@@ -1,0 +1,5 @@
+node_modules/
+docs/build/
+docs/src/pages/public/protocol/
+docs/src/pages/public/SPECTRE-PROTOCOL.md
+.DS_Store
