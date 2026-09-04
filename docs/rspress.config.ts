@@ -25,6 +25,7 @@ export default defineConfig({
       { text: "Wiki", link: "https://wiki.xraynetwork.io/" },
       { text: "SPECTRE", link: "/" },
       { text: "Install", link: "/installation" },
+      { text: "Commands", link: "/commands" },
       { text: "Protocol", link: "/protocol/" },
       { text: "GitHub", link: "https://github.com/xray-network/spectre" }
     ],
@@ -32,6 +33,7 @@ export default defineConfig({
       "/": [
         { text: "Overview", link: "/" },
         { text: "Installation", link: "/installation" },
+        { text: "Commands", link: "/commands" },
         { text: "Versioning", link: "/versioning" },
         { text: "Protocol releases", link: "/protocol/" }
       ]

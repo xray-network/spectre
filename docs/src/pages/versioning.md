@@ -17,7 +17,7 @@ Protocol releases use semantic versioning:
 - A major version changes required paths, authority, fields, or lifecycle semantics.
 
 Always install from an immutable URL containing the complete version. A repository is governed by
-the version in its local `.spectre/SPECTRE-PROTOCOL.md`, not by whichever release is newest online.
+the version in its local `.agents/spectre/SPECTRE-PROTOCOL.md`, not by whichever release is newest online.
 The release manifest records the SHA-256 digest of every published protocol so downloaded bytes can
 be verified independently.
 
