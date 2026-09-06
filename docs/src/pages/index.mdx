@@ -6,23 +6,27 @@ outline: false
 footer: false
 ---
 
-import { CodeBlock } from '@rspress/core/theme';
+import { CodeBlock, HeroArtwork } from '@rspress/core/theme';
 
 <div className="spectre-home rp-not-doc">
   <section className="spectre-hero" aria-labelledby="every-change-leaves-a-trace">
+    <HeroArtwork />
     <div className="spectre-eyebrow-row">
       <span className="spectre-eyebrow">A protocol for deliberate change</span>
       <a className="spectre-version" href="./protocol/">v1.0.0 <span aria-hidden="true">↗</span></a>
     </div>
 
-    <h1 id="every-change-leaves-a-trace">A clear plan and record for every change.</h1>
-
-    <p className="spectre-lead">Turn work with your coding agent into a clear sequence of plans, evidence, and decisions. All in your repository.</p>
-    <div className="spectre-actions">
-      <a className="spectre-button spectre-button--primary" href="#get-started">Get started <span aria-hidden="true">↓</span></a>
-      <a className="spectre-button spectre-button--secondary" href="./commands">Explore commands <span aria-hidden="true">→</span></a>
+    <div className="spectre-hero-grid">
+      <div className="spectre-hero-copy">
+        <h1 id="every-change-leaves-a-trace">A clear plan and record for every change.</h1>
+        <p className="spectre-lead">Turn work with your coding agent into a clear sequence of plans, evidence, and decisions. All in your repository.</p>
+        <div className="spectre-actions">
+          <a className="spectre-button spectre-button--primary" href="#get-started">Get started <span aria-hidden="true">↓</span></a>
+          <a className="spectre-button spectre-button--secondary" href="./commands">Explore commands <span aria-hidden="true">→</span></a>
+        </div>
+        <p className="spectre-hero-note">One Markdown protocol. Your existing coding agent.</p>
+      </div>
     </div>
-    <p className="spectre-hero-note">One Markdown protocol. Your existing coding agent.</p>
   </section>
 
   <section className="spectre-start" id="get-started" aria-labelledby="get-started-title">
@@ -42,7 +46,7 @@ import { CodeBlock } from '@rspress/core/theme';
     </div>
   </section>
 
-  <section className="spectre-workflow" aria-labelledby="first-change-title">
+  <section className="spectre-workflow" id="first-change" aria-labelledby="first-change-title">
     <div className="spectre-section-heading">
       <div><span className="spectre-eyebrow">02 / The workflow</span><h2 id="first-change-title">From intent to a reviewed change.</h2></div>
     </div>

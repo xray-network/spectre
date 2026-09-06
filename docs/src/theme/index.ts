@@ -8,9 +8,11 @@ export function Layout(props: LayoutProps) {
     afterNavTitle: createElement(
       "a",
       { href: "https://wiki.xraynetwork.io", className: "spectre-back-to-wiki" },
+      createElement("span", { "aria-hidden": true }, "←"),
       "Back to Wiki"
     )
   })
 }
 
 export * from "@rspress/core/theme-original"
+export { HeroArtwork } from "./HeroArtwork"
