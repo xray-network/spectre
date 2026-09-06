@@ -1,7 +1,7 @@
-export const spacing = 40
-export const firstY = 30
+export const spacing = 26
+export const firstY = 20
 
-// CSS-pixel coordinates: resize changes the number of dots, never their size.
+// CSS-pixel coordinates: resize changes the number of symbols, never their size.
 export function createGrid(width: number, height: number) {
   const margin = 6
   const columns = width > 0 ? Math.floor((width + margin) / spacing) + 1 : 0

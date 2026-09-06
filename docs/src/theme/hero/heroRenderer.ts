@@ -1,7 +1,7 @@
 import { createGrid, spacing, firstY } from "./heroGrid"
+import { strokeSymbol, symbolAt, symbolCount } from "./heroSymbols"
 import { createWave, prepareWave, waveFrame, type PreparedWave } from "./heroWaves"
 
-const spriteCount = 17
 const alphaEpsilon = 1 / 1024
 
 export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCanvasElement, hero: Element): () => void {
@@ -14,54 +14,56 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)")
   let { columns, rows, points } = createGrid(0, 0)
-  let ambient = new Float32Array(points.length)
   let hoverStrength = new Float32Array(points.length)
   let hoverTargets = new Float32Array(points.length)
+  let ambient = new Float32Array(points.length)
   let lastAlpha = new Float32Array(points.length)
   let lastSprite = new Uint8Array(points.length)
   let pixelX = new Int32Array(points.length)
   let pixelY = new Int32Array(points.length)
-  const waves: PreparedWave[] = []
-  const state = { front: 0, envelope: 0 }
-  let frame = 0, wakeTimer = 0, nextAmbient = 0, lastPaint = 0
+  let frame = 0, lastPaint = 0, lastMove = 0
+  let wakeTimer = 0, nextWave = 0
+  let wave: PreparedWave | undefined
+  const waveState = { front: 0, envelope: 0 }
+  let hasPointer = false
   let inView = false, disposed = false, hoverActive = false, hoverDirty = false, boundsDirty = false
   let width = 0, height = 0, pixelRatio = 1, tileSize = 1
   let minRow = 0, maxRow = -1, minColumn = 0, maxColumn = -1
   let mouseX = 0, mouseY = 0, left = 0, top = 0
   let neutral = "#55556d", blue = "#1940ed"
-  let spriteRatio = 0, spriteBlue = ""
+  let spriteRatio = 0, spriteBlue = "", spriteNeutral = ""
   const canAnimate = () => !disposed && !reducedMotion.matches && !document.hidden && inView && width > 0 && height > 0
 
-  const fillDot = (context: CanvasRenderingContext2D, x: number, y: number, radius: number) => {
-    context.beginPath()
-    context.arc(x, y, radius, 0, Math.PI * 2)
-    context.fill()
-  }
   const rebuildImages = () => {
     // Static marks are painted only on resize/theme changes, never copied per frame.
     baseCtx.setTransform(1, 0, 0, 1, 0, 0)
     baseCtx.clearRect(0, 0, background.width, background.height)
     baseCtx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
-    baseCtx.fillStyle = neutral
+    baseCtx.strokeStyle = neutral
+    baseCtx.lineWidth = .75
     for (let row = minRow; row <= maxRow; row++) {
       for (let col = minColumn; col <= maxColumn; col++) {
         const point = points[row * columns + col]
-        baseCtx.globalAlpha = point.visibility * .28
-        fillDot(baseCtx, point.x, point.y, 1)
+        baseCtx.globalAlpha = point.visibility * .5
+        strokeSymbol(baseCtx, 0, point.x, point.y)
       }
     }
     // Small, cached sprites replace path construction/rasterization during animation.
-    if (spriteRatio !== pixelRatio || spriteBlue !== blue) {
-      tileSize = Math.ceil(2.6 * pixelRatio) + 4
-      atlas.width = tileSize * spriteCount
-      atlas.height = tileSize
-      atlasCtx.fillStyle = blue
-      for (let i = 0; i < spriteCount; i++) {
-        const strength = i / (spriteCount - 1)
-        fillDot(atlasCtx, tileSize * (i + .5), tileSize / 2, (1 + strength * .3) * pixelRatio)
+    if (spriteRatio !== pixelRatio || spriteBlue !== blue || spriteNeutral !== neutral) {
+      tileSize = Math.ceil(10 * pixelRatio) + 4
+      atlas.width = tileSize * symbolCount
+      atlas.height = tileSize * 2
+      atlasCtx.lineWidth = 1 * pixelRatio
+      atlasCtx.strokeStyle = blue
+      for (let i = 0; i < symbolCount; i++) {
+        strokeSymbol(atlasCtx, i, tileSize * (i + .5), tileSize / 2, pixelRatio)
       }
+      atlasCtx.strokeStyle = neutral
+      atlasCtx.lineWidth = .75 * pixelRatio
+      strokeSymbol(atlasCtx, 0, tileSize / 2, tileSize * 1.5, pixelRatio)
       spriteRatio = pixelRatio
       spriteBlue = blue
+      spriteNeutral = neutral
     }
     for (let i = 0; i < points.length; i++) {
       pixelX[i] = Math.round(points[i].x * pixelRatio - tileSize / 2)
@@ -71,15 +73,28 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
     lastAlpha.fill(0)
     lastSprite.fill(0)
   }
+  const showRestingMark = (i: number, visible: boolean) => {
+    const x = pixelX[i] / pixelRatio, y = pixelY[i] / pixelRatio, size = tileSize / pixelRatio
+    baseCtx.clearRect(x, y, size, size)
+    if (visible) {
+      baseCtx.globalAlpha = points[i].visibility * .5
+      baseCtx.drawImage(atlas, 0, tileSize, tileSize, tileSize, x, y, size, size)
+    }
+  }
   const suspend = () => {
     cancelAnimationFrame(frame)
     window.clearTimeout(wakeTimer)
-    frame = wakeTimer = 0
-    waves.length = 0
+    wakeTimer = nextWave = 0
+    wave = undefined
+    ambient.fill(0)
+    frame = 0
+    hasPointer = false
     hoverActive = hoverDirty = false
     hoverStrength.fill(0)
     hoverTargets.fill(0)
-    lastPaint = nextAmbient = 0
+    lastPaint = 0
+    for (let i = 0; i < points.length; i++) if (lastSprite[i] > 0) showRestingMark(i, true)
+    lastSprite.fill(0)
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     lastAlpha.fill(0)
   }
@@ -88,13 +103,19 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
     wakeTimer = 0
     if (canAnimate() && !frame) frame = requestAnimationFrame(tick)
   }
-  const syncPlayback = () => { if (canAnimate()) wake(); else suspend() }
+  const syncPlayback = () => { if (!canAnimate()) suspend(); else wake() }
 
   const tick = (now: number) => {
     frame = 0
     if (!canAnimate()) { suspend(); return }
-    const blend = 1 - Math.exp(-(lastPaint ? Math.min(now - lastPaint, 50) : 16.67) / 90)
+    const elapsed = lastPaint ? Math.min(now - lastPaint, 50) : 16.67
+    const rise = 1 - Math.exp(-elapsed / 90)
+    const fade = 1 - Math.exp(-elapsed / 220)
     lastPaint = now
+    if (hoverActive && now - lastMove > 80) {
+      hoverActive = false
+      hoverDirty = true
+    }
     if (boundsDirty && hoverActive) {
       const rect = canvas.getBoundingClientRect()
       left = rect.left
@@ -124,30 +145,23 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
       }
       hoverDirty = false
     }
-    // Compact the existing pool in place rather than allocating a new array every frame.
-    let alive = 0
-    for (let i = 0; i < waves.length; i++) if (now < waves[i].start + waves[i].duration) waves[alive++] = waves[i]
-    waves.length = alive
-    if (now >= nextAmbient) {
-      waves.push(prepareWave(createWave(now, width), points))
-      nextAmbient = now + 2800 + Math.random() * 2400
+    if (wave && now >= wave.start + wave.duration) wave = undefined
+    if (now >= nextWave) {
+      wave = prepareWave(createWave(now, width), points)
+      nextWave = now + wave.duration + 1800 + Math.random() * 1200
     }
     ambient.fill(0)
-    for (let w = 0; w < waves.length; w++) {
-      const wave = waves[w]
-      if (!waveFrame(wave, now, state)) continue
-      const inverseWidth = 1 / wave.width
+    if (wave && waveFrame(wave, now, waveState)) {
       for (let row = minRow; row <= maxRow; row++) {
         const start = row * columns
         const offset = wave.distances[start]
-        // Within a row the wave distance is monotonic, so skip every untouched column.
-        const c0 = Math.max(minColumn, Math.ceil((state.front - wave.width - offset) / spacing))
-        const c1 = Math.min(maxColumn, Math.floor((state.front + wave.width - offset) / spacing))
+        // Visit only the columns touched by this curved wave.
+        const c0 = Math.max(minColumn, Math.ceil((waveState.front - wave.width - offset) / spacing))
+        const c1 = Math.min(maxColumn, Math.floor((waveState.front + wave.width - offset) / spacing))
         for (let col = c0; col <= c1; col++) {
           const i = start + col
-          const band = Math.max(0, 1 - Math.abs(wave.distances[i] - state.front) * inverseWidth)
-          const value = band * band * (3 - 2 * band) * state.envelope
-          if (value > ambient[i]) ambient[i] = value
+          const band = Math.max(0, 1 - Math.abs(wave.distances[i] - waveState.front) / wave.width)
+          ambient[i] = band * band * (3 - 2 * band) * waveState.envelope * points[i].visibility
         }
       }
     }
@@ -157,16 +171,20 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
         const i = row * columns + col
         const difference = hoverTargets[i] - hoverStrength[i]
         if (Math.abs(difference) < .001) hoverStrength[i] = hoverTargets[i]
-        else { hoverStrength[i] += difference * blend; settling = true }
+        else { hoverStrength[i] += difference * (difference > 0 ? rise : fade); settling = true }
         const active = hoverStrength[i]
-        const visibility = points[i].visibility
-        const value = Math.max(ambient[i] * visibility, active * Math.max(visibility, active * .85))
+        const pointerValue = active * (.55 + active * .45)
+        const value = Math.max(pointerValue, ambient[i])
         const alpha = value < .002 ? 0 : value
-        const sprite = Math.round(active * (spriteCount - 1))
+        const sprite = alpha > 0
+          ? (ambient[i] > pointerValue ? symbolAt(i, now) : hoverActive ? symbolAt(i, lastMove) : lastSprite[i])
+          : 0
         if (alpha === lastAlpha[i] || (alpha > 0 && lastAlpha[i] > 0 && Math.abs(alpha - lastAlpha[i]) < alphaEpsilon)) {
           if (sprite === lastSprite[i]) continue
         }
-        // Dot tiles never overlap. Clear only changed tiles, not the full hero surface.
+        // Hide the resting slash while a symbol replaces it; restore from the cache.
+        if ((sprite > 0) !== (lastSprite[i] > 0)) showRestingMark(i, sprite === 0)
+        // Symbol tiles never overlap. Clear only changed tiles, not the full hero surface.
         if (lastAlpha[i] > 0) ctx.clearRect(pixelX[i], pixelY[i], tileSize, tileSize)
         if (alpha > 0) {
           ctx.globalAlpha = alpha
@@ -176,10 +194,10 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
         lastSprite[i] = sprite
       }
     }
-    if (waves.length || settling) frame = requestAnimationFrame(tick)
+    if (wave || hoverActive || settling) frame = requestAnimationFrame(tick)
     else {
       lastPaint = 0
-      wakeTimer = window.setTimeout(() => { wakeTimer = 0; wake() }, Math.max(1, nextAmbient - now))
+      wakeTimer = window.setTimeout(() => { wakeTimer = 0; wake() }, Math.max(1, nextWave - now))
     }
   }
 
@@ -190,7 +208,7 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
     boundsDirty = false
     hoverDirty = true
     const ratio = Math.min(window.devicePixelRatio || 1, 2)
-    if (width === rect.width && height === rect.height && ratio === pixelRatio) { wake(); return }
+    if (width === rect.width && height === rect.height && ratio === pixelRatio) return
     width = rect.width
     height = rect.height
     pixelRatio = ratio
@@ -200,9 +218,9 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
     columns = grid.columns
     rows = grid.rows
     points = grid.points
-    ambient = new Float32Array(points.length)
     hoverStrength = new Float32Array(points.length)
     hoverTargets = new Float32Array(points.length)
+    ambient = new Float32Array(points.length)
     lastAlpha = new Float32Array(points.length)
     lastSprite = new Uint8Array(points.length)
     pixelX = new Int32Array(points.length)
@@ -210,9 +228,7 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
     minColumn = minRow = 0
     maxColumn = columns - 1
     maxRow = rows - 1
-    for (let i = 0; i < waves.length; i++) {
-      waves[i] = prepareWave({ ...waves[i], extent: width }, points)
-    }
+    if (wave) wave = prepareWave({ ...wave, extent: width }, points)
     rebuildImages()
     syncPlayback()
   }
@@ -224,26 +240,27 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
     neutral = nextNeutral
     blue = nextBlue
     rebuildImages()
-    wake()
+    syncPlayback()
   }
   const onMove = (event: Event) => {
     if (!canAnimate() || !finePointer.matches) return
     const { clientX, clientY } = event as PointerEvent
-    if (hoverActive && mouseX === clientX && mouseY === clientY) return
+    if (hasPointer && mouseX === clientX && mouseY === clientY) return
+    hasPointer = true
+    lastMove = performance.now()
     mouseX = clientX
     mouseY = clientY
     hoverActive = hoverDirty = true
     wake()
   }
-  const onLeave = () => { hoverActive = false; hoverDirty = true; wake() }
-  const onScroll = () => { boundsDirty = true; if (hoverActive) wake() }
+  const onLeave = () => { hasPointer = false; hoverActive = false; hoverDirty = true; if (lastPaint || frame) wake() }
+  const onScroll = () => { boundsDirty = true; onLeave() }
   const intersection = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; syncPlayback() })
   const sizeObserver = new ResizeObserver(resize)
   const themeObserver = new MutationObserver(readTheme)
   intersection.observe(hero)
   sizeObserver.observe(canvas)
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class", "style"] })
-  hero.addEventListener("pointerenter", onMove)
   hero.addEventListener("pointermove", onMove)
   hero.addEventListener("pointerleave", onLeave)
   reducedMotion.addEventListener("change", syncPlayback)
@@ -259,7 +276,6 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
     intersection.disconnect()
     sizeObserver.disconnect()
     themeObserver.disconnect()
-    hero.removeEventListener("pointerenter", onMove)
     hero.removeEventListener("pointermove", onMove)
     hero.removeEventListener("pointerleave", onLeave)
     reducedMotion.removeEventListener("change", syncPlayback)

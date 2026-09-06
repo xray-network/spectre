@@ -470,7 +470,7 @@ html :where(a, button, input):focus-visible {
   .spectre-hero-grid {
     min-height: 484px;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(280px, .68fr);
+    grid-template-columns: minmax(0, 1fr) minmax(280px, .6fr);
     gap: 20px;
     align-items: center;
   }
@@ -526,7 +526,6 @@ html :where(a, button, input):focus-visible {
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -.05em;
-  text-wrap: balance;
 }
 
 .spectre-hero .rp-header-anchor {
