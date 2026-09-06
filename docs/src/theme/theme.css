@@ -242,6 +242,10 @@ html .rp-code-button-group__button {
   color: var(--xr-fg-secondary);
 }
 
+html .rp-code-copy-button {
+  opacity: 1;
+}
+
 html .rp-code-button-group__button:hover {
   background: var(--xr-chip);
   color: var(--xr-fg);
