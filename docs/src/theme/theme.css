@@ -29,10 +29,15 @@ html:root {
   --spectre-layout-width: 1440px;
   --spectre-content-width: 768px;
   --spectre-layout-gutter: 24px;
+  --spectre-header-height: 64px;
+  --spectre-tabs-height: 0px;
+  /* Native sidebar, outline, and anchor offsets include both fixed rows. */
+  --rp-nav-height: calc(var(--spectre-header-height) + var(--spectre-tabs-height));
   --spectre-sidebar-bg: var(--xr-surface);
   --spectre-sidebar-item: var(--xr-gray-500);
   --spectre-symbol-color: var(--xr-blue-500);
   --rp-content-padding-x: 48px;
+  --rp-content-padding-y: 64px;
   --rp-outline-width: 200px;
   --rp-sidebar-margin-left: 0px;
   --rp-outline-margin-right: 0px;
@@ -68,13 +73,76 @@ body {
   text-shadow: none !important;
 }
 
+html:root:has(.spectre-section-tabs) {
+  --spectre-header-height: 56px;
+  --spectre-tabs-height: 40px;
+}
+
 html .rp-nav {
+  height: var(--spectre-header-height);
   padding-inline: max(
-    calc(var(--spectre-layout-gutter) + 12px),
-    calc((100% - var(--spectre-layout-width)) / 2 + 12px)
+    var(--spectre-layout-gutter),
+    calc((100% - var(--spectre-layout-width)) / 2)
   );
   background: var(--xr-canvas);
   border-bottom-color: var(--xr-border);
+}
+
+html .rp-nav:has(+ .spectre-section-tabs) {
+  border-bottom-width: 0;
+}
+
+.spectre-section-tabs {
+  position: sticky;
+  top: calc(var(--spectre-header-height) + var(--rp-banner-height, 0px));
+  z-index: calc(var(--rp-z-index-nav) - 1);
+  flex-shrink: 0;
+  width: 100%;
+  height: var(--spectre-tabs-height);
+  box-sizing: border-box;
+  background: var(--xr-canvas);
+  border-bottom: 1px solid var(--xr-border);
+}
+
+.spectre-section-tabs__inner {
+  display: flex;
+  gap: 24px;
+  width: calc(100% - 2 * var(--spectre-layout-gutter));
+  max-width: var(--spectre-layout-width);
+  height: 100%;
+  margin-inline: auto;
+  overflow-x: auto;
+}
+
+html .spectre-section-tab {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  padding: 0 4px;
+  box-sizing: border-box;
+  border-bottom: 2px solid transparent;
+  color: var(--xr-fg-muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.spectre-section-tab svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+html .spectre-section-tab:hover {
+  color: var(--xr-fg-secondary);
+}
+
+html .spectre-section-tab[aria-current="page"] {
+  color: var(--xr-link);
+  border-bottom-color: var(--xr-link);
 }
 
 /* Header contents, sidebar, and content align to one centered frame. */
@@ -280,10 +348,10 @@ html :where(a, button, input):focus-visible {
   html .rp-doc-layout__sidebar {
     display: flex;
     flex-direction: column;
-    top: calc(var(--rp-nav-height) + 12px + var(--rp-banner-height, 0px));
-    height: calc(100dvh - var(--rp-nav-height) - 24px - var(--rp-banner-height, 0px));
-    max-height: calc(100dvh - var(--rp-nav-height) - 24px - var(--rp-banner-height, 0px));
-    margin: 12px 0;
+    top: calc(var(--rp-nav-height) + 24px + var(--rp-banner-height, 0px));
+    height: calc(100dvh - var(--rp-nav-height) - 48px - var(--rp-banner-height, 0px));
+    max-height: calc(100dvh - var(--rp-nav-height) - 48px - var(--rp-banner-height, 0px));
+    margin: 24px 0;
     left: auto;
     padding: 10px 8px;
     border: 0;
@@ -494,7 +562,7 @@ html :where(a, button, input):focus-visible {
   }
 
   .spectre-hero-art canvas:first-child {
-    opacity: .45;
+    opacity: .7;
   }
 }
 

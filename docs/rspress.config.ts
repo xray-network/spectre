@@ -1,5 +1,6 @@
 import { defineConfig } from "@rspress/core"
 import { remarkOutlineHeadings } from "./plugins/remark-outline-headings"
+import { documentationSections } from "./src/navigation"
 
 export default defineConfig({
   root: "src/pages",
@@ -34,18 +35,10 @@ export default defineConfig({
         position: "left"
       }
     ],
-    sidebar: {
-      "/": [
-        { sectionHeaderText: "Get started" },
-        { text: "Overview", link: "/" },
-        { text: "Installation", link: "/installation" },
-        { text: "Commands", link: "/commands" },
-        { text: "Example repository", link: "/example" },
-        { sectionHeaderText: "Reference" },
-        { text: "Versioning", link: "/versioning" },
-        { text: "Protocol releases", link: "/protocol/" },
-        { text: "v1.0.0", link: "/protocol/", context: "spectre-version" }
-      ]
-    }
+    sidebar: Object.fromEntries(
+      documentationSections.flatMap(({ paths, sidebar }) =>
+        paths.map(path => [path, sidebar])
+      )
+    )
   }
 })

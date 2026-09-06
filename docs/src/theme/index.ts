@@ -1,6 +1,14 @@
 import "./theme.css"
-import { createElement, forwardRef } from "react"
-import { Link as DefaultLink, type LinkProps } from "@rspress/core/theme-original"
+import { createElement, forwardRef, Fragment } from "react"
+import { Link as DefaultLink, Layout as DefaultLayout, type LinkProps, type LayoutProps } from "@rspress/core/theme-original"
+import { SectionTabs } from "./SectionTabs"
+
+export function Layout(props: LayoutProps) {
+  return createElement(DefaultLayout, {
+    ...props,
+    afterNav: createElement(Fragment, null, createElement(SectionTabs), props.afterNav)
+  })
+}
 
 // Native navigation opens external URLs in a new tab; the Wiki is our parent site.
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) =>
