@@ -605,6 +605,13 @@ html :where(a, button, input):focus-visible {
   line-height: 1.65;
 }
 
+.spectre-home .spectre-hero-definition {
+  margin-top: 16px;
+  color: var(--xr-fg-secondary);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
 .spectre-actions {
   display: flex;
   flex-wrap: wrap;
