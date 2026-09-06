@@ -37,6 +37,13 @@ After installation, the adopting repository's skill lives at `.agents/skills/spe
 Installed state, immutable records, templates, and provider evidence live separately under
 `.agents/spectre/`.
 
+The router loads `runtime/core.md` plus the selected command file. It adds selector/reference rules
+and templates only where required. For example, rejection loads `core.md`, `selectors.md`,
+`references.md`, and `commands/decide.md`, then the relevant ledger and records. It does not read
+installation instructions, provider templates, or every other command. Source-hash checks use local
+tools without loading the full protocol text. Required workflow validation and evidence reads are
+preserved; full validation and archiving still check installation-wide integrity.
+
 For example, `implement api/0002` is an ordinary request; `/spectre implement api/0002` explicitly
 starts the SPECTRE implementation workflow. In Codex, use `$spectre implement api/0002`.
 Missing or ambiguous details pause the selected operation for clarification; malformed syntax

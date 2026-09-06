@@ -4,8 +4,7 @@ Each published directory is immutable. Installations should use the complete ver
 than a floating `latest` or major-version alias.
 
 The <a href="/spectre/SPECTRE-PROTOCOL.md">current-release mirror</a> is convenient for reading and
-repository discovery. The build verifies it is byte-for-byte identical to the latest immutable
-release.
+repository discovery. The build generates it directly from the latest versioned protocol source.
 
 ## 1.0.0
 
@@ -19,6 +18,10 @@ identities and asking when the meaning is ambiguous.
 The archive command moves terminal records and decision history into immutable batches while
 preserving references and implementation IDs.
 This release defines fresh installation only.
+
+The complete file contains marked runtime sections. Installation extracts shared rules and command
+modules; normal invocations load only their declared dependencies. Versioned runtime downloads are
+generated from the same source, with the pinned protocol's SHA-256 in each header.
 
 Machine-readable release metadata is available from
 <a href="/spectre/protocol/index.json"><code>protocol/index.json</code></a>.

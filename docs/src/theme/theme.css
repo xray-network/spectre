@@ -485,7 +485,7 @@ html :where(a, button, input):focus-visible {
   }
 
   .spectre-hero .spectre-hero-copy h1 {
-    font-size: 60px;
+    font-size: 56px;
   }
 
   .spectre-home .spectre-hero-copy .spectre-lead {
@@ -494,6 +494,19 @@ html :where(a, button, input):focus-visible {
 }
 
 @container (max-width: 779px) {
+  .spectre-hero-copy {
+    text-align: center;
+  }
+
+  .spectre-hero .spectre-hero-copy h1,
+  .spectre-home .spectre-hero-copy .spectre-lead {
+    margin-inline: auto;
+  }
+
+  .spectre-hero-copy .spectre-actions {
+    justify-content: center;
+  }
+
   .spectre-hero-art {
     opacity: .45;
   }

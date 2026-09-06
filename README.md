@@ -27,6 +27,13 @@ The pinned standard installs as `.agents/spectre/SPECTRE-PROTOCOL.md`, with its 
 implementation summary and sole active lifecycle ledger. Archived decisions remain in immutable
 batch manifests under `.agents/spectre/archive/`.
 
+Installation also extracts `runtime/core.md`, `selectors.md`, `references.md`, and ten command
+modules from marked sections of the complete protocol. The small skill router loads only shared
+rules and the selected operation's dependencies on each call. Templates, record contents, and
+required evidence load when needed; installation and full integrity checks retain their full scope.
+Runtime files are generated verbatim, checked against the pinned protocol, and never maintained
+as separate summaries. Missing or stale modules block a command without an implicit repair.
+
 ## Commands
 
 ```text
@@ -65,7 +72,6 @@ decision proofs, and reference identity are preserved; implementation IDs never 
 
 ```text
 .
-├── SPECTRE-PROTOCOL.md          # current-release mirror
 ├── protocol/
 │   └── v1.0.0/
 │       └── SPECTRE-PROTOCOL.md
@@ -75,11 +81,15 @@ decision proofs, and reference identity are preserved; implementation IDs never 
     └── wrangler.jsonc
 ```
 
-`protocol/` is the canonical, immutable release source. Root `SPECTRE-PROTOCOL.md` mirrors the
-latest release for convenient repository access. The documentation build rejects drift between
-the mirror and latest release, then publishes both current and immutable raw assets. This source
+`protocol/` is the single canonical release source. The documentation build generates both
+the public current-release mirror and versioned raw assets directly from it. This source
 repository does not install its own `.agents/` tracking or command structure; the v1 protocol
 instructs adopting repositories to create it during installation.
+
+The docs publisher also generates `protocol/v1.0.0/runtime/` downloads from the marked source.
+Generated runtime files live in build assets and adopting repositories, not as a second set of
+hand-maintained files in this source repository. Run `npm run test:protocol` from `docs/` to check
+extraction, invalid markers, shared rules, and routing coverage.
 
 ## Documentation
 

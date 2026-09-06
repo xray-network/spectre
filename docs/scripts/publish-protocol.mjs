@@ -2,6 +2,7 @@ import { cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises"
 import { createHash } from "node:crypto"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
+import { extractRuntime } from "./protocol-runtime.mjs"
 
 const scriptDirectory = dirname(fileURLToPath(import.meta.url))
 const repositoryRoot = resolve(scriptDirectory, "../..")
@@ -44,6 +45,11 @@ for (const release of releases) {
   }
 
   await cp(sourceDirectory, join(destinationRoot, release), { recursive: true })
+  for (const [path, content] of extractRuntime(protocol)) {
+    const destination = join(destinationRoot, release, "runtime", path)
+    await mkdir(dirname(destination), { recursive: true })
+    await writeFile(destination, content)
+  }
   manifest.push({
     version,
     protocol: expectedUrl,
@@ -54,15 +60,6 @@ for (const release of releases) {
 const latest = manifest.at(-1)
 const latestRelease = releases.at(-1)
 const latestProtocolPath = join(sourceRoot, latestRelease, "SPECTRE-PROTOCOL.md")
-const [latestProtocol, rootProtocol] = await Promise.all([
-  readFile(latestProtocolPath, "utf8"),
-  readFile(join(repositoryRoot, "SPECTRE-PROTOCOL.md"), "utf8")
-])
-
-if (rootProtocol !== latestProtocol) {
-  throw new Error(`Root SPECTRE-PROTOCOL.md must match the latest release (${latestRelease}).`)
-}
-
 await Promise.all([
   writeFile(
     join(destinationRoot, "index.json"),

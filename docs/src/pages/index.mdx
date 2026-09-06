@@ -46,21 +46,22 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
       <div><span className="spectre-eyebrow">02 / The workflow</span><h2 id="first-change-title">From intent to a reviewed change.</h2></div>
     </div>
     <p>Run one command at a time. In Codex, use <code>$spectre</code> in place of <code>/spectre</code>.</p>
+    <p>Describe targets and changes in your own words. Direct target slugs such as <code>api</code> and record IDs such as <code>api/0002</code> also work.</p>
     <ol className="spectre-workflow-list">
       <li>
         <span className="spectre-step" aria-hidden="true">01</span>
         <div className="spectre-workflow-content">
           <div className="spectre-workflow-title"><h3>Plan the change</h3><span className="spectre-state spectre-state--planned">PLANNED</span></div>
-          <p>Ask for a bounded plan. Replace <code>api</code> with your repository slug or monorepo target.</p>
-          <CodeBlock><pre tabIndex={0}><code>/spectre plan api: add a health endpoint</code></pre></CodeBlock>
+          <p>Describe where the change belongs and what you want to achieve. Your agent creates a bounded plan.</p>
+          <CodeBlock><pre tabIndex={0}><code>/spectre plan the backend service: add a health endpoint</code></pre></CodeBlock>
         </div>
       </li>
       <li>
         <span className="spectre-step" aria-hidden="true">02</span>
         <div className="spectre-workflow-content">
           <div className="spectre-workflow-title"><h3>Implement the plan</h3><span className="spectre-state spectre-state--review">REVIEW</span></div>
-          <p>Read the plan, then refer to it by ID or description. Your agent implements, validates, and records the result.</p>
-          <CodeBlock><pre tabIndex={0}><code>/spectre implement api/0002</code></pre></CodeBlock>
+          <p>Read the plan, then ask your agent to implement it by description. It validates the changes and records the result.</p>
+          <CodeBlock><pre tabIndex={0}><code>/spectre implement the health endpoint plan</code></pre></CodeBlock>
         </div>
       </li>
       <li>
@@ -68,7 +69,7 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
         <div className="spectre-workflow-content">
           <div className="spectre-workflow-title"><h3>Make the final decision</h3><span className="spectre-state spectre-state--accepted">ACCEPTED</span></div>
           <p>Review the result and checks. Accept with your own decision proof, or request a revision.</p>
-          <CodeBlock><pre tabIndex={0}><code>/spectre accept api/0002: reviewed the changes and validation</code></pre></CodeBlock>
+          <CodeBlock><pre tabIndex={0}><code>/spectre accept the health endpoint change: reviewed the changes and validation</code></pre></CodeBlock>
         </div>
       </li>
     </ol>
