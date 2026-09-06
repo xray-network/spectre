@@ -605,13 +605,6 @@ html :where(a, button, input):focus-visible {
   line-height: 1.65;
 }
 
-.spectre-home .spectre-hero-definition {
-  margin-top: 16px;
-  color: var(--xr-fg-secondary);
-  font-size: 12px;
-  line-height: 1.8;
-}
-
 .spectre-actions {
   display: flex;
   flex-wrap: wrap;
@@ -990,17 +983,38 @@ html :where(a, button, input):focus-visible {
 
   .spectre-workflow-list > li {
     grid-template-columns: 28px minmax(0, 1fr);
-    gap: 12px;
+    column-gap: 8px;
+    row-gap: 0;
   }
 
   .spectre-step {
     width: 28px;
     height: 28px;
+    grid-column: 1;
+    grid-row: 1;
   }
 
+  .spectre-workflow-content,
   .spectre-workflow-title {
-    align-items: start;
-    flex-direction: column;
+    display: contents;
+  }
+
+  .spectre-workflow-title .spectre-state {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    justify-self: start;
+  }
+
+  .spectre-workflow-title h3,
+  .spectre-workflow-content > p,
+  .spectre-workflow-content > .rp-codeblock {
+    grid-column: 1 / -1;
+  }
+
+  .spectre-workflow-title h3 {
+    margin-top: 14px;
+    margin-bottom: 7px;
   }
 }
 
