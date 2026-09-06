@@ -27,6 +27,7 @@ html:root {
   --rp-radius-large: var(--xr-radius-panel);
   --rp-sidebar-width: 265px;
   --spectre-layout-width: 1440px;
+  --spectre-content-width: 768px;
   --spectre-layout-gutter: 24px;
   --spectre-sidebar-bg: var(--xr-surface);
   --spectre-sidebar-item: var(--xr-gray-500);
@@ -86,6 +87,18 @@ html .rp-doc-layout__doc {
   flex: 1;
   min-width: 0;
   max-width: none;
+}
+
+html .rp-doc-layout__doc-container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--spectre-content-width) + 2 * var(--rp-content-padding-x));
+  margin-inline: auto;
+  font-size: 16px;
+}
+
+html .rp-doc-layout__doc-container .rp-doc {
+  font-size: 16px;
 }
 
 @media (min-width: 1280px) {
@@ -159,7 +172,7 @@ html .rp-sidebar-item {
   margin-top: 2px;
   border-radius: 6px;
   color: var(--spectre-sidebar-item);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 24px;
 }
@@ -198,6 +211,13 @@ html .rp-doc-layout__outline {
   backdrop-filter: none;
 }
 
+html .rp-outline,
+html .rp-outline__title,
+html .rp-outline__action-row,
+html .rp-outline .rp-toc-item__text {
+  font-size: 14px;
+}
+
 html .rp-doc :where(h1, h2, h3):not(:where(.rp-not-doc *)) {
   color: var(--xr-fg);
   font-weight: 700;
@@ -221,7 +241,7 @@ html .rp-doc :where(h3):not(:where(.rp-not-doc *)) {
 
 html .rp-doc :where(p, li):not(:where(.rp-not-doc *)) {
   color: var(--xr-fg-secondary);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.8;
 }
 
@@ -230,7 +250,7 @@ html .rp-doc :where(strong):not(:where(.rp-not-doc *)) {
 }
 
 html .rp-doc :where(table):not(:where(.rp-not-doc *)) {
-  font-size: 13px;
+  font-size: 16px;
 }
 
 html .rp-doc :where(th):not(:where(.rp-not-doc *)) {
@@ -305,10 +325,10 @@ html :where(a, button, input):focus-visible {
 /* The homepage uses the native docs sidebar and mobile menu. */
 .spectre-home {
   --spectre-home-radius: 6px;
-  max-width: 960px;
+  max-width: var(--spectre-content-width);
   margin-inline: auto;
   color: var(--rp-c-text-2);
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.65;
   padding-bottom: 12px;
 }
@@ -485,7 +505,7 @@ html :where(a, button, input):focus-visible {
   .spectre-hero-grid {
     min-height: 484px;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(280px, .6fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: 20px;
     align-items: center;
   }
@@ -496,7 +516,7 @@ html :where(a, button, input):focus-visible {
 
   .spectre-hero-diagram {
     margin: 0;
-    justify-self: end;
+    justify-self: center;
   }
 
   .spectre-hero .spectre-hero-copy h1 {
@@ -789,7 +809,7 @@ html :where(a, button, input):focus-visible {
 }
 
 .spectre-workflow-content > p {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .spectre-state {
@@ -824,7 +844,7 @@ html :where(a, button, input):focus-visible {
   padding: 20px;
   border-radius: var(--spectre-home-radius);
   background: var(--xr-surface);
-  font-size: 13px;
+  font-size: 16px;
 }
 
 .spectre-callout-mark {
@@ -887,7 +907,7 @@ html :where(a, button, input):focus-visible {
 }
 
 .spectre-resource p {
-  font-size: 13px;
+  font-size: 16px;
 }
 
 .spectre-home-footer {
