@@ -31,6 +31,7 @@ html:root {
   --spectre-layout-gutter: 24px;
   --spectre-sidebar-bg: var(--xr-surface);
   --spectre-sidebar-item: var(--xr-gray-500);
+  --spectre-symbol-color: var(--xr-blue-500);
   --rp-content-padding-x: 48px;
   --rp-outline-width: 200px;
   --rp-sidebar-margin-left: 0px;
@@ -50,6 +51,7 @@ html:root {
 html:root:is(.rp-dark, .dark) {
   --spectre-sidebar-bg: color-mix(in srgb, var(--xr-gray-900) 30%, var(--xr-black));
   --spectre-sidebar-item: var(--xr-gray-400);
+  --spectre-symbol-color: var(--xr-blue-400);
 }
 
 html,
@@ -125,23 +127,6 @@ html .rp-nav__title__logo {
 html .rp-nav__title__logo-image {
   width: 32px;
   height: 32px;
-}
-
-.spectre-back-to-wiki {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 44px;
-  margin-left: 16px;
-  color: var(--xr-fg-secondary);
-  font-size: 13px;
-  font-weight: 500;
-  white-space: nowrap;
-  text-decoration: none;
-}
-
-.spectre-back-to-wiki:hover {
-  color: var(--xr-link);
 }
 
 html .rp-search-button {
@@ -409,7 +394,7 @@ html :where(a, button, input):focus-visible {
   display: block;
   width: min(100%, 320px);
   height: auto;
-  margin: 32px auto 0;
+  margin: 0 auto 32px;
   overflow: visible;
   pointer-events: none;
   fill: none;
@@ -431,28 +416,6 @@ html :where(a, button, input):focus-visible {
   stroke-dasharray: 3 4;
 }
 
-.spectre-diagram-traces {
-  stroke: var(--xr-fg-muted);
-  stroke-width: 1;
-  stroke-dasharray: 3 4;
-  stroke-linecap: round;
-  opacity: .6;
-}
-
-.spectre-diagram-ports {
-  fill: var(--xr-canvas);
-  stroke: var(--xr-link);
-  stroke-width: 1;
-}
-
-.spectre-diagram-repository {
-  fill: var(--xr-canvas);
-  fill-opacity: .65;
-  stroke: var(--xr-border-strong);
-  stroke-width: 1;
-  stroke-dasharray: 4 3;
-}
-
 .spectre-diagram-caption {
   fill: var(--xr-fg-muted);
   font-size: 9px;
@@ -463,13 +426,6 @@ html :where(a, button, input):focus-visible {
   stroke-width: 1.3;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-
-.spectre-hero-diagram .spectre-diagram-name {
-  fill: var(--xr-link);
-  font-size: 18px;
-  font-weight: 500;
-  letter-spacing: .12em;
 }
 
 .spectre-diagram-frame {
@@ -493,11 +449,6 @@ html :where(a, button, input):focus-visible {
 
 .spectre-diagram-records text {
   fill: var(--xr-link);
-  font-size: 10px;
-}
-
-.spectre-diagram-summary {
-  fill: var(--xr-fg-secondary);
   font-size: 10px;
 }
 
@@ -542,7 +493,7 @@ html :where(a, button, input):focus-visible {
     justify-content: center;
   }
 
-  .spectre-hero-art {
+  .spectre-hero-art canvas:first-child {
     opacity: .45;
   }
 }

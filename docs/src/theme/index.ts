@@ -1,18 +1,16 @@
 import "./theme.css"
-import { createElement } from "react"
-import { Layout as DefaultLayout, type LayoutProps } from "@rspress/core/theme-original"
+import { createElement, forwardRef } from "react"
+import { Link as DefaultLink, type LinkProps } from "@rspress/core/theme-original"
 
-export function Layout(props: LayoutProps) {
-  return createElement(DefaultLayout, {
+// Native navigation opens external URLs in a new tab; the Wiki is our parent site.
+export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) =>
+  createElement(DefaultLink, {
     ...props,
-    afterNavTitle: createElement(
-      "a",
-      { href: "https://wiki.xraynetwork.io", className: "spectre-back-to-wiki" },
-      createElement("span", { "aria-hidden": true }, "←"),
-      "Back to Wiki"
-    )
+    ref,
+    ...(props.href === "https://wiki.xraynetwork.io" ? { target: "_self" } : {})
   })
-}
+)
+Link.displayName = "Link"
 
 export * from "@rspress/core/theme-original"
 export { HeroArtwork } from "./hero/HeroArtwork"

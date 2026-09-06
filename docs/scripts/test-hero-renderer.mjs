@@ -59,7 +59,7 @@ function harness() {
   math.random = () => .4
   const environment = {
     window: win, document: doc, Math: math, performance: { now: () => now },
-    getComputedStyle: () => ({ getPropertyValue: k => colors[k] }),
+    getComputedStyle: () => ({ getPropertyValue: k => colors[k] ?? '' }),
     requestAnimationFrame: fn => { const id = ++nextId; frames.set(id, fn); return id }, cancelAnimationFrame: id => frames.delete(id),
     IntersectionObserver: Observer, ResizeObserver: Observer, MutationObserver: Observer,
   }

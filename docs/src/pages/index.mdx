@@ -1,17 +1,10 @@
----
-pageType: doc-wide
-title: Overview
-description: Get started with SPECTRE. Install the protocol, plan your first change, and review the result.
-outline: false
-footer: false
----
-
 import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationPrompt } from '@rspress/core/theme';
 
 <div className="spectre-home rp-not-doc">
   <section className="spectre-hero" aria-labelledby="every-change-leaves-a-trace">
     <div className="spectre-hero-grid">
       <HeroArtwork />
+      <HeroDiagram />
       <div className="spectre-hero-copy">
         <h1 id="every-change-leaves-a-trace">A clear plan and record for every change.</h1>
         <p className="spectre-lead">Turn work with your coding agent into a clear sequence of plans, evidence, and decisions. All in your repository.</p>
@@ -20,13 +13,12 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
           <CopyPromptButton />
         </div>
       </div>
-      <HeroDiagram />
     </div>
   </section>
 
   <section className="spectre-start" id="get-started" aria-labelledby="get-started-title">
     <div className="spectre-section-heading">
-      <div><span className="spectre-eyebrow">01 / Installation</span><h2 id="get-started-title">Start with a single prompt.</h2></div>
+      <div><span className="spectre-eyebrow">01 / Installation</span><h2 id="get-started-title" data-outline>Start with a single prompt</h2></div>
       <a className="spectre-text-link" href="./installation">Installation guide <span aria-hidden="true">↗</span></a>
     </div>
     <p>Open your repository in a coding agent, then copy and send this prompt.</p>
@@ -43,7 +35,7 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
 
   <section className="spectre-workflow" id="first-change" aria-labelledby="first-change-title">
     <div className="spectre-section-heading">
-      <div><span className="spectre-eyebrow">02 / The workflow</span><h2 id="first-change-title">From intent to a reviewed change.</h2></div>
+      <div><span className="spectre-eyebrow">02 / The workflow</span><h2 id="first-change-title" data-outline>From intent to a reviewed change</h2></div>
     </div>
     <p>Run one command at a time. In Codex, use <code>$spectre</code> in place of <code>/spectre</code>.</p>
     <p>Describe targets and changes in your own words. Direct target slugs such as <code>api</code> and record IDs such as <code>api/0002</code> also work.</p>

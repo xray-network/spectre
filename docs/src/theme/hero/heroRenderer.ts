@@ -175,7 +175,7 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
         const active = hoverStrength[i]
         const pointerValue = active * (.55 + active * .45)
         const value = Math.max(pointerValue, ambient[i])
-        const alpha = value < .002 ? 0 : value
+        const alpha = value < .002 ? 0 : value * (2 - value)
         const sprite = alpha > 0
           ? (ambient[i] > pointerValue ? symbolAt(i, now) : hoverActive ? symbolAt(i, lastMove) : lastSprite[i])
           : 0
@@ -235,7 +235,7 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
   const readTheme = () => {
     const style = getComputedStyle(canvas)
     const nextNeutral = style.getPropertyValue("--xr-fg-muted").trim() || neutral
-    const nextBlue = style.getPropertyValue("--xr-link").trim() || blue
+    const nextBlue = style.getPropertyValue("--spectre-symbol-color").trim() || style.getPropertyValue("--xr-link").trim() || blue
     if (neutral === nextNeutral && blue === nextBlue) return
     neutral = nextNeutral
     blue = nextBlue
