@@ -7,22 +7,16 @@ The <a href="/spectre/SPECTRE-PROTOCOL.md">current-release mirror</a> is conveni
 repository discovery. The build verifies it is byte-for-byte identical to the latest immutable
 release.
 
-## 2.0.0
+## 1.0.0
 
-- <a href="/spectre/protocol/v2.0.0/SPECTRE-PROTOCOL.md">Read or download <code>SPECTRE-PROTOCOL.md</code></a>
-- <a href="/spectre/protocol/v2.0.0/MIGRATION.md">Read the 1.x migration instructions</a>
+- <a href="/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md">Read or download <code>SPECTRE-PROTOCOL.md</code></a>
 
-SPECTRE 2.0.0 separates the locally installed protocol from the project summary: the protocol is
-stored at `.spectre/SPECTRE-PROTOCOL.md`, while root `SPECTRE.md` is the sole lifecycle ledger.
-
-## 3.0.0
-
-- <a href="/spectre/protocol/v3.0.0/SPECTRE-PROTOCOL.md">Read or download <code>SPECTRE-PROTOCOL.md</code></a>
-- <a href="/spectre/protocol/v3.0.0/MIGRATION.md">Read the 2.x migration instructions</a>
-
-SPECTRE 3.0.0 moves installed protocol data to `.agents/spectre/` and adds the portable
-`.agents/skills/spectre/SKILL.md` command entrypoint. The canonical command vocabulary uses
-`/spectre`; Codex invokes the same skill as `$spectre`.
+The initial release stores installed protocol data in `.agents/spectre/`, exposes the command
+skill at `.agents/skills/spectre/SKILL.md`, and uses root `SPECTRE.md` as the sole active lifecycle ledger.
+SPECTRE runs only on explicit `/spectre` invocation; Codex invokes the same skill as `$spectre`.
+The archive command moves terminal records and decision history into immutable batches while
+preserving references and implementation IDs.
+This release defines fresh installation only.
 
 Machine-readable release metadata is available from
 <a href="/spectre/protocol/index.json"><code>protocol/index.json</code></a>.

@@ -8,6 +8,8 @@ export default defineConfig({
   icon: "https://cdn.xraynetwork.io/favicon.png",
   themeDir: "src/theme",
   title: "SPECTRE",
+  logo: "/xray-blue.svg",
+  logoText: "SPECTRE",
   description: "Evidence-backed implementation protocol for humans and coding agents.",
   head: [
     ["meta", { property: "og:type", content: "website" }],
@@ -19,17 +21,17 @@ export default defineConfig({
   ],
   route: { cleanUrls: true },
   themeConfig: {
+    fallbackHeadingTitle: false,
     darkMode: "auto",
     enableAppearanceAnimation: false,
-    nav: [
-      { text: "Commands", link: "/commands" },
-      { text: "GitHub", link: "https://github.com/xray-network/spectre" }
-    ],
+    nav: [],
     sidebar: {
       "/": [
+        { sectionHeaderText: "Get started" },
         { text: "Overview", link: "/" },
         { text: "Installation", link: "/installation" },
         { text: "Commands", link: "/commands" },
+        { sectionHeaderText: "Reference" },
         { text: "Versioning", link: "/versioning" },
         { text: "Protocol releases", link: "/protocol/" }
       ]

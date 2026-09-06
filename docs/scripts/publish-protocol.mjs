@@ -34,7 +34,6 @@ for (const release of releases) {
   const protocolPath = join(sourceDirectory, "SPECTRE-PROTOCOL.md")
   const protocol = await readFile(protocolPath, "utf8")
   const expectedUrl = `${canonicalOrigin}/${release}/SPECTRE-PROTOCOL.md`
-  const releaseFiles = await readdir(sourceDirectory)
 
   if (!protocol.includes(`Standard-Version: ${version}`)) {
     throw new Error(`${release} does not declare Standard-Version: ${version}.`)
@@ -48,10 +47,7 @@ for (const release of releases) {
   manifest.push({
     version,
     protocol: expectedUrl,
-    sha256: createHash("sha256").update(protocol).digest("hex"),
-    migration: releaseFiles.includes("MIGRATION.md")
-      ? `${canonicalOrigin}/${release}/MIGRATION.md`
-      : null
+    sha256: createHash("sha256").update(protocol).digest("hex")
   })
 }
 

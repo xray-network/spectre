@@ -1,0 +1,80 @@
+/*
+ * Palette extracted from XRAY app shared/design-system/tokens.ts.
+ * Neutral roles follow its antd-theme.ts; surface geometry and action/link roles
+ * follow https://wiki.xraynetwork.io/design/. Kept local for standalone builds.
+ */
+html:root {
+  --xr-white: #ffffff;
+  --xr-black: #000000;
+  --xr-gray-50: #f9fafb;
+  --xr-gray-100: #f3f4f6;
+  --xr-gray-200: #e5e7eb;
+  --xr-gray-300: #d1d5db;
+  --xr-gray-400: #9ca3af;
+  --xr-gray-500: #6e758d;
+  --xr-gray-600: #55556d;
+  --xr-gray-700: #374151;
+  --xr-gray-800: #1f2937;
+  --xr-gray-900: #1e2232;
+  --xr-gray-950: #0e0e18;
+  --xr-blue-300: #657ff3;
+  --xr-blue-400: #3f5ff0;
+  --xr-blue-500: #1940ed;
+  --xr-blue-600: #0f2fbf;
+  --xr-blue-700: #0b228b;
+  --xr-blue-50: #c3cdfa;
+  --xr-green-200: #bef7ec;
+  --xr-green-500: #15e4a3;
+  --xr-green-900: #046635;
+  --xr-green-950: #02421e;
+
+  --xr-font-sans: "-apple-system-body", "ui-sans-serif", "-apple-system", "system-ui", "Segoe UI", "Helvetica", "Apple Color Emoji", "Arial", "sans-serif", "Segoe UI Emoji", "Segoe UI Symbol";
+  --xr-font-mono: "ui-monospace", "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", "monospace";
+  --xr-radius: 10px;
+  --xr-radius-panel: 20px;
+  --xr-radius-pill: 100px;
+  --xr-ease: cubic-bezier(.16, 1, .3, 1);
+
+  --xr-canvas: var(--xr-white);
+  --xr-panel: var(--xr-white);
+  --xr-surface: var(--xr-gray-50);
+  --xr-chip: var(--xr-gray-100);
+  --xr-hover: var(--xr-gray-200);
+  --xr-border: var(--xr-gray-200);
+  --xr-border-strong: var(--xr-gray-300);
+  --xr-fg: var(--xr-gray-950);
+  --xr-fg-secondary: var(--xr-gray-600);
+  --xr-fg-muted: var(--xr-gray-600);
+  --xr-fg-disabled: var(--xr-gray-400);
+  --xr-action: var(--xr-blue-500);
+  --xr-action-hover: var(--xr-blue-400);
+  --xr-action-pressed: var(--xr-blue-600);
+  --xr-on-action: var(--xr-white);
+  --xr-link: var(--xr-blue-500);
+  --xr-focus: var(--xr-blue-500);
+  --xr-selection-bg: var(--xr-gray-100);
+  --xr-selection-fg: var(--xr-blue-500);
+  --xr-success-bg: var(--xr-green-200);
+  --xr-success-fg: var(--xr-green-950);
+}
+
+html:root:is(.rp-dark, .dark) {
+  --xr-canvas: var(--xr-black);
+  --xr-panel: var(--xr-gray-950);
+  --xr-surface: var(--xr-gray-950);
+  --xr-chip: var(--xr-gray-800);
+  --xr-hover: var(--xr-gray-900);
+  --xr-border: var(--xr-gray-900);
+  --xr-border-strong: var(--xr-gray-700);
+  --xr-fg: var(--xr-white);
+  --xr-fg-secondary: var(--xr-gray-300);
+  --xr-fg-muted: var(--xr-gray-400);
+  --xr-fg-disabled: var(--xr-gray-500);
+  /* One source-palette step brighter for readable small links on dark panels. */
+  --xr-link: var(--xr-blue-300);
+  --xr-focus: var(--xr-blue-300);
+  --xr-selection-bg: var(--xr-gray-800);
+  --xr-selection-fg: var(--xr-white);
+  --xr-success-bg: var(--xr-green-950);
+  --xr-success-fg: var(--xr-green-500);
+}

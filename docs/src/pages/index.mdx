@@ -1,137 +1,88 @@
 ---
-pageType: custom
-title: SPECTRE
-description: Evidence-backed implementation tracking for humans and coding agents.
+pageType: doc-wide
+title: Overview
+description: Get started with SPECTRE. Install the protocol, plan your first change, and review the result.
+outline: false
+footer: false
 ---
 
-<main className="xray-landing" id="top">
-  <section className="xray-hero xray-shell">
-    <div>
-      <div className="xray-kicker"><span className="xray-status-dot" />Open protocol · agent ready</div>
-      <h1>Every change leaves a trace.</h1>
-      <p className="xray-lead">A Markdown-only protocol that connects bounded plans, declared evidence, implementation, validation, and final human decisions.</p>
-      <div className="xray-actions">
-        <a className="xray-button xray-button--primary" href="./installation">Install SPECTRE</a>
-        <a className="xray-button xray-button--secondary" href="./protocol/">Read the protocol</a>
-      </div>
+import { CodeBlock } from '@rspress/core/theme';
+
+<div className="spectre-home rp-not-doc">
+  <section className="spectre-hero" aria-labelledby="every-change-leaves-a-trace">
+    <div className="spectre-eyebrow-row">
+      <span className="spectre-eyebrow"><span className="spectre-status-dot" />SPECTRE / Documentation</span>
+      <a className="spectre-version" href="./protocol/">v1.0.0 <span aria-hidden="true">↗</span></a>
     </div>
 
-    <aside className="xray-summary" aria-label="SPECTRE release summary">
-      <div className="xray-summary__head"><span>SPECTRE protocol</span><strong>Released</strong></div>
-      <div className="xray-summary__metric">3.0<span>VERSION</span></div>
-      <div className="xray-summary__rows">
-        <div><span>Standard</span><code>xray/spectre</code></div>
-        <div><span>Storage</span><code>.agents/spectre</code></div>
-        <div><span>Command</span><code>/spectre</code></div>
-      </div>
-    </aside>
+# Every change leaves a trace.
+
+    <p className="spectre-lead">A Markdown protocol for planning, implementing, and reviewing changes with your coding agent.</p>
+    <div className="spectre-actions">
+      <a className="spectre-button spectre-button--primary" href="#get-started">Get started <span aria-hidden="true">↓</span></a>
+      <a className="spectre-button spectre-button--secondary" href="./commands">Explore commands <span aria-hidden="true">→</span></a>
+    </div>
+    <p className="spectre-hero-note">Lives in your repository. Runs when you ask. Keeps you in control.</p>
   </section>
 
-  <section className="xray-section" id="workflow">
-    <div className="xray-shell xray-section-grid">
-      <div className="xray-section-label">01 — Workflow</div>
-      <div>
-        <div className="xray-section-heading">
-          <div className="xray-kicker"><span className="xray-status-dot" />Bounded work · durable evidence</div>
-          <h2>Make implementation explainable from plan to approval.</h2>
-          <p>SPECTRE keeps the plan, inputs, changed paths, validation outcomes, and human decision beside the code they govern.</p>
-        </div>
-
-        <div className="xray-split">
-          <div className="xray-panel xray-steps">
-            <h3>How the lifecycle operates</h3>
-            <details open>
-              <summary><span className="xray-step-no">01</span><strong>Plan</strong><span aria-hidden="true">+</span></summary>
-              <p>Create one implementation-ready instruction and a <code>PLANNED</code> ledger row. Product source remains unchanged.</p>
-            </details>
-            <details>
-              <summary><span className="xray-step-no">02</span><strong>Implement or revise</strong><span aria-hidden="true">+</span></summary>
-              <p>Apply only the bounded instruction, run its validation, record the actual result, and stop in <code>REVIEW</code>.</p>
-            </details>
-            <details>
-              <summary><span className="xray-step-no">03</span><strong>Decide</strong><span aria-hidden="true">+</span></summary>
-              <p>A human accepts, rejects, or cancels the pointed record with durable decision proof. Terminal history stays immutable.</p>
-            </details>
-          </div>
-
-          <aside className="xray-panel xray-panel--soft">
-            <span className="xray-panel-label">Lifecycle</span>
-            <div className="xray-state-flow" aria-label="SPECTRE lifecycle">
-              <strong>PLANNED</strong><span>implement + validate</span>
-              <strong>REVIEW</strong><span>human decision</span>
-              <div className="xray-state-pair"><strong>ACCEPTED</strong><strong>REJECTED</strong></div>
-            </div>
-            <p className="xray-note">Passing tests never implies acceptance. Final authority always stays with the human.</p>
-          </aside>
-        </div>
-      </div>
+  <section className="spectre-start" id="get-started" aria-labelledby="get-started-title">
+    <div className="spectre-section-heading">
+      <div><span className="spectre-eyebrow">01 / Start here</span><h2 id="get-started-title">One prompt to get set up.</h2></div>
+      <a className="spectre-text-link" href="./installation">Installation guide <span aria-hidden="true">↗</span></a>
+    </div>
+    <p>Open your repository in a coding agent, then copy and send this prompt.</p>
+    <CodeBlock title="Installation prompt" wrapCode>
+      <pre tabIndex={0}><code>Read https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v1.0.0 in this repository.</code></pre>
+    </CodeBlock>
+    <div className="spectre-install-result">
+      <span className="spectre-check" aria-hidden="true">✓</span>
+      <p>Your agent sets up the command skill and creates <code>SPECTRE.md</code> to track your work. Product code stays unchanged.</p>
     </div>
   </section>
 
-  <section className="xray-section" id="commands">
-    <div className="xray-shell xray-section-grid">
-      <div className="xray-section-label">02 — Commands</div>
-      <div>
-        <div className="xray-section-heading">
-          <h2>One namespace. One operation at a time.</h2>
-          <p>The command selects a workflow and its stopping boundary. It never authorizes the next lifecycle step.</p>
-        </div>
-        <div className="xray-command-grid" aria-label="SPECTRE command examples">
-          <code>/spectre plan &lt;target&gt;: &lt;objective&gt;</code>
-          <code>/spectre implement &lt;target&gt;/&lt;id&gt;</code>
-          <code>/spectre revise &lt;target&gt;/&lt;id&gt;: &lt;changes&gt;</code>
-          <code>/spectre status &lt;target&gt;/&lt;id&gt;</code>
-          <code>/spectre list [target] [state]</code>
-          <code>/spectre validate [target/id]</code>
-          <code>/spectre accept &lt;target&gt;/&lt;id&gt;: &lt;proof&gt;</code>
-          <code>/spectre reject &lt;target&gt;/&lt;id&gt;: &lt;proof&gt;</code>
-          <code>/spectre cancel &lt;target&gt;/&lt;id&gt;: &lt;reason&gt;</code>
-          <code>/spectre capture &lt;provider&gt;</code>
-          <code>/spectre help [operation]</code>
-        </div>
-        <div className="xray-inline-actions">
-          <a className="xray-button xray-button--primary" href="./commands">Command reference</a>
-          <span>Codex invokes the same repository skill with <code>$spectre</code>.</span>
-        </div>
-      </div>
+  <section className="spectre-workflow" aria-labelledby="first-change-title">
+    <div className="spectre-section-heading">
+      <div><span className="spectre-eyebrow">02 / Your first change</span><h2 id="first-change-title">Plan it. Build it. Review it.</h2></div>
     </div>
+    <p>Run one command at a time. In Codex, use <code>$spectre</code> in place of <code>/spectre</code>.</p>
+    <ol className="spectre-workflow-list">
+      <li>
+        <span className="spectre-step" aria-hidden="true">01</span>
+        <div className="spectre-workflow-content">
+          <div className="spectre-workflow-title"><h3>Define the change</h3><span className="spectre-state">PLANNED</span></div>
+          <p>Ask for a bounded plan. Replace <code>api</code> with your repository slug or monorepo target.</p>
+          <CodeBlock><pre tabIndex={0}><code>/spectre plan api: add a health endpoint</code></pre></CodeBlock>
+        </div>
+      </li>
+      <li>
+        <span className="spectre-step" aria-hidden="true">02</span>
+        <div className="spectre-workflow-content">
+          <div className="spectre-workflow-title"><h3>Implement the plan</h3><span className="spectre-state">REVIEW</span></div>
+          <p>Read the plan, then use its exact ID. Your agent implements, validates, and records the result.</p>
+          <CodeBlock><pre tabIndex={0}><code>/spectre implement api/0002</code></pre></CodeBlock>
+        </div>
+      </li>
+      <li>
+        <span className="spectre-step" aria-hidden="true">03</span>
+        <div className="spectre-workflow-content">
+          <div className="spectre-workflow-title"><h3>Make the final decision</h3><span className="spectre-state spectre-state--accepted">ACCEPTED</span></div>
+          <p>Review the result and checks. Accept with your own decision proof, or request a revision.</p>
+          <CodeBlock><pre tabIndex={0}><code>/spectre accept api/0002: reviewed the changes and validation</code></pre></CodeBlock>
+        </div>
+      </li>
+    </ol>
+    <div className="spectre-callout"><strong>Only when you invoke it.</strong><p>Ordinary requests do not create SPECTRE records. Each new operation needs an explicit command; passing tests never means automatic acceptance.</p></div>
   </section>
 
-  <section className="xray-section" id="install">
-    <div className="xray-shell xray-section-grid">
-      <div className="xray-section-label">03 — Install</div>
-      <div className="xray-split">
-        <div className="xray-panel">
-          <span className="xray-panel-label">Agent prompt</span>
-          <h3>Pin the complete standard</h3>
-          <p>Ask a coding agent to read the immutable release and install SPECTRE v3.0.0 in the repository.</p>
-          <pre className="xray-code"><code>Read https://wiki.xraynetwork.io/spectre/protocol/v3.0.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v3.0.0 in this repository.</code></pre>
-        </div>
-        <div className="xray-panel xray-panel--soft">
-          <span className="xray-panel-label">Installed contract</span>
-          <h3>Rules stay beside the work</h3>
-          <p>The protocol and records live under <code>.agents/spectre/</code>, the command skill under <code>.agents/skills/spectre/</code>, and the project summary remains root <code>SPECTRE.md</code>.</p>
-          <a className="xray-text-link" href="./installation">View installation details →</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section className="xray-section">
-    <div className="xray-shell xray-section-grid">
-      <div className="xray-section-label">04 — Operating idea</div>
-      <div className="xray-operating-grid">
-        <article><span>01 / READ</span><h3>Pin the protocol</h3><p>Use an immutable version so a mutable page cannot silently change the rules.</p></article>
-        <article><span>02 / BUILD</span><h3>Share explicit context</h3><p>Keep plans, evidence, and validation readable by humans and coding agents.</p></article>
-        <article><span>03 / DECIDE</span><h3>Reserve final authority</h3><p>Review the recorded outcome, then accept or reject it with human proof.</p></article>
-      </div>
-    </div>
-  </section>
-
-  <footer className="xray-footer">
-    <div className="xray-shell">
-      <div><strong>SPECTRE</strong><p>Every change leaves a trace.</p></div>
-      <div><a href="./protocol/">Protocol</a><a href="https://github.com/xray-network/spectre">GitHub</a><a href="#top">Back to top</a></div>
-    </div>
-  </footer>
-</main>
+  <nav className="spectre-resources" aria-label="Explore SPECTRE documentation">
+    <a className="spectre-resource" href="./commands">
+      <span className="spectre-resource-label">03 / Daily use <span aria-hidden="true">↗</span></span>
+      <h2>Command reference</h2><p>Revise a change, check status, capture evidence, or archive completed work.</p>
+    </a>
+    <a className="spectre-resource" href="./protocol/">
+      <span className="spectre-resource-label">04 / The full standard <span aria-hidden="true">↗</span></span>
+      <h2>Read the protocol</h2><p>Explore the workflows, evidence rules, and record formats behind SPECTRE.</p>
+    </a>
+  </nav>
+  <div className="spectre-home-footer"><span>Specification · Planning · Evidence · Change · Traceability · Review · Execution</span><a href="./versioning">About versions <span aria-hidden="true">→</span></a></div>
+</div>

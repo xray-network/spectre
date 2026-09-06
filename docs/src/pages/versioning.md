@@ -1,6 +1,7 @@
 # Versioning
 
 SPECTRE separates the version of the standard from the schemas used by installed records.
+The initial release is `1.0.0`; its templates and record schemas start at `v1`.
 
 | Version | Meaning |
 | --- | --- |
@@ -8,6 +9,7 @@ SPECTRE separates the version of the standard from the schemas used by installed
 | `Status-Schema-Version` | Schema of the root `SPECTRE.md` ledger |
 | `Implementation-Version` | Schema of an instruction record |
 | `Result-Version` | Schema of a result record |
+| `Archive-Version` | Schema of an immutable archive manifest |
 | `Provider-Version` | Version of one repository's provider contract |
 
 Protocol releases use semantic versioning:
@@ -21,5 +23,6 @@ the version in its local `.agents/spectre/SPECTRE-PROTOCOL.md`, not by whichever
 The release manifest records the SHA-256 digest of every published protocol so downloaded bytes can
 be verified independently.
 
-Major upgrades require the release's migration instructions. Historical terminal records must not
-be rewritten under the new standard.
+This release defines fresh installation only. Existing installations from another standard
+version or layout are not converted in place. Terminal record contents and decision data remain
+immutable; the explicit archive command may relocate files and rebase their ledger links.
