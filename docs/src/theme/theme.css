@@ -271,6 +271,7 @@ html :where(a, button, input):focus-visible {
   color: var(--rp-c-text-2);
   font-size: 15px;
   line-height: 1.65;
+  padding-bottom: 12px;
 }
 
 .spectre-home *,
@@ -303,7 +304,7 @@ html :where(a, button, input):focus-visible {
 }
 
 .spectre-hero {
-  padding: 4px 0 38px;
+  padding: 20px 0 40px;
 }
 
 .spectre-eyebrow-row,
@@ -321,23 +322,15 @@ html :where(a, button, input):focus-visible {
   align-items: center;
   gap: 10px;
   color: var(--rp-c-text-3);
-  font: 600 12px/1.5 var(--rp-font-family-mono);
+  font: 500 10px/1.5 var(--rp-font-family-mono);
   letter-spacing: .07em;
   text-transform: uppercase;
-}
-
-.spectre-status-dot {
-  height: 7px;
-  width: 7px;
-  flex: 0 0 7px;
-  border-radius: 50%;
-  background: var(--xr-green-500);
 }
 
 .spectre-version {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   padding: 4px 12px;
   border: 1px solid var(--rp-c-divider-light);
   border-radius: var(--xr-radius-pill);
@@ -348,11 +341,11 @@ html :where(a, button, input):focus-visible {
 
 .spectre-hero h1 {
   max-width: 760px;
-  margin: 26px 0 20px;
+  margin: 34px 0 24px;
   color: var(--rp-c-text-0);
-  font-size: clamp(38px, 4.4vw, 64px);
-  font-weight: 700;
-  line-height: 1.06;
+  font-size: clamp(42px, 5.2vw, 68px);
+  font-weight: 650;
+  line-height: 1.08;
   letter-spacing: -.055em;
   text-wrap: balance;
 }
@@ -362,7 +355,7 @@ html :where(a, button, input):focus-visible {
 }
 
 .spectre-home .spectre-lead {
-  max-width: 620px;
+  max-width: 550px;
   font-size: 18px;
   line-height: 1.65;
 }
@@ -371,7 +364,7 @@ html :where(a, button, input):focus-visible {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 24px 0 16px;
+  margin: 28px 0 14px;
 }
 
 .spectre-button {
@@ -413,30 +406,44 @@ html :where(a, button, input):focus-visible {
 
 .spectre-home .spectre-hero-note {
   color: var(--rp-c-text-3);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .spectre-start {
-  padding: 28px;
+  scroll-margin-top: 128px;
+}
+
+.spectre-start > p {
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--rp-c-divider-light);
+}
+
+.spectre-install-panel {
+  margin-top: 26px;
+  padding: 30px;
   border: 1px solid var(--rp-c-divider-light);
   border-radius: var(--xr-radius-panel);
   background: var(--rp-c-bg-soft);
-  scroll-margin-top: 128px;
 }
 
 .spectre-section-heading {
   align-items: end;
   flex-wrap: wrap;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .spectre-section-heading h2 {
-  margin-top: 6px;
+  margin-top: 10px;
   color: var(--rp-c-text-0);
-  font-size: clamp(23px, 2.4vw, 29px);
+  font-size: clamp(22px, 2.4vw, 28px);
   line-height: 1.25;
   letter-spacing: -.035em;
-  font-weight: 700;
+  font-weight: 600;
+}
+
+.spectre-start > p,
+.spectre-workflow > p {
+  font-size: 14px;
 }
 
 .spectre-text-link,
@@ -444,6 +451,9 @@ html :where(a, button, input):focus-visible {
   color: var(--rp-c-link);
   font-size: 13px;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .spectre-text-link:hover,
@@ -459,6 +469,16 @@ html :where(a, button, input):focus-visible {
   border-radius: var(--xr-radius);
   background: var(--rp-c-bg);
   text-align: left;
+}
+
+.spectre-start .rp-codeblock {
+  margin: 0 0 16px;
+}
+
+.spectre-start .rp-codeblock__title {
+  background: var(--xr-canvas);
+  border-bottom: 1px solid var(--xr-border);
+  font: 500 11px/1.5 var(--xr-font-mono);
 }
 
 .spectre-start .rp-codeblock__content {
@@ -505,11 +525,11 @@ html :where(a, button, input):focus-visible {
 }
 
 .spectre-workflow {
-  padding: 44px 0 36px;
+  padding: 52px 0 40px;
 }
 
 .spectre-workflow-list {
-  margin: 24px 0;
+  margin: 28px 0 24px;
   padding: 0;
   list-style: none;
 }
@@ -517,8 +537,8 @@ html :where(a, button, input):focus-visible {
 .spectre-workflow-list > li {
   display: grid;
   grid-template-columns: 36px minmax(0, 1fr);
-  gap: 18px;
-  padding: 22px 0 6px;
+  gap: 20px;
+  padding: 26px 0 10px;
   border-top: 1px solid var(--rp-c-divider-light);
 }
 
@@ -527,9 +547,10 @@ html :where(a, button, input):focus-visible {
   width: 34px;
   height: 34px;
   place-items: center;
-  border: 1px solid var(--rp-c-divider-light);
-  border-radius: 50%;
-  color: var(--rp-c-brand);
+  background: var(--xr-surface);
+  border: 1px solid var(--xr-border);
+  border-radius: 8px;
+  color: var(--xr-fg-muted);
   font: 600 11px/1 var(--rp-font-family-mono);
 }
 
@@ -561,17 +582,34 @@ html :where(a, button, input):focus-visible {
   letter-spacing: .035em;
 }
 
+.spectre-state--planned {
+  color: var(--xr-planned-fg);
+  background: var(--xr-planned-bg);
+}
+
+.spectre-state--review {
+  color: var(--xr-review-fg);
+  background: var(--xr-review-bg);
+}
+
 .spectre-state--accepted {
   color: var(--xr-success-fg);
   background: var(--xr-success-bg);
 }
 
 .spectre-callout {
-  padding: 18px 20px;
-  border: 1px solid var(--xr-border);
-  border-radius: var(--xr-radius-panel);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px;
+  border-radius: var(--xr-radius);
   background: var(--xr-surface);
   font-size: 13px;
+}
+
+.spectre-callout-mark {
+  color: var(--xr-link);
+  font: 400 24px/1.2 var(--xr-font-mono);
 }
 
 .spectre-callout strong {
@@ -583,25 +621,22 @@ html :where(a, button, input):focus-visible {
 .spectre-resources {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  border: 1px solid var(--xr-border);
-  border-radius: var(--xr-radius-panel);
-  overflow: hidden;
+  gap: 16px;
 }
 
 .spectre-resource {
   display: block;
   padding: 24px;
+  border: 1px solid var(--xr-border);
+  border-radius: var(--xr-radius-panel);
   background: var(--xr-panel);
   color: var(--rp-c-text-2);
   transition: background-color 120ms var(--xr-ease), border-color 120ms var(--xr-ease);
 }
 
-.spectre-resource + .spectre-resource {
-  border-left: 1px solid var(--xr-border);
-}
-
 .spectre-resource:hover {
-  background: var(--xr-chip);
+  background: var(--xr-surface);
+  border-color: var(--xr-border-strong);
 }
 
 .spectre-home .spectre-resource:focus-visible {
@@ -619,7 +654,7 @@ html :where(a, button, input):focus-visible {
 }
 
 .spectre-resource h2 {
-  margin: 22px 0 8px;
+  margin: 24px 0 8px;
   color: var(--rp-c-text-0);
   font-size: 19px;
   font-weight: 600;
@@ -635,7 +670,7 @@ html :where(a, button, input):focus-visible {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 16px;
-  margin-top: 36px;
+  margin-top: 40px;
   padding-top: 20px;
   border-top: 1px solid var(--rp-c-divider-light);
   color: var(--rp-c-text-3);
@@ -652,19 +687,16 @@ html :where(a, button, input):focus-visible {
   outline-offset: -3px;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 520px) {
+  .spectre-hero {
+    padding-top: 8px;
+  }
+
   .spectre-resources {
     grid-template-columns: 1fr;
   }
 
-  .spectre-resource + .spectre-resource {
-    border-left: 0;
-    border-top: 1px solid var(--xr-border);
-  }
-}
-
-@media (max-width: 520px) {
-  .spectre-start {
+  .spectre-install-panel {
     padding: 18px;
   }
 
@@ -675,6 +707,10 @@ html :where(a, button, input):focus-visible {
 
   .spectre-home .spectre-lead {
     font-size: 16px;
+  }
+
+  .spectre-workflow {
+    padding-top: 36px;
   }
 
   .spectre-workflow-list > li {

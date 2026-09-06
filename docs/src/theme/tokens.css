@@ -27,6 +27,10 @@ html:root {
   --xr-green-500: #15e4a3;
   --xr-green-900: #046635;
   --xr-green-950: #02421e;
+  --xr-orange-50: #fff4e6;
+  --xr-orange-300: #ffb88a;
+  --xr-orange-700: #995011;
+  --xr-orange-900: #331b07;
 
   --xr-font-sans: "-apple-system-body", "ui-sans-serif", "-apple-system", "system-ui", "Segoe UI", "Helvetica", "Apple Color Emoji", "Arial", "sans-serif", "Segoe UI Emoji", "Segoe UI Symbol";
   --xr-font-mono: "ui-monospace", "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", "monospace";
@@ -56,6 +60,10 @@ html:root {
   --xr-selection-fg: var(--xr-blue-500);
   --xr-success-bg: var(--xr-green-200);
   --xr-success-fg: var(--xr-green-950);
+  --xr-planned-bg: var(--xr-orange-50);
+  --xr-planned-fg: var(--xr-orange-700);
+  --xr-review-bg: var(--xr-blue-50);
+  --xr-review-fg: var(--xr-blue-700);
 }
 
 html:root:is(.rp-dark, .dark) {
@@ -77,4 +85,8 @@ html:root:is(.rp-dark, .dark) {
   --xr-selection-fg: var(--xr-white);
   --xr-success-bg: var(--xr-green-950);
   --xr-success-fg: var(--xr-green-500);
+  --xr-planned-bg: var(--xr-orange-900);
+  --xr-planned-fg: var(--xr-orange-300);
+  --xr-review-bg: var(--xr-blue-700);
+  --xr-review-fg: var(--xr-blue-50);
 }

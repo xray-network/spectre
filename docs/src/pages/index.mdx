@@ -11,45 +11,47 @@ import { CodeBlock } from '@rspress/core/theme';
 <div className="spectre-home rp-not-doc">
   <section className="spectre-hero" aria-labelledby="every-change-leaves-a-trace">
     <div className="spectre-eyebrow-row">
-      <span className="spectre-eyebrow"><span className="spectre-status-dot" />SPECTRE / Documentation</span>
+      <span className="spectre-eyebrow">A protocol for deliberate change</span>
       <a className="spectre-version" href="./protocol/">v1.0.0 <span aria-hidden="true">↗</span></a>
     </div>
 
-# Every change leaves a trace.
+    <h1 id="every-change-leaves-a-trace">A clear plan and record for every change.</h1>
 
-    <p className="spectre-lead">A Markdown protocol for planning, implementing, and reviewing changes with your coding agent.</p>
+    <p className="spectre-lead">Turn work with your coding agent into a clear sequence of plans, evidence, and decisions. All in your repository.</p>
     <div className="spectre-actions">
       <a className="spectre-button spectre-button--primary" href="#get-started">Get started <span aria-hidden="true">↓</span></a>
       <a className="spectre-button spectre-button--secondary" href="./commands">Explore commands <span aria-hidden="true">→</span></a>
     </div>
-    <p className="spectre-hero-note">Lives in your repository. Runs when you ask. Keeps you in control.</p>
+    <p className="spectre-hero-note">One Markdown protocol. Your existing coding agent.</p>
   </section>
 
   <section className="spectre-start" id="get-started" aria-labelledby="get-started-title">
     <div className="spectre-section-heading">
-      <div><span className="spectre-eyebrow">01 / Start here</span><h2 id="get-started-title">One prompt to get set up.</h2></div>
+      <div><span className="spectre-eyebrow">01 / Installation</span><h2 id="get-started-title">Start with a single prompt.</h2></div>
       <a className="spectre-text-link" href="./installation">Installation guide <span aria-hidden="true">↗</span></a>
     </div>
     <p>Open your repository in a coding agent, then copy and send this prompt.</p>
-    <CodeBlock title="Installation prompt" wrapCode>
-      <pre tabIndex={0}><code>Read https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v1.0.0 in this repository.</code></pre>
-    </CodeBlock>
-    <div className="spectre-install-result">
-      <span className="spectre-check" aria-hidden="true">✓</span>
-      <p>Your agent sets up the command skill and creates <code>SPECTRE.md</code> to track your work. Product code stays unchanged.</p>
+    <div className="spectre-install-panel">
+      <CodeBlock title="Copy into your coding agent" wrapCode>
+        <pre tabIndex={0}><code>Read https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v1.0.0 in this repository.</code></pre>
+      </CodeBlock>
+      <div className="spectre-install-result">
+        <span className="spectre-check" aria-hidden="true">✓</span>
+        <p>Your agent installs the command skill and creates your <code>SPECTRE.md</code> ledger.</p>
+      </div>
     </div>
   </section>
 
   <section className="spectre-workflow" aria-labelledby="first-change-title">
     <div className="spectre-section-heading">
-      <div><span className="spectre-eyebrow">02 / Your first change</span><h2 id="first-change-title">Plan it. Build it. Review it.</h2></div>
+      <div><span className="spectre-eyebrow">02 / The workflow</span><h2 id="first-change-title">From intent to a reviewed change.</h2></div>
     </div>
     <p>Run one command at a time. In Codex, use <code>$spectre</code> in place of <code>/spectre</code>.</p>
     <ol className="spectre-workflow-list">
       <li>
         <span className="spectre-step" aria-hidden="true">01</span>
         <div className="spectre-workflow-content">
-          <div className="spectre-workflow-title"><h3>Define the change</h3><span className="spectre-state">PLANNED</span></div>
+          <div className="spectre-workflow-title"><h3>Plan the change</h3><span className="spectre-state spectre-state--planned">PLANNED</span></div>
           <p>Ask for a bounded plan. Replace <code>api</code> with your repository slug or monorepo target.</p>
           <CodeBlock><pre tabIndex={0}><code>/spectre plan api: add a health endpoint</code></pre></CodeBlock>
         </div>
@@ -57,7 +59,7 @@ import { CodeBlock } from '@rspress/core/theme';
       <li>
         <span className="spectre-step" aria-hidden="true">02</span>
         <div className="spectre-workflow-content">
-          <div className="spectre-workflow-title"><h3>Implement the plan</h3><span className="spectre-state">REVIEW</span></div>
+          <div className="spectre-workflow-title"><h3>Implement the plan</h3><span className="spectre-state spectre-state--review">REVIEW</span></div>
           <p>Read the plan, then use its exact ID. Your agent implements, validates, and records the result.</p>
           <CodeBlock><pre tabIndex={0}><code>/spectre implement api/0002</code></pre></CodeBlock>
         </div>
@@ -71,18 +73,18 @@ import { CodeBlock } from '@rspress/core/theme';
         </div>
       </li>
     </ol>
-    <div className="spectre-callout"><strong>Only when you invoke it.</strong><p>Ordinary requests do not create SPECTRE records. Each new operation needs an explicit command; passing tests never means automatic acceptance.</p></div>
+    <div className="spectre-callout"><span className="spectre-callout-mark" aria-hidden="true">↳</span><div><strong>You make the final call.</strong><p>Each operation needs an explicit command. Passing tests does not automatically accept a change.</p></div></div>
   </section>
 
   <nav className="spectre-resources" aria-label="Explore SPECTRE documentation">
     <a className="spectre-resource" href="./commands">
-      <span className="spectre-resource-label">03 / Daily use <span aria-hidden="true">↗</span></span>
+      <span className="spectre-resource-label">REFERENCE <span aria-hidden="true">↗</span></span>
       <h2>Command reference</h2><p>Revise a change, check status, capture evidence, or archive completed work.</p>
     </a>
     <a className="spectre-resource" href="./protocol/">
-      <span className="spectre-resource-label">04 / The full standard <span aria-hidden="true">↗</span></span>
+      <span className="spectre-resource-label">SPECIFICATION <span aria-hidden="true">↗</span></span>
       <h2>Read the protocol</h2><p>Explore the workflows, evidence rules, and record formats behind SPECTRE.</p>
     </a>
   </nav>
-  <div className="spectre-home-footer"><span>Specification · Planning · Evidence · Change · Traceability · Review · Execution</span><a href="./versioning">About versions <span aria-hidden="true">→</span></a></div>
+  <div className="spectre-home-footer"><span>SPECTRE <span aria-hidden="true">/</span> A record of how your code changes.</span><a href="./versioning">About versions <span aria-hidden="true">→</span></a></div>
 </div>
