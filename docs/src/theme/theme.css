@@ -26,9 +26,11 @@ html:root {
   --rp-radius-small: var(--xr-radius);
   --rp-radius-large: var(--xr-radius-panel);
   --rp-sidebar-width: 265px;
-  --spectre-layout-width: 1240px;
+  --spectre-layout-width: 1440px;
   --spectre-layout-gutter: 24px;
-  --rp-content-padding-x: 32px;
+  --spectre-sidebar-bg: var(--xr-surface);
+  --spectre-sidebar-item: var(--xr-gray-500);
+  --rp-content-padding-x: 48px;
   --rp-outline-width: 200px;
   --rp-sidebar-margin-left: 0px;
   --rp-outline-margin-right: 0px;
@@ -42,6 +44,11 @@ html:root {
   --rp-shadow-3: none;
   --rp-shadow-4: none;
   --rp-shadow-5: none;
+}
+
+html:root:is(.rp-dark, .dark) {
+  --spectre-sidebar-bg: color-mix(in srgb, var(--xr-gray-900) 30%, var(--xr-black));
+  --spectre-sidebar-item: var(--xr-gray-400);
 }
 
 html,
@@ -142,12 +149,16 @@ html .rp-sidebar-section-header__left {
   font: inherit;
 }
 
+html .rp-doc-layout__sidebar {
+  background: var(--spectre-sidebar-bg);
+}
+
 html .rp-sidebar-item {
   min-height: 36px;
   padding: 6px 12px;
   margin-top: 2px;
   border-radius: 6px;
-  color: var(--xr-fg-secondary);
+  color: var(--spectre-sidebar-item);
   font-size: 13px;
   font-weight: 500;
   line-height: 24px;
@@ -155,13 +166,13 @@ html .rp-sidebar-item {
 
 html .rp-sidebar-item:hover,
 html .rp-sidebar-item--pending {
-  color: var(--xr-fg);
+  color: var(--xr-fg-secondary);
   background: var(--xr-chip);
 }
 
 html .rp-sidebar-item--active,
 html .rp-sidebar-item--active:hover {
-  color: var(--xr-selection-fg);
+  color: var(--xr-link);
   background: var(--xr-selection-bg);
   font-weight: 700;
 }
@@ -272,7 +283,7 @@ html :where(a, button, input):focus-visible {
     padding: 10px 8px;
     border: 0;
     border-radius: var(--xr-radius);
-    background: var(--xr-surface);
+    background: var(--spectre-sidebar-bg);
   }
 
   html .rp-doc-layout__sidebar > * {
