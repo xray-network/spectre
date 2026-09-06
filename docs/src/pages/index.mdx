@@ -1,4 +1,4 @@
-import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationPrompt } from '@rspress/core/theme';
+import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationPrompt, Link } from '@rspress/core/theme';
 
 <div className="spectre-home rp-not-doc">
   <section className="spectre-hero" aria-labelledby="every-change-leaves-a-trace">
@@ -19,7 +19,7 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
   <section className="spectre-start" id="get-started" aria-labelledby="get-started-title">
     <div className="spectre-section-heading">
       <div><span className="spectre-eyebrow">01 / Installation</span><h2 id="get-started-title" data-outline>Start with a single prompt</h2></div>
-      <a className="spectre-text-link" href="./installation">Installation guide <span aria-hidden="true">↗</span></a>
+      <Link className="spectre-text-link" href="/installation">Installation guide <span aria-hidden="true">↗</span></Link>
     </div>
     <p>Open your repository in a coding agent, then copy and send this prompt.</p>
     <div className="spectre-install-panel">
@@ -69,14 +69,14 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
   </section>
 
   <nav className="spectre-resources" aria-label="Explore SPECTRE documentation">
-    <a className="spectre-resource" href="./commands">
+    <Link className="spectre-resource" href="/commands">
       <span className="spectre-resource-label">REFERENCE <span aria-hidden="true">↗</span></span>
       <h2>Command reference</h2><p>Revise a change, check status, capture evidence, or archive completed work.</p>
-    </a>
-    <a className="spectre-resource" href="./protocol/">
+    </Link>
+    <Link className="spectre-resource" href="/protocol/">
       <span className="spectre-resource-label">SPECIFICATION <span aria-hidden="true">↗</span></span>
       <h2>Read the protocol</h2><p>Explore the workflows, evidence rules, and record formats behind SPECTRE.</p>
-    </a>
+    </Link>
   </nav>
-  <div className="spectre-home-footer"><span>SPECTRE <span aria-hidden="true">/</span> A record of how your code changes.</span><a href="./versioning">About versions <span aria-hidden="true">→</span></a></div>
+  <div className="spectre-home-footer"><span>SPECTRE <span aria-hidden="true">/</span> A record of how your code changes.</span><Link href="/versioning">About versions <span aria-hidden="true">→</span></Link></div>
 </div>

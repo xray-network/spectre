@@ -21,8 +21,9 @@ preserving references and implementation IDs.
 This release defines fresh installation only.
 
 The complete file contains marked runtime sections. Installation extracts shared rules and command
-modules; normal invocations load only their declared dependencies. Versioned runtime downloads are
-generated from the same source, with the pinned protocol's SHA-256 in each header.
+modules locally from the pinned protocol, with its SHA-256 in each header. Normal invocations load
+only their declared dependencies. Separate runtime downloads are not published; references to those
+optional downloads in v1.0.0 describe the earlier publishing setup. Local extraction is unchanged.
 
 Machine-readable release metadata is available from
 <a href="/spectre/protocol/index.json"><code>protocol/index.json</code></a>.

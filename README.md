@@ -90,10 +90,8 @@ the public current-release mirror and versioned raw assets directly from it. Thi
 repository does not install its own `.agents/` tracking or command structure; the v1 protocol
 instructs adopting repositories to create it during installation.
 
-The docs publisher also generates `protocol/v1.0.0/runtime/` downloads from the marked source.
-Generated runtime files live in build assets and adopting repositories, not as a second set of
-hand-maintained files in this source repository. Run `npm run test:protocol` from `docs/` to check
-extraction, invalid markers, shared rules, and routing coverage.
+Adopting repositories extract runtime modules locally from the pinned protocol during installation.
+The docs publisher does not generate separate runtime downloads.
 
 ## Documentation
 
