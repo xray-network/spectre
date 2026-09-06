@@ -12,7 +12,6 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
   if (!ctx || !baseCtx || !atlasCtx) return () => {}
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
-  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)")
   let { columns, rows, points } = createGrid(0, 0)
   let hoverStrength = new Float32Array(points.length)
   let hoverTargets = new Float32Array(points.length)
@@ -243,8 +242,8 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
     syncPlayback()
   }
   const onMove = (event: Event) => {
-    if (!canAnimate() || !finePointer.matches) return
-    const { clientX, clientY } = event as PointerEvent
+    const { clientX, clientY, isPrimary } = event as PointerEvent
+    if (!canAnimate() || isPrimary === false) return
     if (hasPointer && mouseX === clientX && mouseY === clientY) return
     hasPointer = true
     lastMove = performance.now()
@@ -253,7 +252,20 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
     hoverActive = hoverDirty = true
     wake()
   }
-  const onLeave = () => { hasPointer = false; hoverActive = false; hoverDirty = true; if (lastPaint || frame) wake() }
+  const onLeave = (event?: Event) => {
+    if ((event as PointerEvent | undefined)?.isPrimary === false) return
+    hasPointer = false
+    hoverActive = false
+    hoverDirty = true
+    if (lastPaint || frame) wake()
+  }
+  const onContact = (event: Event) => {
+    if ((event as PointerEvent).pointerType !== "mouse") onMove(event)
+  }
+  const onEndContact = (event: Event) => {
+    const { isPrimary, pointerType } = event as PointerEvent
+    if (isPrimary !== false && pointerType !== "mouse") onLeave()
+  }
   const onScroll = () => { boundsDirty = true; onLeave() }
   const intersection = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; syncPlayback() })
   const sizeObserver = new ResizeObserver(resize)
@@ -261,10 +273,13 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
   intersection.observe(hero)
   sizeObserver.observe(canvas)
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class", "style"] })
-  hero.addEventListener("pointermove", onMove)
+  // Passive pointer events support touch/pen without blocking native scrolling.
+  hero.addEventListener("pointerdown", onContact, { passive: true })
+  hero.addEventListener("pointermove", onMove, { passive: true })
+  hero.addEventListener("pointerup", onEndContact, { passive: true })
+  hero.addEventListener("pointercancel", onEndContact, { passive: true })
   hero.addEventListener("pointerleave", onLeave)
   reducedMotion.addEventListener("change", syncPlayback)
-  finePointer.addEventListener("change", onLeave)
   document.addEventListener("visibilitychange", syncPlayback)
   window.addEventListener("resize", resize)
   window.addEventListener("scroll", onScroll, true)
@@ -277,9 +292,11 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, background: HTMLCa
     sizeObserver.disconnect()
     themeObserver.disconnect()
     hero.removeEventListener("pointermove", onMove)
+    hero.removeEventListener("pointerdown", onContact)
+    hero.removeEventListener("pointerup", onEndContact)
+    hero.removeEventListener("pointercancel", onEndContact)
     hero.removeEventListener("pointerleave", onLeave)
     reducedMotion.removeEventListener("change", syncPlayback)
-    finePointer.removeEventListener("change", onLeave)
     document.removeEventListener("visibilitychange", syncPlayback)
     window.removeEventListener("resize", resize)
     window.removeEventListener("scroll", onScroll, true)

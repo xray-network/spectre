@@ -6,11 +6,12 @@ import ts from 'typescript'
 
 const heroDir = fileURLToPath(new URL('../src/theme/hero/', import.meta.url))
 
-function harness() {
+function harness({ finePointer = true } = {}) {
   let now = 0, nextId = 0, layoutReads = 0
   let rect = { left: 0, top: 0, width: 1000, height: 500 }
   let colors = { '--xr-fg-muted': '#55556d', '--xr-link': '#1940ed' }
   const frames = new Map(), timers = new Map(), events = new Map(), windowEvents = new Map(), documentEvents = new Map()
+  const eventOptions = new Map()
   const observers = [], extraCanvases = [], contexts = []
   const metric = { strokes: 0, fills: 0, images: 0, imagePixels: 0, clears: 0, clearPixels: 0 }
   const makeCanvas = () => {
@@ -37,9 +38,9 @@ function harness() {
     const c = { width: 300, height: 150, getContext: () => ctx, closest: () => hero, getBoundingClientRect: () => { layoutReads++; return rect } }
     ctx.canvas = c; contexts.push(ctx); return c
   }
-  const hero = { addEventListener: (k, fn) => events.set(k, fn), removeEventListener: k => events.delete(k) }
+  const hero = { addEventListener: (k, fn, options) => { events.set(k, fn); eventOptions.set(k, options) }, removeEventListener: k => { events.delete(k); eventOptions.delete(k) } }
   const foreground = makeCanvas(), background = makeCanvas()
-  const media = [false, true].map(matches => ({ matches, addEventListener(_, fn) { this.fn = fn }, removeEventListener() { delete this.fn } }))
+  const media = [false, finePointer].map(matches => ({ matches, addEventListener(_, fn) { this.fn = fn }, removeEventListener() { delete this.fn } }))
   const win = {
     devicePixelRatio: 2, matchMedia: q => media[q.includes('reduced') ? 0 : 1],
     addEventListener: (k, fn) => windowEvents.set(k, fn), removeEventListener: k => windowEvents.delete(k),
@@ -81,7 +82,7 @@ function harness() {
     const jobs = [...frames.values()]; frames.clear(); jobs.forEach(fn => fn(now))
   }
   return {
-    advance, cleanup, metric, contexts, foreground, background, extraCanvases, frames, timers, events, win,
+    advance, cleanup, metric, contexts, foreground, background, extraCanvases, frames, timers, events, eventOptions, win,
     get now() { return now }, get layoutReads() { return layoutReads },
     resetMetric() { for (const key in metric) metric[key] = 0 },
     setVisible(value) { observers[0].fn([{ isIntersecting: value }]) },
@@ -164,6 +165,39 @@ assert.equal(h.frames.size, 0, 'Offscreen pointer events are ignored')
 h.setVisible(true); assert.equal(h.frames.size, 1, 'Returning to view resumes ambient playback')
 h.cleanup(); h.assertClean(); assert.equal(atlas.width + atlas.height, 0, 'Sprite memory is released')
 
+// Touch-only devices activate on contact and movement, then fade on release or
+// browser cancellation (for example, when a gesture becomes page scrolling).
+for (const endEvent of ['pointerup', 'pointercancel']) {
+  const touch = harness({ finePointer: false })
+  touch.setVisible(true)
+  touch.advance(16)
+  touch.advance(5200)
+  assert.equal(touch.frames.size, 0, 'Touch test starts between ambient waves')
+  const contact = { pointerType: 'touch', isPrimary: true, clientX: 104, clientY: 124 }
+  touch.events.get('pointerdown')({ ...contact, isPrimary: false })
+  assert.equal(touch.frames.size, 0, 'Additional fingers do not start an effect')
+  touch.events.get('pointerdown')(contact)
+  touch.advance(5216)
+  assert(touch.contexts[0].painted.size > 0, 'Touch contact activates symbols without a fine pointer')
+  for (let i = 1; i <= 12; i++) {
+    touch.events.get('pointermove')({ ...contact, clientX: 104 + i % 2 })
+    touch.advance(5216 + i * 16)
+  }
+  const strongest = Math.max(...[...touch.contexts[0].painted.values()].map(mark => mark.alpha))
+  touch.events.get(endEvent)(contact)
+  touch.advance(5440)
+  assert(Math.max(...[...touch.contexts[0].painted.values()].map(mark => mark.alpha)) < strongest, `${endEvent} starts the fade`)
+  for (let time = 5456; time <= 7300; time += 16) touch.advance(time)
+  assert.equal(touch.contexts[0].painted.size, 0, `${endEvent} restores resting slashes`)
+  for (const event of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel']) {
+    assert.equal(touch.eventOptions.get(event).passive, true, `${event} allows native scrolling`)
+  }
+  touch.setReduced(true)
+  touch.events.get('pointerdown')(contact)
+  assert.equal(touch.frames.size, 0, 'Reduced motion also suppresses touch effects')
+  touch.cleanup(); touch.assertClean()
+}
+
 // Grid coordinates, slash dimensions and cached sprites must not scale with the viewport.
 const fixed = harness()
 fixed.setReduced(true)
@@ -194,4 +228,4 @@ for (const density of [1, 1.5, 2, 3]) {
   assert.equal(fixedAtlas.getContext('2d').lineWidth / ratio, .75, 'Cached symbols keep thin strokes across displays')
 }
 fixed.cleanup(); fixed.assertClean()
-console.log('Renderer checks passed: ambient waves, pointer symbol cycling, eased stop, sleep between waves, cached rendering, fixed size/density, theme, visibility and cleanup.')
+console.log('Renderer checks passed: ambient waves, mouse/touch interaction, touch release/cancellation, eased stop, sleep between waves, cached rendering, fixed size/density, theme, visibility and cleanup.')
