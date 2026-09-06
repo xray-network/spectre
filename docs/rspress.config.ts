@@ -22,7 +22,7 @@ export default defineConfig({
   route: { cleanUrls: true },
   themeConfig: {
     fallbackHeadingTitle: false,
-    darkMode: "auto",
+    darkMode: "dark",
     enableAppearanceAnimation: false,
     nav: [],
     sidebar: {

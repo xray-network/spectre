@@ -39,11 +39,11 @@ Use your repository slug, or a target in your monorepo, in place of `api`:
 /spectre plan api: add a health endpoint
 ```
 
-The agent creates a plan in `PLANNED` and stops. Read it, then run `implement` with the exact ID
-returned by the agent:
+The agent creates a plan in `PLANNED` and stops. Read it, then run `implement` with its ID or
+a clear description:
 
 ```text
-/spectre implement api/0002
+/spectre implement the health endpoint plan
 ```
 
 The agent implements the plan, runs its checks, and leaves the result in `REVIEW`. You then decide

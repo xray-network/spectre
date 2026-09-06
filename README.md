@@ -31,26 +31,35 @@ batch manifests under `.agents/spectre/archive/`.
 
 ```text
 /spectre plan <target>: <objective>
-/spectre implement <target>/<id>
-/spectre revise <target>/<id>: <changes>
-/spectre status <target>/<id>
+/spectre implement <record>
+/spectre revise <record>: <changes>
+/spectre status <record>
 /spectre list [target] [state] [--archived]
-/spectre validate [target/id]
-/spectre accept <target>/<id>: <proof>
-/spectre reject <target>/<id>: <proof>
-/spectre cancel <target>/<id>: <reason>
+/spectre validate [record]
+/spectre accept <record>: <proof>
+/spectre reject <record>: <proof>
+/spectre cancel <record>: <reason>
 /spectre archive [target]
 /spectre capture <provider>
 /spectre help [operation]
 ```
 
 `/spectre` is the cross-agent spelling. In Codex, invoke the repository skill with `$spectre` and
-the same arguments.
+the same arguments. Record selectors accept IDs or natural descriptions; target and provider
+selectors accept descriptions too. For example:
+
+```text
+/spectre implement the health endpoint plan
+/spectre reject last implementation: missing the required validation
+```
+
+The agent reports the resolved identity and asks when a match is ambiguous or a required decision
+reason is missing. Natural-language selectors work only inside an explicit command.
 
 `archive [target]` moves terminal implementations and their decision rows into a dated archive,
 clearing those rows from the active ledger. `PLANNED` and `REVIEW` stay active. Record contents,
 decision proofs, and reference identity are preserved; implementation IDs never restart. Use
-`list --archived` to browse history and `status <target>/<id>` to find a record in either location.
+`list --archived` to browse history and `status <record>` to find a record in either location.
 
 ## Repository layout
 

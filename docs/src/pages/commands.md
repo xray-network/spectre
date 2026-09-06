@@ -11,14 +11,14 @@ do not count as invocations. Each new operation requires a new explicit command.
 
 ```text
 /spectre plan <target>: <objective>
-/spectre implement <target>/<id>
-/spectre revise <target>/<id>: <changes>
-/spectre status <target>/<id>
+/spectre implement <record>
+/spectre revise <record>: <changes>
+/spectre status <record>
 /spectre list [target] [state] [--archived]
-/spectre validate [target/id]
-/spectre accept <target>/<id>: <proof>
-/spectre reject <target>/<id>: <proof>
-/spectre cancel <target>/<id>: <reason>
+/spectre validate [record]
+/spectre accept <record>: <proof>
+/spectre reject <record>: <proof>
+/spectre cancel <record>: <reason>
 /spectre archive [target]
 /spectre capture <provider>
 /spectre help [operation]
@@ -39,7 +39,55 @@ Installed state, immutable records, templates, and provider evidence live separa
 
 For example, `implement api/0002` is an ordinary request; `/spectre implement api/0002` explicitly
 starts the SPECTRE implementation workflow. In Codex, use `$spectre implement api/0002`.
-Missing or malformed required arguments produce syntax guidance without running another operation.
+Missing or ambiguous details pause the selected operation for clarification; malformed syntax
+produces guidance without running another operation.
+
+## Describe the target naturally
+
+`<record>` can be an exact ID such as `api/0002`, a unique title or description, or a reference
+such as `this implementation` or `last implementation`. Target and provider arguments also accept
+plain descriptions of a repository/package or existing provider contract.
+
+```text
+/spectre plan the backend service: add a health endpoint
+/spectre implement the health endpoint plan
+/spectre revise this implementation: cover the timeout case
+/spectre status last implementation
+/spectre list the frontend app REVIEW
+/spectre validate the login change
+/spectre accept this implementation: reviewed the diff and checks
+/spectre reject last implementation: missing the required validation
+/spectre cancel the old login plan: superseded by the new approach
+/spectre archive the backend service
+/spectre capture the payments provider
+```
+
+The agent resolves the description, reports its canonical ID or scope, and proceeds when the match
+is unique. If several records could match, it asks you to distinguish them by description or ID.
+An invalid exact ID never falls back to a similar record. Stored references always use canonical IDs.
+
+`last` means the latest created instruction: highest ID within a target, or the unique latest
+instruction `Created` timestamp across targets. Ties or missing chronology require clarification.
+`the one you just implemented` uses verified conversation context; `last implemented` requires
+actual completion-order evidence. The agent never skips an ineligible latest record to operate
+on an older one. For example, rejecting an accepted latest implementation is refused.
+
+Use a colon before the objective, changes, or decision reason. Natural phrasing also works when
+its meaning is clear:
+
+```text
+/spectre reject the login change because the timeout check is missing
+```
+
+`/spectre reject last implementation` is a valid request, but the agent still needs your rejection
+reason before recording the decision. You can provide it in a follow-up without repeating the
+command. An ambiguous selector or a missing reason never causes a guessed decision.
+
+Optional scope works as before: `list` and `archive` without a target cover all targets; `validate`
+without a record checks the whole installation. `archive` selects a whole target's terminal records,
+so a description of one implementation does not silently expand to its target. `help` takes an
+operation name. For `list`, keep the state and final `--archived` flag explicit; quote a target
+selector that would otherwise be read as a state, for example `/spectre list "review"`.
 
 ## Lifecycle boundaries
 
@@ -63,7 +111,8 @@ Missing or malformed required arguments produce syntax guidance without running 
 
 `archive` selects all targets; an optional target limits it to that existing target. Only
 `ACCEPTED`, `REJECTED`, and `CANCELLED` records move. `PLANNED` and `REVIEW` stay active. If no
-eligible records exist, the command changes nothing. An unknown target is an error.
+eligible records exist, the command changes nothing. An unknown or ambiguous supplied target
+requires clarification; it never becomes an all-target archive.
 
 Each batch lives at `.agents/spectre/archive/<archive-id>/`, using a UTC timestamp and a numeric
 suffix if needed to avoid collisions. It contains unchanged instruction and result files and an
