@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 
-export const installationPrompt = "Read https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v1.0.0 in this repository."
+export const installationPrompt = "Read https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md completely and install SPECTRE in this repository."
 
 export function CopyPromptButton() {
   const [status, setStatus] = useState<"idle" | "copying" | "copied" | "error">("idle")

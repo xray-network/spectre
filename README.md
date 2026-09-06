@@ -19,8 +19,12 @@ leave SPECTRE inactive: no tracking records, lifecycle actions, or operation-sel
 Ask a coding agent:
 
 ```text
-Read https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v1.0.0 in this repository.
+Read https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md completely and install SPECTRE in this repository.
 ```
+
+The mirror identifies the current release. The installer verifies its versioned canonical copy
+and pins that release locally; later mirror updates do not change existing installations.
+For a particular release, use its versioned URL and name that version in the prompt.
 
 The pinned standard installs as `.agents/spectre/SPECTRE-PROTOCOL.md`, with its command skill at
 `.agents/skills/spectre/SKILL.md`. Installation creates root `SPECTRE.md` as the adopting project's

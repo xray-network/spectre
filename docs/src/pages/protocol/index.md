@@ -1,7 +1,8 @@
 # Protocol releases
 
-Each published directory is immutable. Installations should use the complete versioned URL rather
-than a floating `latest` or major-version alias.
+Each published directory is immutable. Installation pins a complete versioned URL. The default
+prompt starts from the current-release mirror to discover that version; you can also choose a
+specific release directly.
 
 The <a href="/spectre/SPECTRE-PROTOCOL.md">current-release mirror</a> is convenient for reading and
 repository discovery. The build generates it directly from the latest versioned protocol source.

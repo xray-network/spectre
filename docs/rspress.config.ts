@@ -31,6 +31,7 @@ export default defineConfig({
         { text: "Overview", link: "/" },
         { text: "Installation", link: "/installation" },
         { text: "Commands", link: "/commands" },
+        { text: "Example repository", link: "/example" },
         { sectionHeaderText: "Reference" },
         { text: "Versioning", link: "/versioning" },
         { text: "Protocol releases", link: "/protocol/" },

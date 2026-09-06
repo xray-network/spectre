@@ -195,7 +195,29 @@ Installation is an explicit setup request that creates the command skill and the
 record. It does not activate SPECTRE for subsequent requests; after setup, the invocation rule
 in §1 governs every lifecycle operation.
 
-From the repository root, create the tracking directory and download this file:
+Default installation prompt:
+
+```text
+Read https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md completely and install SPECTRE in this repository.
+```
+
+The current-release mirror is an entry point for fresh installation, not the installed source of
+authority. Before writing installation files, resolve the document's `Standard-Version` and
+`Canonical-URL`. Require `Standard-ID: xray/spectre` and the matching versioned URL
+`https://wiki.xraynetwork.io/spectre/protocol/v<Standard-Version>/SPECTRE-PROTOCOL.md`. Fetch that
+canonical release and require its bytes and metadata to match the document that initiated this
+installation. If they differ or the pinned release cannot be retrieved, report the mismatch or
+failure without installing another version. Do not switch versions by rereading the moving mirror.
+Install the canonical bytes locally and derive every runtime file, template, and bootstrap record
+from that same pinned release. Report the resolved version and canonical URL on completion.
+
+An explicit versioned URL or version request takes precedence over the mirror; never substitute
+the latest release for a requested version. A manually downloaded versioned protocol can be used
+directly. Later mirror updates do not change installed rules. Repeated installation follows the
+existing idempotency and conflict rules; the default prompt does not authorize an upgrade or
+migration of an existing installation.
+
+To download this specific release manually, run from the repository root:
 
 ```sh
 mkdir -p .agents/spectre

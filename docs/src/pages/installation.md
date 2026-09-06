@@ -8,10 +8,13 @@ protocol, the command skill, and the files that track your work.
 Copy and send this prompt to your agent:
 
 ```text wrapCode
-Read https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v1.0.0 in this repository.
+Read https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md completely and install SPECTRE in this repository.
 ```
 
-The agent inspects your repository, chooses the appropriate storage layout, and creates the
+The agent resolves the mirror's declared version, verifies the matching canonical release, and
+pins that copy locally. Later mirror updates do not change your installed protocol.
+
+It inspects your repository, chooses the appropriate storage layout, and creates the
 accepted installation record. It does not modify product source.
 
 It also extracts compact runtime files from marked sections of the protocol. Later commands load
@@ -90,10 +93,23 @@ Completed work can later move into dated batches under `.agents/spectre/archive/
 [archive command](./commands#archive-completed-work). That directory is created by the first
 nonempty archive operation.
 
+[See a populated repository tree and its matching SPECTRE.md ledger →](./example)
+
 Runtime files contain a version and source hash. Commands check these against the pinned protocol;
 full validation checks that every module exactly matches its source blocks. A missing or stale
 module is reported without an automatic repair or protocol update. Do not edit generated modules
 independently; this release still defines fresh installation, without record migrations.
+
+## Install a specific version
+
+To choose a release explicitly, use its versioned URL and include the version in your request:
+
+```text wrapCode
+Read https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v1.0.0 in this repository.
+```
+
+An explicitly requested version takes precedence over the current-release mirror. Neither prompt
+automatically upgrades or migrates an existing installation.
 
 ## Manual download
 
