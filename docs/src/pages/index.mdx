@@ -6,26 +6,22 @@ outline: false
 footer: false
 ---
 
-import { CodeBlock, HeroArtwork } from '@rspress/core/theme';
+import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationPrompt } from '@rspress/core/theme';
 
 <div className="spectre-home rp-not-doc">
   <section className="spectre-hero" aria-labelledby="every-change-leaves-a-trace">
-    <HeroArtwork />
-    <div className="spectre-eyebrow-row">
-      <span className="spectre-eyebrow">A protocol for deliberate change</span>
-      <a className="spectre-version" href="./protocol/">v1.0.0 <span aria-hidden="true">↗</span></a>
-    </div>
-
     <div className="spectre-hero-grid">
+      <HeroArtwork />
       <div className="spectre-hero-copy">
         <h1 id="every-change-leaves-a-trace">A clear plan and record for every change.</h1>
         <p className="spectre-lead">Turn work with your coding agent into a clear sequence of plans, evidence, and decisions. All in your repository.</p>
         <div className="spectre-actions">
           <a className="spectre-button spectre-button--primary" href="#get-started">Get started <span aria-hidden="true">↓</span></a>
-          <a className="spectre-button spectre-button--secondary" href="./commands">Explore commands <span aria-hidden="true">→</span></a>
+          <CopyPromptButton />
         </div>
         <p className="spectre-hero-note">One Markdown protocol. Your existing coding agent.</p>
       </div>
+      <HeroDiagram />
     </div>
   </section>
 
@@ -37,7 +33,7 @@ import { CodeBlock, HeroArtwork } from '@rspress/core/theme';
     <p>Open your repository in a coding agent, then copy and send this prompt.</p>
     <div className="spectre-install-panel">
       <CodeBlock title="Copy into your coding agent" wrapCode>
-        <pre tabIndex={0}><code>Read https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v1.0.0 in this repository.</code></pre>
+        <pre tabIndex={0}><code>{installationPrompt}</code></pre>
       </CodeBlock>
       <div className="spectre-install-result">
         <span className="spectre-check" aria-hidden="true">✓</span>

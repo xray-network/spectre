@@ -33,7 +33,8 @@ export default defineConfig({
         { text: "Commands", link: "/commands" },
         { sectionHeaderText: "Reference" },
         { text: "Versioning", link: "/versioning" },
-        { text: "Protocol releases", link: "/protocol/" }
+        { text: "Protocol releases", link: "/protocol/" },
+        { text: "v1.0.0", link: "/protocol/", context: "spectre-version" }
       ]
     }
   }

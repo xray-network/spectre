@@ -15,4 +15,6 @@ export function Layout(props: LayoutProps) {
 }
 
 export * from "@rspress/core/theme-original"
-export { HeroArtwork } from "./HeroArtwork"
+export { HeroArtwork } from "./hero/HeroArtwork"
+export { HeroDiagram } from "./hero/HeroDiagram"
+export { CopyPromptButton, installationPrompt } from "./CopyPromptButton"
