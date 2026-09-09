@@ -21,8 +21,8 @@ It also extracts compact runtime files from marked sections of the protocol. Lat
 shared rules and their own operation files instead of rereading the complete specification.
 Required source, evidence, and validation checks still apply.
 
-SPECTRE 1.0.0 is the initial release. It defines fresh installation only and uses a pinned
-protocol file, so a remote page cannot silently change your repository's rules.
+SPECTRE 1.0.0 is still in development. It defines installation and explicit development adoption
+rules and pins the protocol locally, so remote edits cannot silently change your repository’s rules.
 
 ## 2. Check the setup
 
@@ -34,9 +34,9 @@ Ask for the command reference:
 
 **Using Codex?** Use `$spectre` instead of `/spectre` for every command, for example `$spectre help`.
 
-You can also run `/spectre validate` to check the installed structure. Installing SPECTRE does not
-enable automatic tracking: ordinary requests stay outside its workflows until you explicitly
-invoke a command.
+The installer validates the complete structure automatically before reporting success. Installing
+SPECTRE does not enable automatic tracking. Start with a command; after plans are identified, a direct human
+implementation follow-up can authorize that bounded work. Other ordinary requests stay outside it.
 
 ## 3. Plan your first change
 
@@ -54,7 +54,10 @@ a clear description:
 ```
 
 The agent implements the plan, runs its checks, and leaves the result in `REVIEW`. You then decide
-whether to accept, reject, or request a revision. Each operation requires its own command.
+whether to accept, reject, or request a revision, using their separate commands. Once plans are
+identified, you may also say "implement these one by one": the agent resolves a fixed batch and
+completes each item's tests, result and REVIEW update before the next. It stops at blockers and
+records partial work, so source changes and tracking cannot be reported complete separately.
 
 [Continue to the command reference →](./commands)
 
@@ -72,6 +75,7 @@ SPECTRE.md                    # active implementation ledger
     │   ├── core.md           # shared authority and lifecycle rules
     │   ├── selectors.md      # natural-language target resolution
     │   ├── references.md     # active/archive record links
+    │   ├── validation.md     # internal checks used by workflows
     │   └── commands/
     │       ├── help.md
     │       ├── list.md
@@ -81,8 +85,7 @@ SPECTRE.md                    # active implementation ledger
     │       ├── revise.md
     │       ├── decide.md     # accept, reject, cancel
     │       ├── capture.md
-    │       ├── archive.md
-    │       └── validate.md
+    │       └── archive.md
     ├── templates/
     ├── implementations/      # instructions and results
     └── providers/            # optional external evidence

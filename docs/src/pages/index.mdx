@@ -37,7 +37,7 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
     <div className="spectre-section-heading">
       <div><span className="spectre-eyebrow">02 / The workflow</span><h2 id="first-change-title" data-outline>From intent to a reviewed change</h2></div>
     </div>
-    <p>Run one command at a time. In Codex, use <code>$spectre</code> in place of <code>/spectre</code>.</p>
+    <p>Authorize each stage when you are ready. Implement selected plans one by one in a single batch. In Codex, use <code>$spectre</code> in place of <code>/spectre</code>.</p>
     <p>Describe targets and changes in your own words. Direct target slugs such as <code>api</code> and record IDs such as <code>api/0002</code> also work.</p>
     <ol className="spectre-workflow-list">
       <li>
@@ -52,7 +52,7 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
         <span className="spectre-step" aria-hidden="true">02</span>
         <div className="spectre-workflow-content">
           <div className="spectre-workflow-title"><h3>Implement the plan</h3><span className="spectre-state spectre-state--review">REVIEW</span></div>
-          <p>Read the plan, then ask your agent to implement it by description. It validates the changes and records the result.</p>
+          <p>Read the plans, then ask your agent to implement one or a selected batch. It finishes validation, the result, and the REVIEW update for each item before the next.</p>
           <CodeBlock><pre tabIndex={0}><code>/spectre implement the health endpoint plan</code></pre></CodeBlock>
         </div>
       </li>
@@ -65,7 +65,7 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
         </div>
       </li>
     </ol>
-    <div className="spectre-callout"><span className="spectre-callout-mark" aria-hidden="true">↳</span><div><strong>You make the final call.</strong><p>Each operation needs an explicit command. Passing tests does not automatically accept a change.</p></div></div>
+    <div className="spectre-callout"><span className="spectre-callout-mark" aria-hidden="true">↳</span><div><strong>You make the final call.</strong><p>A direct “implement these one by one” follow-up can authorize identified plans. Decisions still need your explicit command and proof; passing tests does not accept a change.</p></div></div>
   </section>
 
   <nav className="spectre-resources" aria-label="Explore SPECTRE documentation">

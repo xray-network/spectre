@@ -6,9 +6,10 @@
   "packageManager": "npm@10.8.2",
   "scripts": {
     "protocol:publish": "node scripts/publish-protocol.mjs",
+    "check:protocol": "node scripts/check-protocol.mjs",
     "predev": "npm run protocol:publish",
     "dev": "rspress dev --host 0.0.0.0 --port 10007",
-    "prebuild": "npm run protocol:publish",
+    "prebuild": "npm run check:protocol && npm run protocol:publish",
     "build": "rspress build",
     "test:renderer": "node scripts/test-hero-renderer.mjs",
     "deploy": "npm run build && wrangler deploy",
