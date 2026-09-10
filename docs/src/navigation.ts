@@ -16,7 +16,7 @@ export const documentationSections = [
       { sectionHeaderText: "Reference" },
       { text: "Versioning", link: "/versioning" },
       { text: "Protocol releases", link: "/protocol/" },
-      { text: "v1.0.0", link: "/protocol/", context: "spectre-version" }
+      { text: "v1.0.0", link: "/protocol/", context: "spectre-version" },
     ]
   }
 ] satisfies { text: string; href: string; paths: string[]; icon: string; sidebar: Sidebar[string] }[]

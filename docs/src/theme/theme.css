@@ -36,6 +36,7 @@ html:root {
   --spectre-sidebar-bg: var(--xr-surface);
   --spectre-sidebar-item: var(--xr-gray-500);
   --spectre-symbol-color: var(--xr-blue-500);
+  --spectre-external-link-icon: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20fill='none'%20viewBox='0%200%2024%2024'%20stroke='%23000'%20stroke-width='1.6'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m12%205-7%207%207%207M5%2012h14'/%3E%3C/svg%3E");
   --rp-content-padding-x: 48px;
   --rp-content-padding-y: 64px;
   --rp-outline-width: 200px;
@@ -195,6 +196,23 @@ html .rp-nav__title__logo {
 html .rp-nav__title__logo-image {
   width: 32px;
   height: 32px;
+}
+
+/* Reuse the Back to Wiki arrow, rotated to mark external destinations. */
+html .rp-nav-menu a[target="_blank"]::after,
+html .rp-sidebar-item.rp-link[target="_blank"]::after,
+html .rp-nav-screen-menu-item.rp-link[target="_blank"] .rp-nav-screen-menu-item__left::after {
+  content: "";
+  display: inline-block;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  margin: 0 0 0 6px;
+  background-color: currentColor;
+  transform: rotate(135deg);
+  vertical-align: -2px;
+  -webkit-mask: var(--spectre-external-link-icon) center / contain no-repeat;
+  mask: var(--spectre-external-link-icon) center / contain no-repeat;
 }
 
 html .rp-search-button {

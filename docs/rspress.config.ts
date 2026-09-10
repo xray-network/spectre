@@ -13,6 +13,10 @@ export default defineConfig({
   logo: "/xray-blue.svg",
   logoText: "SPECTRE",
   description: "Evidence-backed implementation protocol for humans and coding agents.",
+  i18nSource: source => ({
+    ...source,
+    editLinkText: { ...source.editLinkText, en: "Edit on GitHub" }
+  }),
   head: [
     ["meta", { property: "og:type", content: "website" }],
     ["meta", { property: "og:title", content: "SPECTRE — Every change leaves a trace" }],
@@ -27,6 +31,16 @@ export default defineConfig({
     fallbackHeadingTitle: false,
     darkMode: "dark",
     enableAppearanceAnimation: false,
+    editLink: {
+      docRepoBaseUrl: "https://github.com/xray-network/spectre/edit/main/docs/src/pages"
+    },
+    socialLinks: [
+      {
+        icon: "github",
+        mode: "link",
+        content: "https://github.com/xray-network/spectre"
+      }
+    ],
     nav: [
       {
         text: "Back to Wiki",
@@ -34,11 +48,6 @@ export default defineConfig({
         icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 5-7 7 7 7M5 12h14"/></svg>',
         position: "left"
       },
-      {
-        text: "GitHub",
-        link: "https://github.com/xray-network/spectre",
-        position: "right"
-      }
     ],
     sidebar: Object.fromEntries(
       documentationSections.flatMap(({ paths, sidebar }) =>
