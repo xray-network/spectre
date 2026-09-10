@@ -69,9 +69,9 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
         <span className="spectre-step" aria-hidden="true">03</span>
         <div className="spectre-workflow-content">
           <div className="spectre-workflow-title"><h3>Make the final decision</h3><span className="spectre-state spectre-state--accepted">ACCEPTED</span></div>
-          <p>Review the source changes, result, and checks. Accept or reject the work with your decision proof. Your agent updates only the matching row in <code>SPECTRE.md</code>; the instruction and result remain as the permanent record.</p>
+          <p>Review the source changes, results, and checks. Accept or reject one or a bounded set with decision proof that applies to every selected implementation. Your agent updates only their matching rows in <code>SPECTRE.md</code>; instructions and results remain as the permanent record.</p>
           <p className="spectre-workflow-output"><strong>Produced:</strong> decision proof in the ledger row <span aria-hidden="true">→</span> <code>ACCEPTED</code> or <code>REJECTED</code></p>
-          <CodeBlock><pre tabIndex={0}><code>/spectre accept 0002</code></pre></CodeBlock>
+          <CodeBlock><pre tabIndex={0}><code>/spectre accept 0002: reviewed the result and checks</code></pre></CodeBlock>
         </div>
       </li>
     </ol>

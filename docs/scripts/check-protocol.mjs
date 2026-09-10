@@ -44,19 +44,28 @@ for (const [name, bodies] of blocks) {
 
 // These dependencies must remain inside the modules loaded by the router.
 for (const [name, heading] of [
-  ["core.md", "### Authorization and continuation"],
+  ["core.md", "### Authorization, compound queues, and continuation"],
   ["selectors.md", "### Implementation batch selectors"],
+  ["selectors.md", "### Decision batch selectors"],
   ["commands/implement.md", "### Sequential batch execution"],
+  ["commands/decide.md", "### Decision workflow"],
   ["references.md", "### Pinned provider evidence"],
   ["references.md", "### Explicit development-layout adoption"],
   ["commands/capture.md", "### Publish a numbered incremental capture"],
   ["validation.md", "## 13. Validation invariants"]
 ]) assert.ok(runtime.get(name).includes(heading), `${name} is missing ${heading}`)
 assert.ok(runtime.get("commands/help.md").includes("/spectre implement --batch <records>"))
+assert.ok(runtime.get("commands/help.md").includes("queue multiple explicitly"))
+assert.ok(runtime.get("commands/help.md").includes("bounded eligible record set"))
+assert.ok(runtime.get("core.md").includes("non-decision operations in one natural-language request"))
+assert.ok(runtime.get("core.md").includes("`accept`, `reject`, and `cancel` are never queue items"))
+assert.ok(runtime.get("commands/decide.md").includes("one root\n`SPECTRE.md` ledger edit"))
+assert.ok(runtime.get("commands/capture.md").includes("### Compound-queue provider preparation"))
 
 const skill = /````markdown\n(---\nname: spectre\n[\s\S]+?)\n````/.exec(source)?.[1]
 assert.ok(skill, "missing installable skill")
-assert.ok(skill.includes("direct implementation follow-up"), "router must recognize bounded continuation")
+assert.ok(skill.includes("explicit natural-language operation queues"), "router must recognize compound queues")
+assert.ok(skill.includes("direct continuations"), "router must recognize bounded continuation")
 assert.ok(skill.includes("core.md") && skill.includes("selectors.md"), "router must load authorization and scope rules")
 for (const template of ["IMPL", "STATUS", "PROVIDER"]) {
   assert.equal(source.split(`### \`.agents/spectre/templates/TEMPLATE_${template}.md\``).length - 1, 1,

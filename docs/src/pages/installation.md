@@ -35,8 +35,9 @@ Ask for the command reference:
 **Using Codex?** Use `$spectre` instead of `/spectre` for every command, for example `$spectre help`.
 
 The installer validates the complete structure automatically before reporting success. Installing
-SPECTRE does not enable automatic tracking. Start with a command; after plans are identified, a direct human
-implementation follow-up can authorize that bounded work. Other ordinary requests stay outside it.
+SPECTRE does not enable automatic tracking. Start with a command or explicitly direct SPECTRE to
+queue multiple non-decision operations; after work is identified, a direct human continuation can
+resume that bounded scope. Other ordinary requests stay outside it.
 
 ## 3. Plan your first change
 
@@ -57,13 +58,18 @@ The agent implements the plan, runs its checks, and leaves the result in `REVIEW
 the changes and validation, accept it with your decision proof:
 
 ```text
-/spectre accept 0002
+/spectre accept 0002: reviewed the result and required checks
 ```
 
-You can instead reject the result or request a revision using their separate commands. Once plans are
-identified, you may also say "implement these one by one": the agent resolves a fixed batch and
-completes each item's tests, result and REVIEW update before the next. It stops at blockers and
-records partial work, so source changes and tracking cannot be reported complete separately.
+You can instead reject the result or request a revision using their separate commands. One accept,
+reject, or cancel command may select a bounded set when its proof or reason applies to every record.
+Decisions never enter an operation queue.
+
+Once plans are identified, you may also say "implement these one by one": the agent resolves a fixed
+batch and completes each item's tests, result and REVIEW update before the next. Or explicitly direct
+SPECTRE to queue capture, planning and implementation in one natural-language request. It reports
+the normalized operations and resolves earlier outputs before dependent items. It stops at blockers
+and records partial work, so source changes and tracking cannot be reported complete separately.
 
 [Continue to the command reference →](./commands)
 

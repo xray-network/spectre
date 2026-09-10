@@ -5,9 +5,11 @@
 SPECTRE is a Markdown-only protocol that connects a bounded implementation plan to its declared
 evidence, source changes, validation, and final human decision.
 
-After installation, start SPECTRE with an explicit command. Direct implementation follow-ups to
-identified plans, such as "implement these one by one", also run the complete tracked workflow.
-Other ordinary requests leave SPECTRE inactive. Planning never starts implementation automatically.
+After installation, start SPECTRE with an explicit command or explicitly direct SPECTRE to perform
+a natural-language queue of non-decision operations. Direct continuations of identified work, such
+as "implement these one by one" or "continue the queue", also run the bounded tracked workflow.
+Other ordinary requests leave SPECTRE inactive. Planning never starts implementation unless the
+human separately states it as a later queue item.
 
 ## Published resources
 
@@ -48,9 +50,9 @@ as separate summaries. Missing or stale modules block a command without an impli
 /spectre revise <record>: <changes>
 /spectre status <record>
 /spectre list [target] [state] [--archived]
-/spectre accept <record>: <proof>
-/spectre reject <record>: <proof>
-/spectre cancel <record>: <reason>
+/spectre accept <records>: <proof>
+/spectre reject <records>: <proof>
+/spectre cancel <records>: <reason>
 /spectre archive [target]
 /spectre capture <provider>
 /spectre help [operation]
@@ -65,13 +67,28 @@ selectors accept descriptions too. For example:
 /spectre reject last implementation: missing the required validation
 ```
 
-The agent reports the resolved identity and asks when a match is ambiguous or a required decision
+The agent reports resolved identities and asks when a match is ambiguous or a required decision
 reason is missing. A bounded implementation follow-up uses the same selector and workflow rules.
 For a fixed batch, use `/spectre implement --batch typescript/0025..0029`, a comma-separated list
 of qualified IDs, or `/spectre implement the plans just listed one by one`. The agent reports the
 resolved order, then implements, validates, writes a result and updates REVIEW for each item before
-the next. It stops on blockers, records partial progress, and can resume existing changes. No batch
-authorizes acceptance, new plans, capture, or arbitrary combinations of operations.
+the next. It stops on blockers, records partial progress, and can resume existing changes.
+
+An explicit prompt such as `Spectre: capture provider2, create and capture provider3 from <GitHub
+URL>, create the needed plans, then implement all plans created by this request` is normalized into
+a fixed queue of separately bounded operations. The agent reports its order and deferred output
+bindings before mutation, completes each workflow before the next, and stops with exact remaining
+items on a blocker. This is a protocol rule, not a new command or lifecycle state. Accept, reject,
+and cancel cannot appear in a queue.
+
+A separate decision command can select one record, comma-separated IDs, a target-local range, or a
+bounded plural description. The full set is checked before one all-or-nothing ledger edit, and the
+same human proof or reason must apply to every selected record. For example:
+
+```text
+/spectre accept api/0004, api/0005: reviewed both results and their required checks
+/spectre cancel the three migration plans just listed: superseded by the new design
+```
 
 `PROVIDER.md` is unversioned information about the provider, official sources, tracking and summary
 requirements. Each immutable numbered capture has a `SNAPSHOT.md` specification and `CAPTURE.md`
@@ -79,11 +96,13 @@ summary. The first `artifacts/` contains the full selected baseline; later captu
 or changed bytes. Their complete inventory points unchanged entries directly to earlier files.
 Removed evidence disappears from the new inventory while its historical files remain available.
 
-`capture` detects upstream changes, verifies evidence and publishes only when needed. A no-change
+`capture` detects upstream changes, verifies evidence and publishes only when needed. A compound
+queue may explicitly prepare a missing provider guide from a human-supplied authoritative source
+immediately before capturing it; ordinary capture still requires an existing guide. A no-change
 capture creates no folder or summary. Validation runs automatically inside the workflows; it does
 not require a separate command. Plans pin a numbered snapshot and hashes, including resolved earlier artifacts; a separate
 Git commit is not a protocol prerequisite. Capture, planning and implementation remain separate
-human-triggered operations. See [provider captures](docs/src/pages/commands.md#provider-captures).
+human-triggered operations even when queued together. See [provider captures](docs/src/pages/commands.md#provider-captures).
 
 `archive [target]` moves terminal implementations and their decision rows into a dated archive,
 clearing those rows from the active ledger. `PLANNED` and `REVIEW` stay active. Record contents,
