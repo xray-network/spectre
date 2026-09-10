@@ -16,9 +16,16 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
     </div>
   </section>
 
+  <section className="spectre-about" aria-labelledby="about-spectre-title">
+    <div className="spectre-section-heading">
+      <div><span className="spectre-eyebrow">01 / What is SPECTRE</span><h2 id="about-spectre-title" data-outline>A clear record for every change</h2></div>
+    </div>
+    <p>SPECTRE is a Markdown-only protocol that keeps work with coding agents clear and reviewable. For example, when you ask an agent to plan a <code>/health</code> endpoint, SPECTRE records the scope and required checks in <code>0002-IMPL-INSTR.md</code>. When you then ask the agent to implement the change, it updates the source and tests, runs the required checks, and produces <code>0002-IMPL-RESULT.md</code> with the files changed and actual test results. The root <code>SPECTRE.md</code> ledger tracks the change as it moves from <code>PLANNED</code> to <code>REVIEW</code> and, after your decision, <code>ACCEPTED</code> or <code>REJECTED</code>. These Markdown files stay beside the code, giving reviewers a durable account of what was requested, what the agent changed, how it was validated, and who approved it.</p>
+  </section>
+
   <section className="spectre-start" id="get-started" aria-labelledby="get-started-title">
     <div className="spectre-section-heading">
-      <div><span className="spectre-eyebrow">01 / Installation</span><h2 id="get-started-title" data-outline>Start with a single prompt</h2></div>
+      <div><span className="spectre-eyebrow">02 / Installation</span><h2 id="get-started-title" data-outline>Start with a single prompt</h2></div>
       <Link className="spectre-text-link" href="/installation">Installation guide <span aria-hidden="true">↗</span></Link>
     </div>
     <p>Open your repository in a coding agent, then copy and send this prompt.</p>
@@ -35,37 +42,38 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
 
   <section className="spectre-workflow" id="first-change" aria-labelledby="first-change-title">
     <div className="spectre-section-heading">
-      <div><span className="spectre-eyebrow">02 / The workflow</span><h2 id="first-change-title" data-outline>From intent to a reviewed change</h2></div>
+      <div><span className="spectre-eyebrow">03 / The workflow</span><h2 id="first-change-title" data-outline>Plan, implement, and approve a change</h2></div>
     </div>
-    <p>Authorize each stage when you are ready. Implement selected plans one by one in a single batch. In Codex, use <code>$spectre</code> in place of <code>/spectre</code>.</p>
-    <p>Describe targets and changes in your own words. Direct target slugs such as <code>api</code> and record IDs such as <code>api/0002</code> also work.</p>
+    <p>Each command leaves a clear record in your repository’s root <code>SPECTRE.md</code> ledger. Describe targets and changes in your own words; target slugs such as <code>api</code> and record IDs such as <code>api/0002</code> also work. The example below uses the flat layout; in a monorepo, implementation files live under <code>.agents/spectre/implementations/&lt;target&gt;/</code>. In Codex, use <code>$spectre</code> in place of <code>/spectre</code>.</p>
     <ol className="spectre-workflow-list">
       <li>
         <span className="spectre-step" aria-hidden="true">01</span>
         <div className="spectre-workflow-content">
           <div className="spectre-workflow-title"><h3>Plan the change</h3><span className="spectre-state spectre-state--planned">PLANNED</span></div>
-          <p>Describe where the change belongs and what you want to achieve. Your agent creates a bounded plan.</p>
-          <CodeBlock><pre tabIndex={0}><code>/spectre plan the backend service: add a health endpoint</code></pre></CodeBlock>
+          <p>Describe where the change belongs and what you want to achieve. Your agent creates <code>.agents/spectre/implementations/0002-IMPL-INSTR.md</code> with the bounded plan, then adds its row to the root <code>SPECTRE.md</code> ledger. No result file or product source is changed yet.</p>
+          <p className="spectre-workflow-output"><strong>Produced:</strong> instruction file + ledger row <span aria-hidden="true">→</span> <code>PLANNED</code></p>
+          <CodeBlock><pre tabIndex={0}><code>/spectre plan the backend service add a health endpoint</code></pre></CodeBlock>
         </div>
       </li>
       <li>
         <span className="spectre-step" aria-hidden="true">02</span>
         <div className="spectre-workflow-content">
           <div className="spectre-workflow-title"><h3>Implement the plan</h3><span className="spectre-state spectre-state--review">REVIEW</span></div>
-          <p>Read the plans, then ask your agent to implement one or a selected batch. It finishes validation, the result, and the REVIEW update for each item before the next.</p>
-          <CodeBlock><pre tabIndex={0}><code>/spectre implement the health endpoint plan</code></pre></CodeBlock>
+          <p>Your agent changes the product source and tests, runs the required checks, and creates <code>.agents/spectre/implementations/0002-IMPL-RESULT.md</code>. It links that result from <code>SPECTRE.md</code> and moves the row to <code>REVIEW</code>. If work is blocked, the result records the partial work and the row stays <code>PLANNED</code>.</p>
+          <p className="spectre-workflow-output"><strong>Produced:</strong> source changes + result file + updated ledger row <span aria-hidden="true">→</span> <code>REVIEW</code></p>
+          <CodeBlock><pre tabIndex={0}><code>/spectre implement 0002</code></pre></CodeBlock>
         </div>
       </li>
       <li>
         <span className="spectre-step" aria-hidden="true">03</span>
         <div className="spectre-workflow-content">
           <div className="spectre-workflow-title"><h3>Make the final decision</h3><span className="spectre-state spectre-state--accepted">ACCEPTED</span></div>
-          <p>Review the result and checks. Accept with your own decision proof, or request a revision.</p>
-          <CodeBlock><pre tabIndex={0}><code>/spectre accept the health endpoint change: reviewed the changes and validation</code></pre></CodeBlock>
+          <p>Review the source changes, result, and checks. Accept or reject the work with your decision proof. Your agent updates only the matching row in <code>SPECTRE.md</code>; the instruction and result remain as the permanent record.</p>
+          <p className="spectre-workflow-output"><strong>Produced:</strong> decision proof in the ledger row <span aria-hidden="true">→</span> <code>ACCEPTED</code> or <code>REJECTED</code></p>
+          <CodeBlock><pre tabIndex={0}><code>/spectre accept 0002</code></pre></CodeBlock>
         </div>
       </li>
     </ol>
-    <div className="spectre-callout"><span className="spectre-callout-mark" aria-hidden="true">↳</span><div><strong>You make the final call.</strong><p>A direct “implement these one by one” follow-up can authorize identified plans. Decisions still need your explicit command and proof; passing tests does not accept a change.</p></div></div>
   </section>
 
   <nav className="spectre-resources" aria-label="Explore SPECTRE documentation">

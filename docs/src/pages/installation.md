@@ -40,21 +40,27 @@ implementation follow-up can authorize that bounded work. Other ordinary request
 
 ## 3. Plan your first change
 
-Use your repository slug, or a target in your monorepo, in place of `api`:
+Use your repository slug, or a target in your monorepo, in place of `api`. In this single-project
+example, `0001` is the installation record, so the first planned change receives ID `0002`:
 
 ```text
-/spectre plan api: add a health endpoint
+/spectre plan api add a health endpoint
 ```
 
-The agent creates a plan in `PLANNED` and stops. Read it, then run `implement` with its ID or
-a clear description:
+The agent creates plan `0002` in `PLANNED` and stops. Read it, then run `implement` with its ID:
 
 ```text
-/spectre implement the health endpoint plan
+/spectre implement 0002
 ```
 
-The agent implements the plan, runs its checks, and leaves the result in `REVIEW`. You then decide
-whether to accept, reject, or request a revision, using their separate commands. Once plans are
+The agent implements the plan, runs its checks, and leaves the result in `REVIEW`. After reviewing
+the changes and validation, accept it with your decision proof:
+
+```text
+/spectre accept 0002 reviewed the changes and validation
+```
+
+You can instead reject the result or request a revision using their separate commands. Once plans are
 identified, you may also say "implement these one by one": the agent resolves a fixed batch and
 completes each item's tests, result and REVIEW update before the next. It stops at blockers and
 records partial work, so source changes and tracking cannot be reported complete separately.
