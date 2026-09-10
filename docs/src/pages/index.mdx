@@ -20,7 +20,8 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
     <div className="spectre-section-heading">
       <div><span className="spectre-eyebrow">01 / What is SPECTRE</span><h2 id="about-spectre-title" data-outline>A clear record for every change</h2></div>
     </div>
-    <p>SPECTRE is a Markdown-only protocol that keeps work with coding agents clear and reviewable. For example, when you ask an agent to plan a <code>/health</code> endpoint, SPECTRE records the scope and required checks in <code>0002-IMPL-INSTR.md</code>. When you then ask the agent to implement the change, it updates the source and tests, runs the required checks, and produces <code>0002-IMPL-RESULT.md</code> with the files changed and actual test results. The root <code>SPECTRE.md</code> ledger tracks the change as it moves from <code>PLANNED</code> to <code>REVIEW</code> and, after your decision, <code>ACCEPTED</code> or <code>REJECTED</code>. These Markdown files stay beside the code, giving reviewers a durable account of what was requested, what the agent changed, how it was validated, and who approved it.</p>
+    <p>SPECTRE is a Markdown-only workflow for making code changes with an AI agent. The agent first writes an implementation plan for a human to check. After the plan is approved, the agent updates the code, runs the required checks, and records the results. A human then reviews the code updates and decides whether to accept or reject the change. Every step stays in the repository beside the code.</p>
+    <p>It solves the lack of visibility between asking an AI agent for a change and receiving the finished code. SPECTRE connects the request, plan, implementation, test evidence, and final decision in one clear record.</p>
   </section>
 
   <section className="spectre-start" id="get-started" aria-labelledby="get-started-title">
