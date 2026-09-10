@@ -57,7 +57,7 @@ The agent implements the plan, runs its checks, and leaves the result in `REVIEW
 the changes and validation, accept it with your decision proof:
 
 ```text
-/spectre accept 0002 reviewed the changes and validation
+/spectre accept 0002
 ```
 
 You can instead reject the result or request a revision using their separate commands. Once plans are
@@ -119,6 +119,27 @@ Read https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md com
 
 An explicitly requested version takes precedence over the current-release mirror. Neither prompt
 automatically upgrades or migrates an existing installation.
+
+## Update an existing installation
+
+Copy and send this prompt to your agent:
+
+```text wrapCode
+Read https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md completely and update the existing SPECTRE installation in this repository according to its explicit update and adoption rules. Preserve all active and archived implementation records, provider evidence, and existing references. Validate the complete installation and report any blocker without rewriting history.
+```
+
+The agent compares the published protocol with the locally installed copy and applies only an
+update or migration that the selected protocol explicitly permits. Conflicting files, unsupported
+layouts, unresolved evidence, or references that cannot be preserved block the update instead of
+being overwritten or redirected.
+
+Optionally, move completed terminal records out of the active ledger with the
+[archive command](./commands#archive-completed-work). Archiving is not required for an update;
+records still in `PLANNED` or `REVIEW` remain active and are never archived automatically.
+
+```text
+/spectre archive
+```
 
 ## Manual download
 
