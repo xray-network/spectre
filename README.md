@@ -5,11 +5,12 @@
 SPECTRE is a Markdown-only protocol that connects a bounded implementation plan to its declared
 evidence, source changes, validation, and final human decision.
 
-After installation, start SPECTRE with an explicit command or explicitly direct SPECTRE to perform
-a natural-language queue of non-decision operations. Direct continuations of identified work, such
-as "implement these one by one" or "continue the queue", also run the bounded tracked workflow.
-Other ordinary requests leave SPECTRE inactive. Planning never starts implementation unless the
-human separately states it as a later queue item.
+After installation, SPECTRE activates when the current message contains its standalone name,
+including `/spectre`, a host-native form such as `$spectre`, or a natural-language mention such as
+`using Spectre`. The mention is case-insensitive and may appear anywhere. Every message must opt in
+independently; prior context and requests that omit SPECTRE—including batches and continuations—leave
+it inactive. Planning never starts implementation unless the human separately states it as a later
+queue item.
 
 ## Published resources
 
@@ -68,13 +69,14 @@ selectors accept descriptions too. For example:
 ```
 
 The agent reports resolved identities and asks when a match is ambiguous or a required decision
-reason is missing. A bounded implementation follow-up uses the same selector and workflow rules.
+reason is missing. A follow-up such as `Spectre implement these plans one by one`
+uses the same selector and workflow rules.
 For a fixed batch, use `/spectre implement --batch typescript/0025..0029`, a comma-separated list
 of qualified IDs, or `/spectre implement the plans just listed one by one`. The agent reports the
 resolved order, then implements, validates, writes a result and updates REVIEW for each item before
 the next. It stops on blockers, records partial progress, and can resume existing changes.
 
-An explicit prompt such as `Spectre: capture provider2, create and capture provider3 from <GitHub
+An explicit prompt such as `Using Spectre, capture provider2, create and capture provider3 from <GitHub
 URL>, create the needed plans, then implement all plans created by this request` is normalized into
 a fixed queue of separately bounded operations. The agent reports its order and deferred output
 bindings before mutation, completes each workflow before the next, and stops with exact remaining

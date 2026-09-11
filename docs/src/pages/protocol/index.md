@@ -14,9 +14,11 @@ repository discovery. The build generates it directly from the latest versioned 
 
 The initial release stores installed protocol data in `.agents/spectre/`, exposes the command
 skill at `.agents/skills/spectre/SKILL.md`, and uses root `SPECTRE.md` as the sole active lifecycle ledger.
-SPECTRE starts on explicit `/spectre` invocation; Codex invokes the same skill as `$spectre`.
-Direct implementation follow-ups to identified plans also authorize bounded sequential work,
-including required results and REVIEW updates for every selected item.
+SPECTRE starts when each current-human message mentions its standalone name, including `/spectre`,
+Codex's `$spectre`, `Spectre:`, or natural language such as `using Spectre`. The mention is
+case-insensitive and may appear anywhere. Prior context and implementation follow-ups that omit the
+name do not activate it. SPECTRE-mentioned batches perform bounded sequential work, including
+required results and REVIEW updates for every selected item.
 Commands accept natural-language record, target, and provider selectors, resolving them to canonical
 identities and asking when the meaning is ambiguous.
 Unversioned provider guides describe upstream sources, tracking and summarization. Each immutable

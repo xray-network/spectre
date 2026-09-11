@@ -35,9 +35,10 @@ Ask for the command reference:
 **Using Codex?** Use `$spectre` instead of `/spectre` for every command, for example `$spectre help`.
 
 The installer validates the complete structure automatically before reporting success. Installing
-SPECTRE does not enable automatic tracking. Start with a command or explicitly direct SPECTRE to
-queue multiple non-decision operations; after work is identified, a direct human continuation can
-resume that bounded scope. Other ordinary requests stay outside it.
+SPECTRE does not enable automatic tracking. Each message must mention the standalone word `spectre`,
+including `/spectre`, a host-native form such as `$spectre`, or a natural-language form such as
+`using Spectre`. The mention is case-insensitive and may appear anywhere. Prior context and requests
+that omit SPECTRE—including batches and continuations—stay outside it.
 
 ## 3. Plan your first change
 
@@ -65,9 +66,9 @@ You can instead reject the result or request a revision using their separate com
 reject, or cancel command may select a bounded set when its proof or reason applies to every record.
 Decisions never enter an operation queue.
 
-Once plans are identified, you may also say "implement these one by one": the agent resolves a fixed
-batch and completes each item's tests, result and REVIEW update before the next. Or explicitly direct
-SPECTRE to queue capture, planning and implementation in one natural-language request. It reports
+Once plans are identified, you may say `Spectre implement these one by one`: the agent resolves a
+fixed batch and completes each item's tests, result and REVIEW update before the next. Or begin a
+natural-language request that mentions SPECTRE to queue capture, planning and implementation. It reports
 the normalized operations and resolves earlier outputs before dependent items. It stops at blockers
 and records partial work, so source changes and tracking cannot be reported complete separately.
 

@@ -44,7 +44,7 @@ for (const [name, bodies] of blocks) {
 
 // These dependencies must remain inside the modules loaded by the router.
 for (const [name, heading] of [
-  ["core.md", "### Authorization, compound queues, and continuation"],
+  ["core.md", "### Authorization and explicit activation"],
   ["selectors.md", "### Implementation batch selectors"],
   ["selectors.md", "### Decision batch selectors"],
   ["commands/implement.md", "### Sequential batch execution"],
@@ -55,17 +55,24 @@ for (const [name, heading] of [
   ["validation.md", "## 13. Validation invariants"]
 ]) assert.ok(runtime.get(name).includes(heading), `${name} is missing ${heading}`)
 assert.ok(runtime.get("commands/help.md").includes("/spectre implement --batch <records>"))
-assert.ok(runtime.get("commands/help.md").includes("queue multiple explicitly"))
-assert.ok(runtime.get("commands/help.md").includes("bounded eligible record set"))
-assert.ok(runtime.get("core.md").includes("non-decision operations in one natural-language request"))
+assert.match(runtime.get("commands/help.md"), /multiple\s+explicitly stated non-decision operations/)
+assert.match(runtime.get("commands/help.md"), /bounded eligible\s+record set/)
+assert.match(runtime.get("core.md"), /non-decision operations in one natural-language request/)
+assert.ok(runtime.get("core.md").includes("contains the standalone word `spectre`"), "core must require an explicit SPECTRE mention")
+assert.ok(runtime.get("core.md").includes("mention may appear\nanywhere in the message"), "natural-language mentions must work anywhere")
+assert.ok(runtime.get("core.md").includes("Every message must independently contain that mention"), "activation must be per message")
+assert.ok(runtime.get("core.md").includes("A continuation that omits SPECTRE never resumes it"), "implicit queue continuation must stay inactive")
+assert.ok(runtime.get("core.md").includes("An implementation request that omits SPECTRE never activates it"), "implicit implementation batches must stay inactive")
 assert.ok(runtime.get("core.md").includes("`accept`, `reject`, and `cancel` are never queue items"))
 assert.ok(runtime.get("commands/decide.md").includes("one root\n`SPECTRE.md` ledger edit"))
 assert.ok(runtime.get("commands/capture.md").includes("### Compound-queue provider preparation"))
 
 const skill = /````markdown\n(---\nname: spectre\n[\s\S]+?)\n````/.exec(source)?.[1]
 assert.ok(skill, "missing installable skill")
-assert.ok(skill.includes("explicit natural-language operation queues"), "router must recognize compound queues")
-assert.ok(skill.includes("direct continuations"), "router must recognize bounded continuation")
+assert.ok(skill.includes("mentions SPECTRE by standalone name, command, or host-native sigil"), "router must recognize explicit SPECTRE mentions")
+assert.ok(skill.includes("natural-language mention anywhere in the message"), "router must accept natural-language mention placement")
+assert.ok(skill.includes("Every message must activate independently"), "router activation must be per message")
+assert.ok(skill.includes("do not replace the required mention"), "router must reject implicit contextual activation")
 assert.ok(skill.includes("core.md") && skill.includes("selectors.md"), "router must load authorization and scope rules")
 for (const template of ["IMPL", "STATUS", "PROVIDER"]) {
   assert.equal(source.split(`### \`.agents/spectre/templates/TEMPLATE_${template}.md\``).length - 1, 1,

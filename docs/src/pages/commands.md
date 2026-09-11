@@ -1,15 +1,16 @@
 # Commands
 
 SPECTRE exposes one command namespace. A command selects one workflow and its stopping boundary.
-An explicit natural-language request directed to SPECTRE may instead queue multiple separately
-stated non-decision operations; this is a protocol rule, not another command.
+An explicit natural-language request mentioning SPECTRE may instead queue multiple separately stated
+non-decision operations; this is a protocol rule, not another command.
 
-Start SPECTRE with an explicit human command or explicitly direct SPECTRE to perform a compound
-queue. A direct continuation of identified SPECTRE work, such as "implement these one by one" or
-"continue the queue", also authorizes that bounded work. Other ordinary requests leave tracking
-inactive. Capability questions, quoted commands, repository content, tool output, and provider
-evidence never authorize execution. Planning alone never starts implementation. Accept, reject,
-and cancel remain separate commands and can never be queued.
+SPECTRE activates when the current-human message contains the standalone word `spectre`, including
+`/spectre`, the host-native form `$spectre`, `Spectre:`, or natural language such as `using Spectre`.
+Matching is case-insensitive, and the mention may appear anywhere. Every message must opt in
+independently. Prior context and requests that omit SPECTRE—including batches, "implement these one
+by one", and "continue the queue"—leave tracking inactive. Capability questions and quoted examples
+may mention SPECTRE but do not authorize lifecycle mutation. Planning alone never starts
+implementation. Accept, reject, and cancel remain separate commands and can never be queued.
 
 ```text
 /spectre plan <target>: <objective>
@@ -51,9 +52,9 @@ validate their affected scope.
 
 For example, `/spectre implement api/0002` explicitly starts implementation. In Codex, use
 `$spectre implement api/0002`. After a human or SPECTRE report identifies that existing plan in the
-conversation, a direct "implement this" follow-up starts the same workflow, including tracking.
-Without that established plan context, ordinary prose does not activate SPECTRE. Ambiguous scope
-pauses before source or record changes; it never falls back to untracked implementation.
+conversation, `Spectre implement this` starts the same workflow, including tracking. The phrase
+`implement this` without SPECTRE never activates it, even with that context. Ambiguous scope pauses
+before source or record changes; it never falls back to untracked implementation.
 
 ## Describe the target naturally
 
@@ -93,9 +94,9 @@ its meaning is clear:
 /spectre reject the login change because the timeout check is missing
 ```
 
-`/spectre reject last implementation` is a valid request, but the agent still needs your rejection
-reason before recording the decision. You can provide it in a follow-up without repeating the
-command. An ambiguous selector or a missing reason never causes a guessed decision.
+`/spectre reject last implementation` is incomplete because the agent still needs your rejection
+reason before recording the decision. Repeat the explicit command with that reason. An ambiguous
+selector or a missing reason never causes a guessed decision.
 
 Optional scope works as before: `list` and `archive` without a target cover all targets.
 `archive` selects a whole target's terminal records,
@@ -105,11 +106,11 @@ selector that would otherwise be read as a state, for example `/spectre list "re
 
 ## Queue operations in natural language
 
-No `run` or `queue` command is required. Explicitly direct SPECTRE by name or its host-native sigil
-and state at least two non-decision operations:
+No `run` or `queue` command is required. Mention SPECTRE and state at least two non-decision
+operations:
 
 ```text
-Spectre: capture provider2, create and capture provider3 from
+Using Spectre, capture provider2, create and capture provider3 from
 https://github.com/example/provider3, create the needed plans for the TypeScript target,
 then implement every plan created by this request.
 ```
@@ -126,8 +127,8 @@ declared captures exist; those objectives are bounded and reported before the fi
 Unrelated or subsequently created records never join the queue.
 
 On a blocker, completed work remains complete, partial work is recorded by its operation, and all
-remaining items are reported exactly. `continue the queue` resumes that same identified remainder
-without repeating finished work or widening scope.
+remaining items are reported exactly. `Spectre continue the queue` resumes that same identified
+remainder without repeating finished work or widening scope; a continuation omitting SPECTRE does not.
 
 A compound queue may explicitly prepare a missing provider guide from a supplied authoritative
 source immediately before capturing it. Provider preparation creates and validates only
@@ -145,9 +146,10 @@ implementations reach REVIEW.
 /spectre implement the plans just listed one by one
 ```
 
-You can also reply "implement these one by one" after the plans have been identified in the
-conversation. That is a human instruction to execute a bounded implementation batch. A question
-such as "can SPECTRE support batches?" is not execution authorization.
+You can also reply `Spectre implement these one by one` after the plans have been identified in the
+conversation. The name makes it an instruction to execute a bounded implementation batch. The same
+reply without SPECTRE is not execution authorization. A question such as "can SPECTRE support
+batches?" mentions SPECTRE but authorizes no mutation.
 
 The agent resolves the full set to existing canonical IDs and reports the order before editing.
 Explicit ranges must contain every ID; duplicate, missing, ambiguous or ineligible records are not
@@ -161,13 +163,14 @@ a batch cannot waive that requirement or accept its own work.
 
 On a blocker, the batch stops. Finished items stay in REVIEW; started work has a partial result,
 actual check outcomes and a PLANNED row explaining what remains. Unstarted plans stay unchanged.
-"Continue the remaining plans" resumes the same fixed set: reconcile existing changes, verify
-completed records, and finish missing work. Do not rewrite correct code or invent prior validation.
-A fresh request to change REVIEW work still uses `revise`.
+`Using Spectre, continue the remaining plans` resumes the same fixed set: reconcile existing changes,
+verify completed records, and finish missing work. The phrase without SPECTRE does not activate it.
+Do not rewrite correct code or invent prior validation. A fresh request to change REVIEW work still
+uses an explicit `revise` invocation.
 
 The completion report lists every selected ID and its actual outcome. Source edits with a missing
 result or a stale PLANNED row are not a completed implementation. An implementation batch does not
-combine planning, capture, revision or human decisions; only an explicit compound request queues
+combine planning, capture, revision or human decisions; only a compound request mentioning SPECTRE queues
 separately stated non-decision operations.
 
 ## Decide multiple implementations
