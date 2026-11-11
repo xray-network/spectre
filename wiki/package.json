@@ -14,7 +14,8 @@
     "build": "rspress build",
     "test:renderer": "node scripts/test-hero-renderer.mjs",
     "deploy": "npm run build && wrangler deploy",
-    "preview": "rspress preview --host 0.0.0.0 --port 10007"
+    "preview": "rspress preview --host 0.0.0.0 --port 10007",
+    "test:protocol": "node --test scripts/test-protocol.mjs"
   },
   "devDependencies": {
     "@rspress/core": "2.0.21",
