@@ -11,7 +11,7 @@ stored in a repository. Each version field identifies one specific format or sou
 | `Protocol-Version` | Installed standard version recorded by a ledger or archive manifest |
 | `Runtime-Version` | Matches the installed standard version in each generated runtime module |
 
-SPECTRE `2.1.0` is the current version; earlier releases are frozen as published. Every release is
+SPECTRE `2.3.0` is the current version; earlier releases are frozen as published. Every release is
 immutable once published, and later changes always get a new version. Installed copies remain
 pinned to their own bytes and do not update automatically when the published source changes.
 
@@ -22,7 +22,7 @@ pinned to their own bytes and do not update automatically when the published sou
 | Major | Record formats, rules, or required checks | Archive first, then refresh |
 
 Install from the canonical URL containing the complete version. A repository is governed by the
-version in its local `.agents/spectre/SPECTRE-PROTOCOL.md`, not by whichever release is newest
+version in its local `.agents/spectre/runtime/SPECTRE-PROTOCOL.md`, not by whichever release is newest
 online. The published release manifest records the SHA-256 digest of every protocol so downloaded
 bytes can be verified independently.
 
@@ -48,7 +48,7 @@ independently from the standard version when a release defines a new format. Sin
 table format with qualified `target/NNNN` IDs, and a `Known issues` section in every manifest.
 Every active ledger and archive manifest also records the installed `Protocol-Version`. Terminal
 instructions, results, decisions, and archive manifests remain immutable. An archive is governed
-by the version it was created with; newer versions verify only its header, path map, and hashes.
+by the version it was created with and kept as is; newer versions read only its header and rows.
 
 ## Provider captures
 
@@ -80,13 +80,16 @@ separately; in a monorepo, every project with `.agents/spectre/` is its own inst
 1. Read the target release completely and verify its identity and canonical URL.
 2. Validate the installation under its current version and resolve every failure.
 3. For a major release, decide every `REVIEW` record and archive every terminal record first. A
-   forced archive (`archive --force: <reason>`) may close all open records instead and records
+   forced archive (`archive implementations --force: <reason>`; before 2.3.0, `archive --force:
+   <reason>`) may close all open records instead and records
    existing defects as known issues.
-4. Replace the protocol, runtime, templates, router, README, `AGENTS.md` pointer, and any host
-   adapters with the new version, and update the ledger's version fields.
+4. Replace the protocol, runtime, templates, router, README, and `AGENTS.md` pointer with the new
+   version, rewrite every existing slash command (host adapter) without adding new ones, and update
+   the ledger's version fields. Upgrading to 2.3.0 moves the router to `.agents/spectre/ROUTER.md`
+   and turns the old `.agents/skills/spectre/SKILL.md` into the Codex slash command.
 5. Validate the installation under the new version.
 
 Upgrades never rewrite terminal records, archives, or provider captures. Existing full numbered
 snapshots stay valid at their original paths under the version that created them and may provide
 reused artifacts to new incremental captures. Evidence never moves; an unavoidable move
-keeps the original and is recorded in `.agents/spectre/MIGRATIONS.md`.
+is a human-ordered override that rewrites every reference to the moved file.

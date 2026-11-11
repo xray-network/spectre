@@ -7,6 +7,44 @@ current-release mirror to discover that version; you can also choose a specific 
 The <a href="/spectre/SPECTRE-PROTOCOL.md">current-release mirror</a> is convenient for reading and
 repository discovery. The build generates it directly from the latest versioned protocol source.
 
+## 2.3.0
+
+- <a href="/spectre/protocol/v2.3.0/SPECTRE-PROTOCOL.md">Read or download <code>SPECTRE-PROTOCOL.md</code></a>
+
+A minor release; 2.x installations refresh in place without archiving.
+
+- **No slash command by default.** The router moves from `.agents/skills/spectre/SKILL.md` to
+  `.agents/spectre/ROUTER.md`, a plain file that no agent registers as a command. Installation adds
+  no slash command; mention SPECTRE in natural language, such as `Spectre: list`, until you add one.
+- **`addslash` and `removeslash`.** `/spectre addslash <host> [<host>...]` adds the slash command
+  for Codex, Antigravity, Claude Code, Cursor, GitHub Copilot, Gemini CLI, OpenCode, or Windsurf;
+  `removeslash` removes it. The adapter file is the only state: no ledger row, record, or log.
+  Reload or restart the agent afterwards so it picks up the change.
+- **Override log is informational.** An override now also updates the hashes and links that depend
+  on what it changed, so the installation validates on its own. Its log moves to
+  `.agents/spectre/logs/OVERRIDES.md`; nothing reads it, a `.gitignore` inside `logs/` keeps it out
+  of Git, and you can wipe `logs/` at any time. The override proposes a commit message that carries
+  your reason.
+- **Tidier layout.** `ROUTER.md` is the only file at the top of `.agents/spectre/`. The protocol and
+  templates move into `runtime/`: it holds only `SPECTRE-PROTOCOL.md` and `modules/`, where every
+  generated module and template lives. No README is installed. Links in older records to the old
+  protocol or template paths resolve to their new places.
+- **Archives as is.** An archive is history: after it is written, nothing re-checks or repairs it.
+  Broken links, moved paths, or changed hashes inside archives are information, never failures, and
+  overrides no longer update them. Validation reads only manifest headers and rows.
+- **Archive kinds and provider archive.** `archive` now names what it moves:
+  `/spectre archive implementations [target]` works as `archive` did, and
+  `/spectre archive providers <provider>...` moves whole providers that no active record uses into
+  a dated archive. Bare `/spectre archive` still archives every finished implementation; forcing
+  needs the full form, `/spectre archive implementations --force: <reason>`. For providers, `--force`
+  only records existing defects. `implementations` and `providers` are reserved and can't be target
+  names.
+- **No migrations.** Evidence moves only through an override, which rewrites every reference to the
+  moved file; `MIGRATIONS.md` and its lookup-based resolution are gone.
+- **Upgrade.** An earlier router at `.agents/skills/spectre/SKILL.md` becomes the Codex adapter, so
+  `$spectre` keeps working until `/spectre removeslash codex`. An existing `OVERRIDES.md` moves to
+  `logs/` and stops being tracked.
+
 ## 2.1.0
 
 - <a href="/spectre/protocol/v2.1.0/SPECTRE-PROTOCOL.md">Read or download <code>SPECTRE-PROTOCOL.md</code></a>

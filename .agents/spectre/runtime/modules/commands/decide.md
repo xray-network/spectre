@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.1.0
-Source-SHA256: a4ab931b976a8c0d1cc2c9893623d0a13cff273b5ff2cd2dd9072e3c5b3deb07
+Runtime-Version: 2.3.0
+Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
 
 ### Decision workflow
 
@@ -13,7 +13,7 @@ exactly one record is selected and the human gives no proof or reason, record th
 and UTC date as the Decision proof, for example `Human command "spectre accept typescript/0026" on
 2026-11-10.` A set of two or more records requires a human-written proof or reason.
 
-A forced archive (§9) closes every active `PLANNED` and `REVIEW` row in its scope as `CANCELLED`
+A forced implementations archive (§9) closes every active `PLANNED` and `REVIEW` row in its scope as `CANCELLED`
 with its one human reason. It follows this workflow's preflight, single ledger edit, and
 validation rules for those rows, and is the only way a `REVIEW` row becomes `CANCELLED`.
 

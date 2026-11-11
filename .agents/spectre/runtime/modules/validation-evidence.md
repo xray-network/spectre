@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.1.0
-Source-SHA256: a4ab931b976a8c0d1cc2c9893623d0a13cff273b5ff2cd2dd9072e3c5b3deb07
+Runtime-Version: 2.3.0
+Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
 
 **Provider evidence**
 
@@ -34,4 +34,6 @@ Source-SHA256: a4ab931b976a8c0d1cc2c9893623d0a13cff273b5ff2cd2dd9072e3c5b3deb07
 28. History: captures from earlier versions remain valid under their own version's rules and may
     serve as pinned baselines and artifact owners. No capture contains a status, instruction,
     result, executable tooling, symlink, or undeclared artifact. No ordinary command deletes
-    historical evidence or rewrites terminal records.
+    historical evidence or rewrites terminal records; a provider archive moves a whole provider
+    unchanged and deletes nothing else. No active record references an archived provider, and no
+    live capture uses an archived capture as predecessor or artifact owner.

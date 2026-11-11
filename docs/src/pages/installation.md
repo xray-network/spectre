@@ -21,20 +21,28 @@ It also extracts compact runtime files from marked sections of the protocol. Lat
 shared rules and their own operation files instead of rereading the complete specification.
 Required source, evidence, and validation checks still apply.
 
-SPECTRE 2.1.0 is the current release. Installation pins the protocol locally, so later releases
+SPECTRE 2.3.0 is the current release. Installation pins the protocol locally, so later releases
 cannot silently change your repository’s rules.
 
 ## 2. Check the setup
 
-Ask for the command reference:
+Installation adds no slash command, so ask for the command reference in natural language:
 
 ```text
-/spectre help
+Spectre help
 ```
 
-**Using Codex?** Use `$spectre` instead of `/spectre` for every command, for example `$spectre help`.
-For Claude Code, Cursor, GitHub Copilot, Gemini CLI, or Windsurf, ask the agent to install the
-SPECTRE host adapters; each registers `/spectre` and points to the same router.
+Then add the slash command for the agents you use, and reload or restart each agent so it
+discovers the command:
+
+```text
+Spectre addslash claude
+```
+
+Supported hosts are `codex`, `antigravity`, `claude`, `cursor`, `copilot`, `gemini`, `opencode`, and
+`windsurf`; name several at once, such as `Spectre addslash codex cursor`. Codex invokes it as
+`$spectre`, the others as `/spectre`. `/spectre removeslash <host>` removes it again. Each adapter
+only points to the same router, and its file is the only record that it exists.
 
 The installer validates the complete structure automatically before reporting success. Installing
 SPECTRE does not enable automatic tracking. Each message must mention the standalone word `spectre`,
@@ -81,31 +89,21 @@ and records partial work, so source changes and tracking cannot be reported comp
 ```text
 SPECTRE.md                    # active implementation ledger
 .agents/
-├── skills/spectre/
-│   └── SKILL.md               # command entrypoint
 └── spectre/
-    ├── SPECTRE-PROTOCOL.md    # pinned protocol
-    ├── README.md
-    ├── runtime/
-    │   ├── core.md           # shared authority and lifecycle rules
-    │   ├── selectors.md      # natural-language target resolution
-    │   ├── references.md     # active/archive record links
-    │   ├── providers.md      # provider pins
-    │   ├── validation.md     # record checks used by every workflow
-    │   ├── validation-full.md      # installation and archive checks
-    │   ├── validation-evidence.md  # provider-evidence checks
-    │   └── commands/
-    │       ├── help.md
-    │       ├── list.md
-    │       ├── status.md
-    │       ├── recall.md
-    │       ├── plan.md
-    │       ├── implement.md
-    │       ├── revise.md
-    │       ├── decide.md     # accept, reject, cancel
-    │       ├── capture.md
-    │       └── archive.md
-    ├── templates/
+    ├── ROUTER.md              # the only top-level file; slash commands point here
+    ├── runtime/               # everything agents read and nobody edits
+    │   ├── SPECTRE-PROTOCOL.md       # pinned protocol; the only file here
+    │   └── modules/                  # generated from the protocol; never edited
+    │       ├── core.md           # shared authority and lifecycle rules
+    │       ├── selectors.md      # natural-language target resolution
+    │       ├── references.md     # active/archive record links
+    │       ├── providers.md      # provider pins
+    │       ├── validation.md     # record checks used by every workflow
+    │       ├── validation-full.md      # installation and archive checks
+    │       ├── validation-evidence.md  # provider-evidence checks
+    │       ├── commands/         # help, list, status, recall, plan, implement, revise,
+    │       │                     # decide, override, capture, archive, slash
+    │       └── templates/        # status, implementation, provider templates
     ├── implementations/      # instructions and results
     └── providers/            # optional external evidence
 ```
@@ -127,7 +125,7 @@ independently; upgrades follow the protocol's versioning rules.
 To choose a release explicitly, use its versioned URL and include the version in your request:
 
 ```text wrapCode
-Read https://wiki.xraynetwork.io/spectre/protocol/v2.1.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v2.1.0 in this repository.
+Read https://wiki.xraynetwork.io/spectre/protocol/v2.3.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v2.3.0 in this repository.
 ```
 
 An explicitly requested version takes precedence over the current-release mirror. Neither prompt
@@ -138,7 +136,7 @@ automatically upgrades or migrates an existing installation.
 Copy and send this prompt to your agent:
 
 ```text wrapCode
-Read https://wiki.xraynetwork.io/spectre/protocol/v2.1.0/SPECTRE-PROTOCOL.md completely and upgrade the existing SPECTRE installation in this repository to v2.1.0 using its upgrade procedure. Preserve all archived implementation records, provider evidence, and existing references. Validate the complete installation before and after, and report any blocker without rewriting history.
+Read https://wiki.xraynetwork.io/spectre/protocol/v2.3.0/SPECTRE-PROTOCOL.md completely and upgrade the existing SPECTRE installation in this repository to v2.3.0 using its upgrade procedure. Preserve all archived implementation records, provider evidence, and existing references. Validate the complete installation before and after, and report any blocker without rewriting history.
 ```
 
 The agent follows the target release's [upgrade procedure](./versioning#upgrading). A major release
@@ -153,8 +151,11 @@ To close everything instead, use a forced archive. It cancels open `PLANNED` and
 with your reason and lists existing defects in the manifest instead of failing:
 
 ```text
-/spectre archive --force: closing before the 2.0.0 upgrade
+/spectre archive implementations --force: closing before the upgrade
 ```
+
+Use the syntax of the version you have installed: before 2.3.0, the forced form is
+`/spectre archive --force: <reason>`.
 
 Conflicting files, unresolved evidence, or references that cannot be preserved block the upgrade
 instead of being overwritten or redirected.
@@ -164,9 +165,9 @@ instead of being overwritten or redirected.
 If you prefer to download the protocol yourself, run this from the repository root:
 
 ```sh
-mkdir -p .agents/spectre
-curl -fsSLo .agents/spectre/SPECTRE-PROTOCOL.md \
-  https://wiki.xraynetwork.io/spectre/protocol/v2.1.0/SPECTRE-PROTOCOL.md
+mkdir -p .agents/spectre/runtime
+curl -fsSLo .agents/spectre/runtime/SPECTRE-PROTOCOL.md \
+  https://wiki.xraynetwork.io/spectre/protocol/v2.3.0/SPECTRE-PROTOCOL.md
 ```
 
 Then ask your coding agent to read the local file completely and perform its installation section.

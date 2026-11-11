@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.1.0
-Source-SHA256: a4ab931b976a8c0d1cc2c9893623d0a13cff273b5ff2cd2dd9072e3c5b3deb07
+Runtime-Version: 2.3.0
+Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
 
 | Syntax | Operation and stopping boundary |
 | --- | --- |
@@ -14,10 +14,14 @@ Source-SHA256: a4ab931b976a8c0d1cc2c9893623d0a13cff273b5ff2cd2dd9072e3c5b3deb07
 | `/spectre accept <records>: <proof>` | Resolve one or a bounded set of `REVIEW` records and record the current human's acceptance in only their matching ledger decision fields. |
 | `/spectre reject <records>: <proof>` | Resolve one or a bounded set of `REVIEW` records and record the current human's rejection in only their matching ledger decision fields. |
 | `/spectre cancel <records>: <reason>` | Resolve one or a bounded set of `PLANNED` records and record the human-authorized cancellation in only their matching ledger decision fields. |
-| `/spectre archive [target]` | Run the §9 archive workflow for all targets or one selected target, move only terminal implementations and their ledger rows into a dated archive, preserve active work, validate, and stop. |
-| `/spectre archive [target] --force: <reason>` | Run the §9 forced archive: close every `PLANNED` and `REVIEW` record in scope as `CANCELLED` with the human reason, archive every terminal record, list existing defects in the manifest instead of failing, and stop. |
-| `/spectre override <scope>: <changes> because <reason>` | Run the §9 override: apply exactly the human's requested change to the named SPECTRE files, even where it breaks other SPECTRE rules, log every changed file with its hashes in `OVERRIDES.md`, validate, and stop. |
+| `/spectre archive` | Short form of `/spectre archive implementations` for all targets; it takes no target or flag. |
+| `/spectre archive implementations [target]` | Run the §9 archive workflow for all targets or one selected target, move only terminal implementations and their ledger rows into a dated archive, preserve active work, validate, and stop. |
+| `/spectre archive implementations [target] --force: <reason>` | Run the §9 forced archive: close every `PLANNED` and `REVIEW` record in scope as `CANCELLED` with the human reason, archive every terminal record, list existing defects in the manifest instead of failing, and stop. |
+| `/spectre archive providers <provider> [<provider>...] [--force: <reason>]` | Run the §9 provider archive: move each named provider whole, with its guide and every capture, into a dated archive when no active record references it, warn about files outside SPECTRE that name it, validate, and stop. `--force` only lists existing defects in the manifest instead of failing. |
+| `/spectre override <scope>: <changes> because <reason>` | Run the §9 override: apply exactly the human's requested change to the named SPECTRE files, even where it breaks other SPECTRE rules, update the hashes and links that depend on it, note every changed file in the informational `logs/OVERRIDES.md`, validate, and stop. |
 | `/spectre capture <provider>` | Run only §12 to track upstream changes between plans: publish a numbered full baseline or incremental capture; unchanged evidence creates no folder or tracked writes. Do not create or implement a target record. Planning captures its own providers, so a standalone capture is never a planning prerequisite. |
+| `/spectre addslash <host> [<host>...]` | Add the §2 slash command for each named agent host at the repository root, write no SPECTRE record or state, tell the human to reload or restart that agent, and stop. |
+| `/spectre removeslash <host> [<host>...]` | Remove each named host's §2 slash command, write no SPECTRE record or state, tell the human to reload or restart that agent, and stop. |
 | `/spectre help [operation]` | Report every command, or one named operation, with its syntax, purpose, and stopping boundary without changing tracked files or lifecycle state. |
 
 `help` reads only the router, shared core, and its command module. Its unqualified form reports every command in the table;
@@ -27,7 +31,9 @@ recognized and suggest `/spectre help` without selecting or running another oper
 Unqualified help also explains that a current-human message mentioning SPECTRE may queue multiple
 explicitly stated non-decision operations in natural language without another command,
 and that accept, reject, and cancel remain standalone commands that may select a bounded eligible
-record set; forced archive and override are standalone human decisions too.
+record set; forced archive and override are standalone human decisions too. `addslash` and
+`removeslash` are standalone setup commands: installation adds no slash command, and the adapter
+file each one writes or removes is its only state.
 
 Record, target, and provider selectors accept IDs/slugs or natural descriptions. A unique match
 resolves to its canonical identity; bounded plural record selectors are also valid for implementation

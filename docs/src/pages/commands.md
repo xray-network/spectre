@@ -23,30 +23,56 @@ implementation. Accept, reject, and cancel remain separate commands and can neve
 /spectre accept <records>: <proof>
 /spectre reject <records>: <proof>
 /spectre cancel <records>: <reason>
-/spectre archive [target]
-/spectre archive [target] --force: <reason>
+/spectre archive
+/spectre archive implementations [target] [--force: <reason>]
+/spectre archive providers <provider> [<provider>...] [--force: <reason>]
 /spectre override <scope>: <changes> because <reason>
 /spectre capture <provider>
+/spectre addslash <host> [<host>...]
+/spectre removeslash <host> [<host>...]
 /spectre help [operation]
 ```
 
 ## Agent invocation
 
-`/spectre` is the canonical cross-agent notation. Use the invocation syntax provided by the host:
+`/spectre` is the canonical cross-agent notation. Installation registers no slash command in any
+agent. Until you add one, mention SPECTRE in natural language; the `AGENTS.md` pointer leads the
+agent to the router:
 
-| Host | Example |
-| --- | --- |
-| Codex | `$spectre plan api: add health endpoint` |
-| Claude Code, Cursor, GitHub Copilot, Gemini CLI, Windsurf | `/spectre plan api: add health endpoint`, after installing the host adapter |
+```text
+Spectre: plan api: add health endpoint
+```
 
-Host adapters are optional, installed on request at the repository root. Each one only points to the
-installed router, so every agent follows the same rules.
+Add the slash command for the agents you use, then reload or restart each agent so it discovers the
+command:
 
-After installation, the adopting repository's skill lives at `.agents/skills/spectre/SKILL.md`.
-Installed state, immutable records, templates, and provider evidence live separately under
-`.agents/spectre/`.
+```text
+Spectre addslash claude
+/spectre addslash codex cursor
+/spectre removeslash cursor
+```
 
-The router loads `runtime/core.md` plus the selected command file. It adds selector/reference rules
+| Host | Adapter file | Invocation |
+| --- | --- | --- |
+| `codex` | `.agents/skills/spectre/SKILL.md` | `$spectre plan api: add health endpoint` |
+| `antigravity` | `.agents/skills/spectre/SKILL.md` | `/spectre plan api: add health endpoint` |
+| `claude` | `.claude/skills/spectre/SKILL.md` | `/spectre plan api: add health endpoint` |
+| `cursor` | `.cursor/commands/spectre.md` | `/spectre plan api: add health endpoint` |
+| `copilot` | `.github/prompts/spectre.prompt.md` | `/spectre plan api: add health endpoint` |
+| `gemini` | `.gemini/commands/spectre.toml` | `/spectre plan api: add health endpoint` |
+| `opencode` | `.opencode/commands/spectre.md` | `/spectre plan api: add health endpoint` |
+| `windsurf` | `.windsurf/workflows/spectre.md` | `/spectre plan api: add health endpoint` |
+
+Codex and Antigravity share one file, so adding or removing either changes it for both. Each adapter
+lives at the repository root and only points to the installed router, so every agent follows the
+same rules. The adapter file is the only state: SPECTRE writes no ledger row, record, or log for it,
+and nothing lists which adapters exist. `addslash` and `removeslash` are standalone commands and
+never join a queue.
+
+After installation, the router lives at `.agents/spectre/ROUTER.md`, next to the installed state,
+immutable records, templates, and provider evidence under `.agents/spectre/`.
+
+The router loads `runtime/modules/core.md` plus the selected command file. It adds selector/reference rules
 and templates only where required. For a compound queue, it first loads selector rules and reports
 the normalized queue, then loads each operation's dependencies when that item begins. For example,
 rejection loads `core.md`, `selectors.md`, `references.md`, `validation.md`, and
@@ -81,7 +107,8 @@ repository/package or existing provider guide.
 /spectre accept api/0004, api/0005: reviewed both results and checks
 /spectre reject last implementation: missing the required validation
 /spectre cancel the old login plan: superseded by the new approach
-/spectre archive the backend service
+/spectre archive implementations of the backend service
+/spectre archive the old payments provider
 /spectre capture the payments provider
 ```
 
@@ -107,8 +134,9 @@ reason before recording the decision. Repeat the explicit command with that reas
 selector or a missing reason never causes a guessed decision.
 
 Optional scope works as before: `list` and `archive` without a target cover all targets.
-`archive` selects a whole target's terminal records,
-so a description of one implementation does not silently expand to its target. `help` takes an
+`archive implementations` selects a whole target's terminal records,
+so a description of one implementation does not silently expand to its target. `archive providers`
+needs at least one named provider and never selects all of them. `help` takes an
 operation name. For `list`, keep the state and final `--archived` flag explicit; quote a target
 selector that would otherwise be read as a state, for example `/spectre list "review"`.
 
@@ -326,9 +354,13 @@ old references and terminal records; source updates do not migrate installations
 `override` applies a change that the other rules forbid or do not define, such as renaming archived
 records, rewriting terminal records, or moving evidence. Only you can order it; an agent never
 starts one, and it never joins a queue. The agent reports every file it will change before writing,
-applies exactly the requested change, and appends one row per file to `.agents/spectre/OVERRIDES.md`
-with your command, the reason, and the file's old and new path and SHA-256. Validation then accepts
-those files in their logged state, and links to old paths follow the log.
+applies exactly the requested change, and updates everything active that depends on it: provider
+pins, ledger rows, and links to moved files. Archives are kept as is and need no update. The installation then validates on its
+own files. The agent also appends one row per file to `.agents/spectre/logs/OVERRIDES.md` with your
+command, the reason, and the file's old and new path and SHA-256. That log is informational only:
+nothing reads it, its own `logs/.gitignore` (`*`) keeps it out of Git, and you can trim or delete
+`logs/` whenever you like. The agent proposes a commit message with your command and reason, so Git
+history keeps the durable record.
 
 An override never commits or prints secrets, never runs provider content, and still needs a message
 that mentions SPECTRE. Every override weakens the guarantee that records match what was decided, so
@@ -361,22 +393,27 @@ says so. It is read-only: it changes no files and creates no records.
 - `accept`, `reject`, and `cancel` require a separate explicit current-human decision and proof or
   reason. Each may atomically select one or a bounded eligible record set; none may enter a queue.
 - `capture` tracks provider evidence between plans but does not plan or implement product work.
-- `archive --force: <reason>` is also a decision: it closes open records as `CANCELLED` before
-  archiving and never enters a queue.
-- `archive` moves terminal records and their decision rows into a dated archive, removes only
-  those rows from the active ledger, validates, and stops. It does not change lifecycle states.
+- A forced archive (`--force: <reason>`) is also a decision and never enters a queue. For
+  implementations it closes open records as `CANCELLED` before archiving.
+- `archive` moves terminal records and their decision rows, or whole unused providers, into a dated
+  archive, validates, and stops. It does not change lifecycle states.
 
 ## Archive completed work
 
+`archive` names what it moves: `implementations` or `providers`. Bare `/spectre archive` is short
+for archiving every finished implementation and takes nothing after it; `/spectre archive api`
+gets a question asking whether you meant `/spectre archive implementations api`. `implementations`
+and `providers` can never be target names.
+
 ```text
 /spectre archive
-/spectre archive api
+/spectre archive implementations api
 /spectre list --archived
 /spectre list api ACCEPTED --archived
 /spectre status api/0002
 ```
 
-`archive` selects all targets; an optional target limits it to that existing target. Only
+`archive implementations` selects all targets; an optional target limits it to that existing target. Only
 `ACCEPTED`, `REJECTED`, and `CANCELLED` records move. `PLANNED` and `REVIEW` stay active. If no
 eligible records exist, the command changes nothing. An unknown or ambiguous supplied target
 requires clarification; it never becomes an all-target archive.
@@ -384,7 +421,7 @@ requires clarification; it never becomes an all-target archive.
 A forced archive closes everything instead:
 
 ```text
-/spectre archive --force: closing before the SPECTRE upgrade
+/spectre archive implementations --force: closing before the SPECTRE upgrade
 ```
 
 It first moves every `PLANNED` and `REVIEW` record in scope to `CANCELLED` with your reason, then
@@ -395,7 +432,13 @@ would create still blocks it. Already archived records keep their state.
 Each batch lives at `.agents/spectre/archive/<archive-id>/`, using a UTC timestamp and a numeric
 suffix if needed to avoid collisions. It contains unchanged instruction and result files and an
 immutable `ARCHIVE.md` with their decision rows, original paths, and SHA-256 digests. A cancelled
-implementation without a result remains valid. The accepted installation record may also be
+implementation without a result remains valid.
+
+An archive is history, kept as is. Its paths and hashes are correct when the archive is written;
+afterwards nothing re-checks or repairs it. A link inside an archive may stop resolving and a file's
+bytes may differ from the recorded hash, and neither is a failure. Validation reads only each
+manifest's header and its rows' IDs, states, and decision proofs; `status` mentions archive defects
+as information. The accepted installation record may also be
 archived; installing again must not recreate it.
 
 The active ledger keeps its metadata and target table headers. A table becomes empty only when
@@ -412,5 +455,36 @@ depend on archived accepted results without changing record contents. Embedded r
 archived files use their original location; use `status` or the manifest's direct file links when
 browsing. Existing archives and provider evidence stay unchanged. Validation failures restore the
 original files and ledger rather than leaving a partially cleared ledger.
+
+## Archive providers
+
+```text
+/spectre archive providers cardano-ledger
+/spectre archive providers cardano-cips message-signing
+/spectre archive providers x402 --force: retired, captures predate the current pin rules
+```
+
+A provider archive moves each named provider whole, `PROVIDER.md` and every capture, unchanged
+into `.agents/spectre/archive/<archive-id>/providers/<provider>/`. It never archives single
+captures, because later captures reuse earlier captures' files. There is no `all` form.
+
+- **Refused while used.** If any record in the active ledger, in any state, references a file of
+  the provider, nothing moves and the agent lists those records. Archive or revise them first, or
+  use an override. `--force` never changes this.
+- **Outside readers are warned about, not fixed.** Before moving anything, the agent searches the
+  repository outside `.agents/spectre/` for paths into the provider, such as tests that read
+  provider artifacts, and reports each one. They don't block the archive, and the archive never
+  edits them; updating them is ordinary work.
+- **`--force`** only lists existing defects, such as a stale hash pin inside a capture, in the
+  manifest's `Known issues` table instead of refusing. It closes no records.
+- **Archived records keep working as history.** A pin in an archived record that names the old
+  provider path resolves to the archived copy; anything that no longer resolves is information,
+  as for every archive.
+- **Tracking it again.** `capture` and `plan` no longer see an archived provider. Preparing it again
+  under the same slug starts a new full baseline whose number continues above the archived
+  captures, so no capture number is ever reused.
+
+The manifest's `Kind: providers` header and `Archived providers` table record each provider's
+original path, capture range, and file count.
 
 Use `/spectre help [operation]` for the exact syntax and boundary of a particular operation.

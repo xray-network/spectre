@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.1.0
-Source-SHA256: a4ab931b976a8c0d1cc2c9893623d0a13cff273b5ff2cd2dd9072e3c5b3deb07
+Runtime-Version: 2.3.0
+Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
 
 ### Natural-language selectors
 
@@ -48,9 +48,15 @@ completed: reviewed their results and checks`, `/spectre archive the backend ser
    canonical identity on completion. Store canonical IDs/paths, never relative phrases such as `last`.
 
 Omitted `list`/`archive`/`recall` target means all targets; omitted `help` operation means all commands. An unresolved supplied selector is never omitted scope.
-Archive accepts a whole existing target, not a record; ask before expanding `the login change` to
-its target. A forced archive takes the same target selector and requires its human reason after a
-colon: `/spectre archive [target] --force: <reason>`. Planning discovers targets under §4; never invent a package/slug from a synonym. An
+Archive names its kind first: `implementations` with an optional whole existing target, or
+`providers` with one or more existing providers. A natural description such as `archive the uplc
+provider` selects the matching kind. Bare `/spectre archive` means `implementations` for all
+targets and accepts nothing after it; for `/spectre archive <target>`, `/spectre archive --force`,
+or any other text after a bare `archive`, ask whether the human meant
+`/spectre archive implementations ...`. Archive accepts a whole target or provider, not a record;
+ask before expanding `the login change` to its target. Provider archive has no `all` form and never
+expands a description to every provider. A forced archive takes the same selector and requires its
+human reason after a colon, such as `/spectre archive implementations [target] --force: <reason>`. Planning discovers targets under §4; never invent a package/slug from a synonym. An
 ordinary capture command requires an existing provider guide; only explicit compound provider
 preparation may create a missing guide. Help names an operation, not a repository target. Only
 `implement`, `accept`, `reject`, and `cancel` accept bounded record sets. No selector combines

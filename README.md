@@ -16,7 +16,8 @@ queue item.
 
 - `https://wiki.xraynetwork.io/spectre/` — documentation
 - `https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md` — current-release mirror
-- `https://wiki.xraynetwork.io/spectre/protocol/v2.1.0/SPECTRE-PROTOCOL.md` — v2.1.0 protocol (current)
+- `https://wiki.xraynetwork.io/spectre/protocol/v2.3.0/SPECTRE-PROTOCOL.md` — v2.3.0 protocol (current)
+- `https://wiki.xraynetwork.io/spectre/protocol/v2.1.0/SPECTRE-PROTOCOL.md` — v2.1.0 protocol (frozen)
 - `https://wiki.xraynetwork.io/spectre/protocol/v2.0.0/SPECTRE-PROTOCOL.md` — v2.0.0 protocol (frozen)
 - `https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md` — v1.0.0 protocol (frozen)
 
@@ -32,13 +33,14 @@ The mirror identifies the current release. The installer verifies its versioned 
 and pins that release locally; later mirror updates do not change existing installations.
 For a particular release, use its versioned URL and name that version in the prompt.
 
-The pinned standard installs as `.agents/spectre/SPECTRE-PROTOCOL.md`, with its command skill at
-`.agents/skills/spectre/SKILL.md`. Installation creates root `SPECTRE.md` as the adopting project's
-implementation summary and sole active lifecycle ledger. Archived decisions remain in immutable
+The pinned standard installs as `.agents/spectre/runtime/SPECTRE-PROTOCOL.md`, and everything
+generated from it, runtime modules and templates, goes under `runtime/modules/`; the command router `.agents/spectre/ROUTER.md` is the only top-level file.
+Installation registers no slash command in any agent. It creates root `SPECTRE.md` as the adopting
+project's implementation summary and sole active lifecycle ledger. Archived decisions remain in immutable
 batch manifests under `.agents/spectre/archive/`.
 
-Installation also extracts `runtime/core.md`, `selectors.md`, `references.md`, `providers.md`,
-`validation.md`, `validation-full.md`, `validation-evidence.md`, and ten command modules from marked
+Installation also extracts `runtime/modules/core.md`, `selectors.md`, `references.md`, `providers.md`,
+`validation.md`, `validation-full.md`, `validation-evidence.md`, and twelve command modules from marked
 sections of the complete protocol. The small skill router loads only shared
 rules and the selected operation's dependencies on each call. Templates, record contents, and
 required evidence load when needed; installation and full integrity checks retain their full scope.
@@ -58,16 +60,20 @@ as separate summaries. Missing or stale modules block a command without an impli
 /spectre accept <records>: <proof>
 /spectre reject <records>: <proof>
 /spectre cancel <records>: <reason>
-/spectre archive [target]
-/spectre archive [target] --force: <reason>
+/spectre archive
+/spectre archive implementations [target] [--force: <reason>]
+/spectre archive providers <provider> [<provider>...] [--force: <reason>]
 /spectre override <scope>: <changes> because <reason>
 /spectre capture <provider>
+/spectre addslash <host> [<host>...]
+/spectre removeslash <host> [<host>...]
 /spectre help [operation]
 ```
 
-`/spectre` is the cross-agent spelling. In Codex, invoke the repository skill with `$spectre` and
-the same arguments. Optional host adapters register `/spectre` in Claude Code, Cursor, GitHub
-Copilot, Gemini CLI, and Windsurf. Record selectors accept IDs or natural descriptions; target and provider
+`/spectre` is the cross-agent spelling. Until a slash command is added, mention SPECTRE in natural
+language, such as `Spectre help`. `addslash` adds the command for `codex` (invoked as `$spectre`),
+`antigravity`, `claude`, `cursor`, `copilot`, `gemini`, `opencode`, or `windsurf`, and `removeslash`
+removes it; reload or restart the agent afterwards. The adapter file is the only state. Record selectors accept IDs or natural descriptions; target and provider
 selectors accept descriptions too. For example:
 
 ```text
@@ -118,12 +124,14 @@ Git commit is not a protocol prerequisite. A plan captures the providers it reli
 writing its instruction; a standalone capture tracks upstream changes between plans. Anything from
 another project enters as a provider capture, never as a link outside the installation. See [provider captures](docs/src/pages/commands.md#provider-captures).
 
-`archive [target]` moves terminal implementations and their decision rows into a dated archive,
-clearing those rows from the active ledger. `PLANNED` and `REVIEW` stay active. Record contents,
-decision proofs, and reference identity are preserved; implementation IDs never restart. Use
-`list --archived` to browse history and `status <record>` to find a record in either location.
-`archive [target] --force: <reason>` first closes open records as `CANCELLED` with that reason and
-lists existing defects in the manifest instead of failing.
+`archive implementations [target]`, or bare `archive` for all targets, moves terminal
+implementations and their decision rows into a dated archive, clearing those rows from the active
+ledger. `PLANNED` and `REVIEW` stay active. Record contents, decision proofs, and reference identity
+are preserved; implementation IDs never restart. Use `list --archived` to browse history and
+`status <record>` to find a record in either location. `archive implementations [target] --force:
+<reason>` first closes open records as `CANCELLED` with that reason and lists existing defects in
+the manifest instead of failing. `archive providers <provider>...` moves whole providers that no
+active record uses into an archive; see [archive providers](docs/src/pages/commands.md#archive-providers).
 
 ## Repository layout
 
@@ -134,7 +142,9 @@ lists existing defects in the manifest instead of failing.
 │   │   └── SPECTRE-PROTOCOL.md
 │   ├── v2.0.0/                  # frozen
 │   │   └── SPECTRE-PROTOCOL.md
-│   └── v2.1.0/                  # current
+│   ├── v2.1.0/                  # frozen
+│   │   └── SPECTRE-PROTOCOL.md
+│   └── v2.3.0/                  # current
 │       └── SPECTRE-PROTOCOL.md
 ├── ideas/                       # proposals, not part of the protocol
 └── docs/

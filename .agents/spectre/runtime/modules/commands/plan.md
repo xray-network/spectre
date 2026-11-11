@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.1.0
-Source-SHA256: a4ab931b976a8c0d1cc2c9893623d0a13cff273b5ff2cd2dd9072e3c5b3deb07
+Runtime-Version: 2.3.0
+Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
 
 ## 4. Repository discovery and target selection
 
@@ -31,7 +31,8 @@ Choose targets using these rules:
 - Do not use transient branch names, ticket numbers, contributor names, or vague buckets such as
   `misc`.
 - Use lowercase ASCII slugs containing letters, digits, and single hyphens. A target ID matches
-  `^[a-z0-9]+(?:-[a-z0-9]+)*$`.
+  `^[a-z0-9]+(?:-[a-z0-9]+)*$`. `implementations` and `providers` are reserved archive kinds and
+  are never target slugs.
 - When two plausible models would assign the same source to different targets, stop before
   creating target directories and ask a human to choose.
 

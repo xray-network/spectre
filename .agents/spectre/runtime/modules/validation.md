@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.1.0
-Source-SHA256: a4ab931b976a8c0d1cc2c9893623d0a13cff273b5ff2cd2dd9072e3c5b3deb07
+Runtime-Version: 2.3.0
+Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
 
 ## 13. Validation invariants
 
@@ -21,8 +21,8 @@ inputs or capture are involved.
 
 Run every applicable check below. Each states its pass condition; a check passes only when that
 condition holds exactly. A failed check blocks the operation, except an existing defect that a
-forced archive records as a known issue (§9) or an issue already listed in an earlier manifest's
-`Known issues` table.
+forced archive records as a known issue (§9). Archives are kept as is: beyond checks 11, 29, 30,
+and 32, nothing in them is validated.
 
 Checks are split by who needs them. This module holds the record, reference, and operation checks
 that every workflow applies. `validation-full.md` holds the installation and archive checks (1–9,
@@ -33,8 +33,10 @@ the provider-evidence checks (20–28) for any workflow that captures or consume
 
 10. Format: every ledger and manifest table follows the §11 canonical table format, and every ID
     cell holds a qualified `target/NNNN` ID.
-11. Identity: target and provider slugs and four-digit IDs are valid. IDs are unique across active
-    records and all archives in each sequence, ascending, and never reused.
+11. Identity: target and provider slugs and four-digit IDs are valid, and no target is named
+    `implementations` or `providers`. IDs are unique across active records and all archives in each
+    sequence, ascending, and never reused; a provider's capture numbers are unique across its live
+    directory and every provider archive.
 12. Rows: every ledger row has a concise Title that agrees with its instruction objective, exactly
     one matching instruction, and, for states that require one, exactly one matching result
     (optional states have at most one).
@@ -45,25 +47,24 @@ the provider-evidence checks (20–28) for any workflow that captures or consume
     validation evidence, and a `REVIEW` row or later human decision. A partial `PLANNED` result
     states actual work and blockers. Source edits alone are not completion, and batches never bypass
     this.
-15. Immutability: terminal record bytes and decision values are unchanged since entering their
-    terminal state. Only §9 archive relocation and rebased links are permitted, plus moves recorded
-    in `MIGRATIONS.md` and changes recorded in `OVERRIDES.md`.
+15. Immutability: active terminal record bytes and decision values are unchanged since entering
+    their terminal state; archived files are kept as is and not checked. Only §9 archive relocation of records or whole providers and rebased manifest links are permitted, plus changes a human
+    ordered through an override (§9), whose dependent hashes and links the override updated.
 
 **References**
 
-16. Boundary: every reference in a record, ledger, manifest, or provider file stays inside the
+16. Boundary: every reference in an active record, the ledger, or a provider file stays inside the
     installation root (§3). No reference leaves it, including to another installation in the same
     repository.
-17. Resolution: every reference resolves using original locations, the §9 archive path maps,
-    `MIGRATIONS.md`, and `OVERRIDES.md` to a unique existing file. Manifest links and other installation-relative
+17. Resolution: every reference resolves using original locations and the §9 archive path maps
+    to a unique existing file. Manifest links and other installation-relative
     Markdown links resolve directly.
 18. Dependencies: `DERIVED` and `HYBRID` inputs resolve to results of this installation whose active
-    or archived decision row says `ACCEPTED`; archived result hashes match their manifest.
+    or archived decision row says `ACCEPTED`; an archived result is read as is.
     Dependencies and evidence references resolve across active and archived records to the same
     identity and state.
-19. Migrations: when `MIGRATIONS.md` exists, every row names an existing new path whose bytes match
-    `SHA-256 after`, every row marked as keeping its original names an existing original whose bytes
-    match `SHA-256 before`, and no row maps a path that another row also maps.
+19. Moves: every moved or renamed evidence or record file sits at the path its references name; no
+    reference relies on a lookup table or log to reach it.
 
 **Operations**
 
@@ -71,14 +72,16 @@ the provider-evidence checks (20–28) for any workflow that captures or consume
     unstarted work; required `ACCEPTED` dependencies and human-only decisions remain enforced.
 35. Queues: compound-queue reports account for every normalized operation, dependency, deferred
     binding, completion, blocker, and exact remaining item. Every item keeps its workflow boundary;
-    accept, reject, cancel, forced archive, and override never appear in a queue.
+    accept, reject, cancel, forced archive of either kind, override, addslash, and removeslash never
+    appear in a queue.
 36. Decisions: a decision batch uses one explicit human decision and one applicable proof or reason,
     preflights a fixed nonempty eligible set, changes all selected rows in one ledger edit, and never
     skips or partially decides an invalid selection. Only a single-record decision uses the verbatim
     command and UTC date as its proof.
-37. Overrides: when `OVERRIDES.md` exists, every row records a human command and reason, each file
-    after-state exists with bytes matching `SHA-256 after` unless a later row changed it again, and
-    no row has been edited or removed. Checks broken only by a file's logged after-state pass.
+37. Logs: when `.agents/spectre/logs/` exists, it holds a `.gitignore` whose single line is `*`, and
+    version control tracks no file in it. No other check reads `logs/`. Its files may be edited,
+    trimmed, or deleted, the whole folder included, and their absence or content never fails
+    validation or excuses another check.
 
 Validation should use repository-native tools when available. Machine validation is helpful but
 does not replace human acceptance.

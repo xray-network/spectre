@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.1.0
-Source-SHA256: a4ab931b976a8c0d1cc2c9893623d0a13cff273b5ff2cd2dd9072e3c5b3deb07
+Runtime-Version: 2.3.0
+Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
 
 The two implementation forms in the tree are alternatives and must not be mixed:
 
@@ -24,11 +24,14 @@ immutable history, not additional active ledgers. Target directories contain ins
 results, not status ledgers. Provider captures have no lifecycle ledger and never contain
 implementation instructions or results.
 
-Archive directories are created only by a nonempty `/spectre archive` operation. Each batch
-preserves the installation's flat or nested layout under its `implementations/` directory.
+Archive directories are created only by a nonempty `/spectre archive` operation. A batch holds
+either implementations or providers, never both. An implementations batch preserves the
+installation's flat or nested layout under its `implementations/` directory; a provider batch holds
+each archived provider's whole directory under `providers/<provider>/`.
 IDs remain unique across active records and every archive within their original sequence.
 Archiving never resets a sequence: the next ID follows the highest ID used by any active or
-archived record of that target.
+archived record of that target. A provider's capture numbers likewise stay unique across its live
+directory and every archive that holds an earlier copy of it.
 
 ### Installation boundary
 
@@ -44,29 +47,29 @@ like any upstream source. Capture the other project's published interface, such 
 exported types, and package version or commit, never its SPECTRE records. A plan names the capture
 it relies on instead of requiring another project's result to be `ACCEPTED`.
 
-### Immovable evidence and migrations
+### Immovable evidence
 
 Published capture directories, their files, and every record file keep their path forever. Never
 rename, move, or rewrite them, including to adopt a new naming scheme. Before deleting, merging, or
 moving the repository or project that holds an installation, run full §13 validation and resolve
 every failure, so no evidence depends on history that is about to disappear.
 
-When a human explicitly authorizes an unavoidable evidence move, keep the original file at its
-original path whenever its license and the human's authorization allow it, place the copy at the new
-path, and record the move in `.agents/spectre/MIGRATIONS.md`. Remove an original only when the human
-authorization requires it. Create the file with the first migration:
+Two operations move evidence or records. `/spectre archive` (§9) moves terminal records, or whole
+providers that no active record references, into an archive, unchanged. Any other move or rename is
+a human-ordered `/spectre override` (§9). The override moves the file and, in the same change, updates every link, provider pin, inventory entry,
+and SHA-256 in active records, the ledger, and provider files that refers to it, so every such
+reference names the file's real path. Archives are kept as is and are not updated. It keeps
+a copy at the original path only when the human asks for one. No lookup table redirects old paths.
 
-```markdown
-# SPECTRE migrations
+### Archives are kept as is
 
-| Date | Original path | New path | SHA-256 before | SHA-256 after | Original kept | Reason |
-| --- | --- | --- | --- | --- | --- | --- |
-```
-
-Append one row per moved file; never edit or remove a row. `SHA-256 after` differs from `SHA-256
-before` only when the authorization requires a byte change, and the reason states why. A reference
-to an original path that no longer exists resolves through exactly one row of this table to its new
-path, whose bytes must match `SHA-256 after`. Never follow a chain of rows.
+An archive is history. The archive operation records paths, SHA-256 values, and decision rows as
+they are when it runs; afterwards nothing re-checks or repairs an archive. Links, paths, hashes, and
+text inside archived files and manifests may become stale or broken, and that is never a validation
+failure. Only each manifest row's ID, state, and decision proof are relied on. Ordinary operations
+never edit archives; an override may, but no override has to keep them current. When a command reads
+an archived file, it uses the file as is and may note, as information only, that a link no longer
+resolves or that the bytes differ from the recorded SHA-256.
 
 ### Resolving archived records and references
 
@@ -83,16 +86,21 @@ repository-relative reference from a record:
    Explicit repository-root-relative references keep the installation root as their base.
 2. Normalize the referenced path within the installation root (§3), retaining any fragment. If it
    names an Original path in an archive manifest, resolve it to that row's Archived file. If it
-   names a missing Original path in `MIGRATIONS.md`, resolve it to that row's New path; if it names
-   a missing File before in `OVERRIDES.md`, resolve it to that row's File after. Otherwise
-   use the file at that path. Direct links already naming an archived file remain valid.
+   lies inside an archived provider's Original path and no live file exists at that path, resolve
+   it to the same suffix under that batch's `providers/<provider>/`. If it
+   names `.agents/spectre/SPECTRE-PROTOCOL.md` or a file under `.agents/spectre/templates/`, where
+   earlier releases kept them, resolve it to `.agents/spectre/runtime/SPECTRE-PROTOCOL.md` or the
+   same template under `.agents/spectre/runtime/modules/templates/`. This
+   fixed rule covers tooling files only, never evidence. Otherwise use the file at that path. Logs under `logs/` are never used for resolution. Direct links already naming an archived file remain valid.
 3. Require a unique existing destination. Reject conflicting active and archived copies, duplicate
-   mappings, missing destinations, or paths that leave the installation root. For an archived or
-   migrated destination, verify its digest and, for a record, the matching decision row before using
-   it as evidence. Never follow a mapping chain.
+   mappings, missing destinations, or paths that leave the installation root. For an archived
+   destination, rely on its matching decision row and read the file as is; a missing archived file
+   or a changed digest is information, never a failure. Never follow a mapping chain.
 
-Apply this to `Depends-On`, input tables, `Instruction`, result references, and provider links;
-provider files themselves stay in place. An archived file's raw relative link may require this
-original-location resolution rather than ordinary Markdown navigation. The manifest's record
-links must work directly, and `status` must return usable links to the resolved files. Do not
+Apply this to `Depends-On`, input tables, `Instruction`, result references, and provider links.
+Provider files stay in place unless a provider archive moved them whole; an active record never
+references an archived provider. An archived file's raw relative link may require this
+original-location resolution rather than ordinary Markdown navigation. The archive operation
+writes manifest record links that work directly; afterwards they are kept as is, and `status`
+returns the links it can still resolve. Do not
 rewrite immutable records merely to make their embedded links relative to the archive directory.
