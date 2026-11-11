@@ -8,17 +8,6 @@ Storage-Mode: nested
 This is the sole active lifecycle ledger. Archived decision rows and record paths are preserved
 under `.agents/spectre/archive/` once an archive exists.
 
-## Docs implementation status
-
-Target: docs
-
-### Implementation ledger
-
-| ID | Title | Instruction | State | Result | Evidence mode | Decision proof |
-| --- | --- | --- | --- | --- | --- | --- |
-
-No implementation records.
-
 ## Harness implementation status
 
 Target: harness
@@ -28,17 +17,6 @@ Target: harness
 | ID | Title | Instruction | State | Result | Evidence mode | Decision proof |
 | --- | --- | --- | --- | --- | --- | --- |
 | `harness/0001` | Review ledger decisions locally | [Instruction](.agents/spectre/implementations/harness/0001-IMPL-INSTR.md) | `PLANNED` | — | `LOCAL` | Planned from the human request for a Node-only SPECTRE harness. |
-
-## Protocol implementation status
-
-Target: protocol
-
-### Implementation ledger
-
-| ID | Title | Instruction | State | Result | Evidence mode | Decision proof |
-| --- | --- | --- | --- | --- | --- | --- |
-
-No implementation records.
 
 ## Repository implementation status
 
