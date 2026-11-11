@@ -1,4 +1,4 @@
-# SPECTRE
+# XRAY/SPECTRE
 
 **Specification · Planning · Evidence · Change · Traceability · Review · Execution**
 
@@ -122,7 +122,7 @@ capture creates no folder or summary. Validation runs automatically inside the w
 not require a separate command. Plans pin a numbered snapshot and hashes, including resolved earlier artifacts; a separate
 Git commit is not a protocol prerequisite. A plan captures the providers it relies on before
 writing its instruction; a standalone capture tracks upstream changes between plans. Anything from
-another project enters as a provider capture, never as a link outside the installation. See [provider captures](docs/src/pages/commands.md#provider-captures).
+another project enters as a provider capture, never as a link outside the installation. See [provider captures](wiki/src/pages/commands.md#provider-captures).
 
 `archive implementations [target]`, or bare `archive` for all targets, moves terminal
 implementations and their decision rows into a dated archive, clearing those rows from the active
@@ -131,7 +131,7 @@ are preserved; implementation IDs never restart. Use `list --archived` to browse
 `status <record>` to find a record in either location. `archive implementations [target] --force:
 <reason>` first closes open records as `CANCELLED` with that reason and lists existing defects in
 the manifest instead of failing. `archive providers <provider>...` moves whole providers that no
-active record uses into an archive; see [archive providers](docs/src/pages/commands.md#archive-providers).
+active record uses into an archive; see [archive providers](wiki/src/pages/commands.md#archive-providers).
 
 ## Repository layout
 
@@ -147,7 +147,7 @@ active record uses into an archive; see [archive providers](docs/src/pages/comma
 │   └── v2.3.0/                  # current
 │       └── SPECTRE-PROTOCOL.md
 ├── ideas/                       # proposals, not part of the protocol
-└── docs/
+└── wiki/
     ├── src/pages/public/        # generated release assets
     ├── rspress.config.ts
     └── wrangler.jsonc
@@ -156,7 +156,7 @@ active record uses into an archive; see [archive providers](docs/src/pages/comma
 `protocol/` is the single canonical release source. Each release directory is frozen once
 published; every later change becomes a new semantic version. The documentation build generates
 both the public current-release mirror (the highest version) and versioned raw assets directly from
-it. `docs/scripts/check-protocol.mjs` checks runtime extraction and rule placement for every release.
+it. `wiki/scripts/check-protocol.mjs` checks runtime extraction and rule placement for every release.
 This source repository does not install its own `.agents/` tracking or command structure; the
 protocol instructs adopting repositories to create it during installation.
 
@@ -166,7 +166,7 @@ The docs publisher does not generate separate runtime downloads.
 ## Documentation
 
 ```sh
-cd docs
+cd wiki
 npm install
 npm run dev
 ```

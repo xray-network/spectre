@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url"
 const scriptDirectory = dirname(fileURLToPath(import.meta.url))
 const repositoryRoot = resolve(scriptDirectory, "../..")
 const sourceRoot = join(repositoryRoot, "protocol")
-const publicRoot = join(repositoryRoot, "docs/src/pages/public")
+const publicRoot = join(repositoryRoot, "wiki/src/pages/public")
 const destinationRoot = join(publicRoot, "protocol")
 const releasePattern = /^v(\d+)\.(\d+)\.(\d+)$/
 const canonicalOrigin = "https://wiki.xraynetwork.io/spectre/protocol"

@@ -83,9 +83,9 @@ every workflow applies, `validation-evidence.md` and `providers.md` load only wh
 is captured or consumed, and `validation-full.md` loads for archive and upgrade, which validate the
 full installation.
 
-For example, `/spectre implement api/0002` explicitly starts implementation. In Codex, use
-`$spectre implement api/0002`. After a human or SPECTRE report identifies that existing plan in the
-conversation, `Spectre implement this` starts the same workflow, including tracking. The phrase
+For example, `/spectre implement api/0002` explicitly starts implementation. After a human or
+SPECTRE report identifies that existing plan in the conversation, `Spectre implement this` starts
+the same workflow, including tracking. The phrase
 `implement this` without SPECTRE never activates it, even with that context. Ambiguous scope pauses
 before source or record changes; it never falls back to untracked implementation.
 

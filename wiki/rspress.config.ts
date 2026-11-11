@@ -32,7 +32,7 @@ export default defineConfig({
     darkMode: "dark",
     enableAppearanceAnimation: false,
     editLink: {
-      docRepoBaseUrl: "https://github.com/xray-network/spectre/edit/main/docs/src/pages"
+      docRepoBaseUrl: "https://github.com/xray-network/spectre/edit/main/wiki/src/pages"
     },
     socialLinks: [
       {

@@ -26,7 +26,6 @@ html:root {
   --rp-radius-small: var(--xr-radius);
   --rp-radius-large: var(--xr-radius-panel);
   --rp-sidebar-width: 265px;
-  --spectre-layout-width: 1440px;
   --spectre-content-width: 768px;
   --spectre-layout-gutter: 24px;
   --spectre-header-height: 64px;
@@ -81,10 +80,7 @@ html:root:has(.spectre-section-tabs) {
 
 html .rp-nav {
   height: var(--spectre-header-height);
-  padding-inline: max(
-    var(--spectre-layout-gutter),
-    calc((100% - var(--spectre-layout-width)) / 2)
-  );
+  padding-inline: var(--spectre-layout-gutter);
   background: var(--xr-canvas);
   border-bottom-color: var(--xr-border);
 }
@@ -109,7 +105,7 @@ html .rp-nav:has(+ .spectre-section-tabs) {
   display: flex;
   gap: 24px;
   width: calc(100% - 2 * var(--spectre-layout-gutter));
-  max-width: var(--spectre-layout-width);
+  max-width: none;
   height: 100%;
   margin-inline: auto;
   overflow-x: auto;
@@ -146,11 +142,11 @@ html .spectre-section-tab[aria-current="page"] {
   border-bottom-color: var(--xr-link);
 }
 
-/* Header contents, sidebar, and content align to one centered frame. */
+/* Navigation rails follow the viewport edges; prose keeps a readable measure. */
 html .rp-doc-layout__container,
 html .rp-doc-layout__menu {
   width: calc(100% - 2 * var(--spectre-layout-gutter));
-  max-width: var(--spectre-layout-width);
+  max-width: none;
   margin-inline: auto;
 }
 
