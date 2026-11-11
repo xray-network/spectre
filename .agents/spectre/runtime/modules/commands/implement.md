@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.3.0
-Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
+Runtime-Version: 1.0.0
+Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
 
 ## 6. Evidence modes and inputs
 
@@ -30,26 +30,30 @@ Every normative input must be an explicit row in the instruction's input table. 
 - Do not silently fetch, refresh, substitute, or broaden a declared input during implementation.
   A material input change requires a new or revised non-terminal instruction.
 
-Apply these implementation design rules:
+### Declared source relocation
 
-- Do not preserve backward compatibility. Remove obsolete paths instead of adding compatibility
-  layers or fallbacks.
-- Choose the simplest implementation that fully meets the current requirements. Avoid speculative
-  abstractions, configuration, and indirection.
-- Grow the system in layers. Start from the smallest version that works end to end, and add each
-  new capability on top of a product that already works. Never trade a working product for
-  unfinished complexity.
-- Keep components modular and concerns clearly separated.
-- Prefer established, well-maintained libraries when they reduce overall complexity or improve
-  reliability. Do not reimplement common functionality without a clear reason.
-- Lean on the dependencies already in the project before writing a custom implementation or
-  adding packages. Do not assume a library lacks a capability without checking its documentation
-  and types.
-- Make architectural decisions for the long term. Do not accept a stopgap that only works for now
-  and is meant to be replaced later.
+An instruction that moves its owned source directory must declare old/new target paths and affected
+LOCAL source-input moves/removals in its change table. Before source work, resolve ownership under
+commands/target.md. After the actual move, publish the verified current registry Path and live Path
+projection with the result/ledger update (publication.md), including honest partial results
+when tests fail after a completed move. This bookkeeping is included in the authorized relocation;
+do not require a second path-update permission or leave the registry pointing at an absent folder.
+
+The instruction's Target-Path remains its planning-time snapshot. Explicitly consumed LOCAL owned
+source paths moved/deleted by that change may be historical afterward when their Change IDs and
+old/new dispositions are recorded in the result. Validate the declared outcome/new paths rather
+than requiring deleted source to reappear. This exception never applies to provider pins, evidence,
+SPECTRE record links or accepted-result dependencies. Unexpected missing inputs still block work
+and require an explicit revision. If a partial move leaves ownership ambiguous, preserve edits,
+record the blocker, and resolve it before claiming a valid binding or REVIEW completion.
+
+Follow the instruction's declared compatibility contract. Preserve published consumers where
+required; remove obsolete paths only when the bounded objective authorizes it. Never add
+speculative compatibility layers or silently break the declared public interface. Engineering style
+and design choices come from repository guidance, not from this standard.
 
 For `/spectre implement <record>`, a selected batch or compound-queue item, or an implementation
-continuation that explicitly mentions SPECTRE, complete this workflow for one record:
+continuation authorized under §1, complete this workflow for one record:
 
 1. Require one matching active `PLANNED` row and instruction. Refuse missing, duplicate,
    terminal, or mismatched identities. A previously recorded blocker must be resolved before
@@ -66,7 +70,8 @@ continuation that explicitly mentions SPECTRE, complete this workflow for one re
    Give every required Change ID one disposition: `IMPLEMENTED`, `PARTIAL`, `NOT-IMPLEMENTED`, or
    `SUPERSEDED`. Record actual inputs, paths changed, checks, deviations, and remaining review.
 6. Move the ledger row to `REVIEW` only when the bounded objective and required checks are complete
-   and the matching result exists. Write result and ledger updates as part of this item, validate
+   and the matching result exists. Write the result first and the `REVIEW` row last
+   (publication.md) as part of this item, validate
    their IDs, links, Change IDs and state, confirm every reference in the result stays inside the
    installation boundary (§3) and resolves, and verify the files before reporting completion.
 7. On failure or interruption, preserve the existing work, record a partial result and the actual
@@ -89,7 +94,7 @@ continuation that explicitly mentions SPECTRE, complete this workflow for one re
    acceptance gate. Preserve completed items in `REVIEW`; record the current item's actual progress
    and leave unstarted items unchanged. Report the blocker and the exact remaining IDs. Never
    silently skip a failed item, widen scope, or mark the whole batch complete.
-4. On a continuation that explicitly mentions SPECTRE for this same bound batch, reconcile its IDs
+4. On a continuation authorized under §1 for this same bound batch, reconcile its IDs
    with the ledger and existing changes. Validate records already completed in `REVIEW` and do not
    implement them again.
    Human-decided terminal items remain immutable; verify and report them without reopening them.

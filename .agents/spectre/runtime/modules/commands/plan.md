@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.3.0
-Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
+Runtime-Version: 1.0.0
+Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
 
 ## 4. Repository discovery and target selection
 
@@ -21,7 +21,7 @@ Choose targets using these rules:
 - A single application, package, or service uses flat mode. Do not create
   `implementations/<target>/` for it, even when its name or a plausible target slug is known.
 - A monorepo uses nested mode. Each independently versioned, owned, or validated package/service
-  usually becomes one target directory.
+  usually becomes a target when first planned; discovery alone creates no registry row or directory.
 - In monorepo mode, `repository` is the reserved repository-governance target. Its `0001` record is the
   SPECTRE installation; it is not a parent product target.
 - A current human may explicitly require nested target directories when repository metadata alone
@@ -31,13 +31,13 @@ Choose targets using these rules:
 - Do not use transient branch names, ticket numbers, contributor names, or vague buckets such as
   `misc`.
 - Use lowercase ASCII slugs containing letters, digits, and single hyphens. A target ID matches
-  `^[a-z0-9]+(?:-[a-z0-9]+)*$`. `implementations` and `providers` are reserved archive kinds and
-  are never target slugs.
+  `^[a-z0-9]+(?:-[a-z0-9]+)*$`. `all`, `implementations` and `providers` are reserved
+  and are never new target slugs.
 - When two plausible models would assign the same source to different targets, stop before
   creating target directories and ask a human to choose.
 
 Choose the storage mode and target layout during installation. This release does not define
-in-place conversion between layouts. Terminal records retain their original paths except for
+in-place conversion between layouts or historical target-ID renaming. Terminal records retain their original paths except for
 the explicit archive relocation defined in §9; their logical identity and original path remain recorded.
 
 ## 6. Evidence modes and inputs
@@ -70,14 +70,14 @@ Every normative input must be an explicit row in the instruction's input table. 
 
 ## 8. Planning workflow
 
-Run this workflow only for an explicit `/spectre plan` invocation, its host-native equivalent, or
-one explicitly stated plan item in a normalized compound queue. Planning and implementation remain
+Run this workflow for an explicit planning request in commands or natural language, including
+a normalized queue item. Planning and implementation remain
 separate operations except for the required bootstrap installation record in §2; a queue may contain
-both only when the human stated both. Planning does not authorize product-source changes. Resolve the
+both when implementation of that objective is authorized under §1; a planning-only request stops. Planning does not authorize product-source changes. Resolve the
 target selector using §1 and §4 before allocating an ID or creating records.
 
 1. Read repository guidance, relevant decisions, applicable source/tests/manifest/README, the
-   applicable section in root `SPECTRE.md`, status and implementation templates, and candidate
+   target registry, applicable live rows (the section may be absent), status/target/implementation templates, and candidate
    declared inputs. Read the provider template only when provider evidence is involved.
 2. Capture first. If the plan relies on provider evidence, report every existing provider guide it
    relies on, then run the §12 capture workflow for each, in provider slug order, before allocating
@@ -90,7 +90,10 @@ target selector using §1 and §4 before allocating an ID or creating records.
    Read active records and every archive manifest in that sequence. The next ID is one greater
    than the highest instruction, result, or ledger ID across both locations. Never fill gaps,
    reuse IDs, or restart after archiving, even when the active ledger is empty. Refuse incomplete
-   or conflicting history; if the highest ID is `9999`, stop and report sequence exhaustion.
+   or conflicting history; if the highest ID is `9999`, stop and report sequence exhaustion. If the
+   highest ID is an instruction with no row and no result (an interrupted plan, publication.md),
+   stop unless the current request has the same objective; then validate that instruction and
+   publish its row in step 9 instead of allocating another ID.
 4. Confirm that prerequisite results are `ACCEPTED` and provider snapshots pass their complete
    resolved-inventory checks, including every reused file. Resolve pins under `providers.md`;
    incomplete captures or missing inherited artifacts block planning against that evidence. Do not
@@ -102,9 +105,13 @@ target selector using §1 and §4 before allocating an ID or creating records.
    out-of-scope item, and blocker.
 8. If a material question remains unresolved, record it as a blocker and do not create a
    misleading `PLANNED` row.
-9. Verify that every reference in the new instruction resolves inside the installation boundary,
-   then create `NNNN-IMPL-INSTR.md` and its matching `PLANNED` ledger row in the same change. Give
-   the row a short title matching the instruction objective. Do not create a result or modify source.
+9. Following publication.md, create `NNNN-IMPL-INSTR.md` at a path that does not exist, with
+   Target-Path as a source-location snapshot. Verify required inputs, reference containment and
+   current Path agreement. Reread the registry and ledger; if the sequence changed, stop. Register
+   the resolved target if first used, with its verified existing Path, or the new-project Path its
+   changes create (commands/target.md), and ACTIVE status; never
+   reactivate a retired target implicitly. Add the matching PLANNED row last, creating its live
+   section only now, with a short matching objective title. Do not create a result or modify source.
 
 Every change row receives a stable Change ID such as `C01`. IDs are unique within the instruction
 and are used unchanged by the result.

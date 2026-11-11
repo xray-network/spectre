@@ -2,6 +2,7 @@
 
 Implementation-Version: v1
 Implementation-ID: harness/0001
+Target-Path: ./harness/
 Created: 20261111T100920Z
 Evidence-Mode: LOCAL
 Depends-On: NONE
@@ -12,9 +13,8 @@ Provider-Evidence: NONE
 | Input | Kind | Required | Purpose |
 | --- | --- | --- | --- |
 | Current human request to plan a Node-only SPECTRE harness: a `spectre` CLI whose first release shows the ledger and records human decisions in a local web UI, with AI-driven planning and implementation added later. | `LOCAL` | Yes | Authorize the objective, the `harness` target, the command names, and the no-dependency constraint. |
-| [Pinned SPECTRE protocol](../../SPECTRE-PROTOCOL.md) | `LOCAL` | Yes | Define the ledger format, selectors, lifecycle, decision workflow, and archive manifests the harness reads and writes. |
-| [SPECTRE protocol v2.1.0 source](../../../../protocol/v2.1.0/SPECTRE-PROTOCOL.md) | `LOCAL` | Yes | Supported protocol release; byte-identical to the pinned copy. |
-| [SPECTRE protocol v2.0.0 source](../../../../protocol/v2.0.0/SPECTRE-PROTOCOL.md) | `LOCAL` | Yes | Supported protocol release; the same Status-Schema-Version v2 ledger. |
+| [Pinned SPECTRE protocol](../../runtime/SPECTRE-PROTOCOL.md) | `LOCAL` | Yes | Define the ledger format, selectors, lifecycle, decision workflow, and archive manifests the harness reads and writes. |
+| [SPECTRE protocol v1.0.0 source](../../../../protocol/v1.0.0/SPECTRE-PROTOCOL.md) | `LOCAL` | Yes | Supported protocol release; byte-identical to the pinned copy. |
 | [Repository README](../../../../README.md) | `LOCAL` | Yes | Repository identity, published resources, and the place to document the harness. |
 | [Repository ignore rules](../../../../.gitignore) | `LOCAL` | Yes | Keep dependencies, build output, and secrets out of the harness. |
 | [Repository license](../../../../LICENSE) | `LOCAL` | Yes | License copied into the harness package. |
@@ -89,4 +89,6 @@ actual test output.
 
 ## Blockers
 
-None.
+This plan was written for SPECTRE 2.0.0 and 2.1.0 (Status-Schema-Version v2, no target registry,
+no publication order, earlier decision-proof wording). Revise it against SPECTRE 1.0.0 before
+implementation.

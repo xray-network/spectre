@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.3.0
-Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
+Runtime-Version: 1.0.0
+Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
 
 ### Recall
 
@@ -14,7 +14,7 @@ recall only finds and cites them.
 2. Read only the candidates' instructions and results: objectives, change dispositions, outcomes,
    exported change contracts, validation, and deviations. For candidates with provider inputs, read
    the pinned captures' `CAPTURE.md` summaries. Resolve archived references under
-   `references.md` and pins under `providers.md`. Widen the candidate set only through references
+   `history.md` and pins under `providers.md`. Widen the candidate set only through references
    these records declare.
 3. Classify every relevant record by state. `ACCEPTED` records are the decisions. Report `REVIEW`
    work as pending, `PLANNED` work as intended but not done, and `REJECTED` and `CANCELLED` records

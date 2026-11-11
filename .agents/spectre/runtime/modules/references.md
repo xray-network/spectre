@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.3.0
-Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
+Runtime-Version: 1.0.0
+Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
 
 The two implementation forms in the tree are alternatives and must not be mixed:
 
@@ -17,8 +17,8 @@ Each provider has an independent four-digit capture sequence. These numbers iden
 evidence captures, not versions of the provider or upstream protocol.
 
 Root `SPECTRE.md` is the sole active lifecycle ledger and the project-facing implementation
-summary. It aggregates one status section for the repository in flat mode or one section per
-target in monorepo mode. Each archived implementation has its sole historical decision row in
+summary. It has sections only for targets with live rows. `TARGETS.md` owns target identity
+and current source location independently of whether a target has a live section. Each archived implementation has its sole historical decision row in
 one `archive/<archive-id>/ARCHIVE.md`; it has no row in the active ledger. Archive manifests are
 immutable history, not additional active ledgers. Target directories contain instructions and
 results, not status ledgers. Provider captures have no lifecycle ledger and never contain
@@ -35,8 +35,10 @@ directory and every archive that holds an earlier copy of it.
 
 ### Installation boundary
 
-The installation root is the folder that holds `.agents/spectre/`. Every reference in a record,
-ledger, manifest, or provider file resolves to a file inside that root. A reference that leaves it,
+The installation root is the folder that holds `.agents/spectre/`. Every local reference in a record,
+ledger, manifest, or provider file stays inside that root. Official upstream URLs are provenance,
+not local filesystem references. Active normative inputs must resolve; historical source locations
+may be stale under the source-reference rules below. A reference that leaves it,
 such as `../other-project/...`, an absolute path, or a symbolic link pointing outside, is invalid
 even when the target exists, including another installation in the same repository. Check this
 whenever a record is written, not only during archive.
@@ -47,60 +49,42 @@ like any upstream source. Capture the other project's published interface, such 
 exported types, and package version or commit, never its SPECTRE records. A plan names the capture
 it relies on instead of requiring another project's result to be `ACCEPTED`.
 
-### Immovable evidence
+### Target identity and current paths
 
-Published capture directories, their files, and every record file keep their path forever. Never
-rename, move, or rewrite them, including to adopt a new naming scheme. Before deleting, merging, or
-moving the repository or project that holds an installation, run full §13 validation and resolve
-every failure, so no evidence depends on history that is about to disappear.
+`.agents/spectre/TARGETS.md` is the sole target registry (§11). Its rows contain stable Target ID,
+Label, Path, Status and Reason. It stores no implementation state or next-ID counter. Register only
+the bootstrap target at installation and another target on its first successful plan. Discovery
+does not pre-register filesystem folders. Every live or archived target identity remains registered;
+retirement preserves a tombstone. Historical slugs remain separate identities unless an explicit scoped override changes them
+with unambiguous continuity; never infer that two historical slugs are one sequence.
 
-Two operations move evidence or records. `/spectre archive` (§9) moves terminal records, or whole
-providers that no active record references, into an archive, unchanged. Any other move or rename is
-a human-ordered `/spectre override` (§9). The override moves the file and, in the same change, updates every link, provider pin, inventory entry,
-and SHA-256 in active records, the ledger, and provider files that refers to it, so every such
-reference names the file's real path. Archives are kept as is and are not updated. It keeps
-a copy at the original path only when the human asks for one. No lookup table redirects old paths.
+Path is a normalized installation-root-relative source directory: `./` or `./path/`. Reject absolute
+paths, traversal, `.agents/spectre/` ownership, unsafe encodings, symlink escapes and nonexistent active
+paths. The one exception is a new project: its first plan may register a Path that does not exist yet
+when that plan's Target-Path names it and a change of that plan creates it. The Path must exist once
+any record of the target reaches REVIEW; until then a missing folder is expected, not an error.
+Resolve filesystem containment, not string prefixes. A target has one current path; it is
+context/ownership, not permission to read or modify every descendant. Nested ownership does not
+overlap; the `repository` governance target at `./` is the exception and owns governance only.
+Flat mode has exactly one registered repository target at `./`.
 
-### Archives are kept as is
+Live sections display their registry ID, label and current Path, checked as a projection. Historical
+instructions/source paths and archive Path fields remain snapshots; a source-folder move never
+rewrites them. Target IDs and sequence ownership survive source renames. Record and evidence paths
+remain governed by §3/§9 and cannot be moved by changing this registry.
 
-An archive is history. The archive operation records paths, SHA-256 values, and decision rows as
-they are when it runs; afterwards nothing re-checks or repairs an archive. Links, paths, hashes, and
-text inside archived files and manifests may become stale or broken, and that is never a validation
-failure. Only each manifest row's ID, state, and decision proof are relied on. Ordinary operations
-never edit archives; an override may, but no override has to keep them current. When a command reads
-an archived file, it uses the file as is and may note, as information only, that a link no longer
-resolves or that the bytes differ from the recorded SHA-256.
+### Current inputs and historical source locations
 
-### Resolving archived records and references
+Local normative inputs in a new/revised instruction and all inputs consumed during implementation
+must exist when consumed. Explicit owned-source moves/removals declared by a Change ID can
+become historical after consumption when the result records their verified disposition (§9). Other
+active PLANNED/REVIEW records with moved required inputs need an explicit revision before work; changing target Path cannot silently rebind them.
+SPECTRE record links, dependencies and provider pins always require identity-safe resolution when
+consumed. Registry Path defines current ownership, not an input redirect.
 
-All SPECTRE operations resolve record IDs and references across the active ledger and every
-archive manifest. One implementation ID has exactly one authoritative row and one physical
-instruction (and at most one result), either active or archived. Archive dates never change
-implementation identity, target ownership, state, or dependency acceptance.
-
-Record contents remain byte-for-byte unchanged, including embedded relative paths. To follow a
-repository-relative reference from a record:
-
-1. Use the containing file's original repository location as the base. For an archived record,
-   obtain that location from its Record paths entry; for an active record, use its current path.
-   Explicit repository-root-relative references keep the installation root as their base.
-2. Normalize the referenced path within the installation root (§3), retaining any fragment. If it
-   names an Original path in an archive manifest, resolve it to that row's Archived file. If it
-   lies inside an archived provider's Original path and no live file exists at that path, resolve
-   it to the same suffix under that batch's `providers/<provider>/`. If it
-   names `.agents/spectre/SPECTRE-PROTOCOL.md` or a file under `.agents/spectre/templates/`, where
-   earlier releases kept them, resolve it to `.agents/spectre/runtime/SPECTRE-PROTOCOL.md` or the
-   same template under `.agents/spectre/runtime/modules/templates/`. This
-   fixed rule covers tooling files only, never evidence. Otherwise use the file at that path. Logs under `logs/` are never used for resolution. Direct links already naming an archived file remain valid.
-3. Require a unique existing destination. Reject conflicting active and archived copies, duplicate
-   mappings, missing destinations, or paths that leave the installation root. For an archived
-   destination, rely on its matching decision row and read the file as is; a missing archived file
-   or a changed digest is information, never a failure. Never follow a mapping chain.
-
-Apply this to `Depends-On`, input tables, `Instruction`, result references, and provider links.
-Provider files stay in place unless a provider archive moved them whole; an active record never
-references an archived provider. An archived file's raw relative link may require this
-original-location resolution rather than ordinary Markdown navigation. The archive operation
-writes manifest record links that work directly; afterwards they are kept as is, and `status`
-returns the links it can still resolve. Do not
-rewrite immutable records merely to make their embedded links relative to the archive directory.
+Source/test paths describing completed changes, the Target-Path snapshot of an instruction, and
+source links in terminal records are historical context. A later legitimate move/removal may make
+them stale without invalidating the decision or blocking archiving/target maintenance. Report stale
+source locations when relevant; never rewrite terminal bytes to refresh navigation. Every local
+reference still stays inside the installation. Provider inventory paths and evidence hashes are
+strict evidence, never treated as optional historical source links.

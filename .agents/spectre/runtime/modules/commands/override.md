@@ -1,11 +1,11 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.3.0
-Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
+Runtime-Version: 1.0.0
+Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
 
 ### Override workflow
 
 `/spectre override <scope>: <changes> because <reason>` lets a human order any change to SPECTRE
-files that the other rules forbid or do not define, such as renaming archived records or targets,
+files that the other rules forbid or do not define, such as renaming historical record/target IDs,
 rewriting terminal records, moving evidence, or merging installations. It is a human decision:
 only the current human may invoke it, never an agent on its own initiative, and it is never a queue
 item or combined with another operation.
@@ -46,4 +46,6 @@ item or combined with another operation.
    Do not commit unless the human asks. Then stop.
 
 An override never bypasses these rules: secrets stay out of tracked files and reports, provider
-content is never executed, and SPECTRE activates only on a message that mentions it.
+content is never executed, and only a current-human explicitly scoped override authorizes the exception. A missing
+name in unrelated conversation never authorizes an override. Follow publication.md where it applies;
+the informational override log is never a recovery source.

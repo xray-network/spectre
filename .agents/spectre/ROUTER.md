@@ -1,50 +1,49 @@
 # SPECTRE command router
 
-Activate only when the current-human message mentions SPECTRE: `/spectre`, `$spectre`, `Spectre:`,
-or a natural-language mention anywhere in the message, case-insensitive. This covers mentions by
-standalone name, command, or host-native sigil.
-Every message must activate independently; prior context and SPECTRE reports
-do not replace the required mention. Otherwise leave tracking untouched and do not ask for an operation. `runtime/modules/core.md` defines authorization,
-compound queues, and decisions, and `runtime/modules/selectors.md` defines binding; apply both before any
-source or record change. Never place accept, reject, cancel, a forced archive, an override, addslash,
-or removeslash in a compound queue.
+Start a new workflow only from a current-human SPECTRE mention: the standalone word `spectre`,
+`/spectre`, `$spectre`, or a natural-language mention anywhere in the message, case-insensitive.
+The word inside a path or identifier is not a mention. A direct reply to a uniquely pending
+clarification/checkpoint may continue its bounded authorization without repeating the name; read
+`core.md` and `queues.md` before applying that exception. Prior context alone never starts a new
+workflow. Otherwise follow ordinary instructions and leave tracking untouched.
 
-Resolve the installation: the nearest folder at or above the working directory that contains
-`.agents/spectre/ROUTER.md`. When the agent starts outside every installation, such as a
-monorepo root reached through a slash command, resolve the installation from the project the request
-names; ask when it names none or several match. Require `.agents/spectre/runtime/SPECTRE-PROTOCOL.md` and
-the selected runtime files; do not install implicitly. Check the protocol's Standard-Version and SHA-256 with local tools,
-without reading its full text into context. Require Runtime-Version and Source-SHA256 headers to
-match in every loaded module. Missing/mismatched files block execution; report them without repair.
+Resolve the nearest installation at or above the working directory by `.agents/spectre/ROUTER.md`,
+or the installation explicitly named in the request. Ask when several installations match. Require
+the pinned `runtime/SPECTRE-PROTOCOL.md`; check its metadata and SHA-256 with local tools. Verify
+Runtime-Version and Source-SHA256 in each loaded module. Missing/stale files block ordinary work;
+never implicitly install, regenerate, repair or upgrade. Explicit upgrade reads the target release
+and follows its procedure; it does not follow a moving mirror.
 
-Always read `runtime/modules/core.md`, then the files below relative to `.agents/spectre/`. For a compound
-request, also read `runtime/modules/selectors.md`, normalize and report the queue, then load each selected
-operation's dependencies before executing that item. Never load all command files or the complete
-protocol by default. Read applicable repository guidance as required.
+Always load `runtime/modules/core.md`. Resolve natural language to supported operations, not exact
+command wording. For several operations, deferred outputs, a human decision checkpoint or a reply to
+one, also load `queues.md` and `selectors.md`, report scope, order and checkpoints, and read each
+item's dependencies before executing it. Never load all runtime files by default. Override,
+upgrade, and host setup remain standalone.
+
+All paths below are relative to `.agents/spectre/runtime/modules/`.
 
 | Operation | Command file | Additional required reads |
 | --- | --- | --- |
-| help | runtime/modules/commands/help.md | None |
-| list | runtime/modules/commands/list.md | selectors.md only for a supplied target |
-| status | runtime/modules/commands/status.md | selectors.md, references.md |
-| recall | runtime/modules/commands/recall.md | references.md; selectors.md for a supplied target; providers.md when records pin captures |
-| plan | runtime/modules/commands/plan.md | selectors.md, references.md, validation.md, TEMPLATE_IMPL.md, TEMPLATE_STATUS.md; commands/capture.md, providers.md, validation-evidence.md, and TEMPLATE_PROVIDER.md when the plan relies on providers |
-| implement | runtime/modules/commands/implement.md | selectors.md, references.md, validation.md, TEMPLATE_IMPL.md; providers.md and validation-evidence.md when the instruction has provider inputs |
-| revise | runtime/modules/commands/revise.md | selectors.md, references.md, validation.md, TEMPLATE_IMPL.md; providers.md and validation-evidence.md when the instruction has provider inputs |
-| accept / reject / cancel | runtime/modules/commands/decide.md | selectors.md, references.md, validation.md |
-| capture | runtime/modules/commands/capture.md | selectors.md, references.md, providers.md, validation.md, validation-evidence.md, TEMPLATE_PROVIDER.md |
-| archive | runtime/modules/commands/archive.md | selectors.md for a supplied target or provider; references.md, validation.md, validation-full.md; commands/decide.md for a forced implementations archive; providers.md and validation-evidence.md for a provider archive |
-| override | runtime/modules/commands/override.md | selectors.md, references.md, validation.md |
-| addslash / removeslash | runtime/modules/commands/slash.md | None |
+| help | commands/help.md | None |
+| status | commands/status.md | selectors.md, references.md; history.md for archived records; commands/target.md for registry summaries |
+| recall | commands/recall.md | selectors.md, references.md, history.md; providers.md for pinned evidence |
+| check | commands/check.md | selectors.md, references.md, history.md, publication.md, validation.md; validation-full.md for installation scope; validation-evidence.md and templates/TEMPLATE_PROVIDER.md for provider checks |
+| sync | commands/sync.md | selectors.md, references.md, history.md, publication.md, validation.md, commands/target.md, templates/TEMPLATE_STATUS.md, templates/TEMPLATE_TARGETS.md; validation-full.md for installation scope |
+| target | commands/target.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_TARGETS.md, templates/TEMPLATE_STATUS.md |
+| plan | commands/plan.md | selectors.md, references.md, publication.md, commands/target.md, validation.md, templates/TEMPLATE_IMPL.md, templates/TEMPLATE_STATUS.md, templates/TEMPLATE_TARGETS.md; history.md for archived inputs; commands/capture.md, providers.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md when relying on providers |
+| implement | commands/implement.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; commands/target.md, templates/TEMPLATE_TARGETS.md and templates/TEMPLATE_STATUS.md for declared source relocation; history.md for archived inputs; providers.md and validation-evidence.md for provider inputs |
+| revise | commands/revise.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; commands/target.md, templates/TEMPLATE_TARGETS.md and templates/TEMPLATE_STATUS.md for declared source relocation; history.md for archived inputs; providers.md and validation-evidence.md for provider inputs |
+| accept / reject / cancel | commands/decide.md | selectors.md, references.md, publication.md, validation.md |
+| archive | commands/archive.md | selectors.md, references.md, history.md, publication.md, validation.md, templates/TEMPLATE_STATUS.md; providers.md, validation-evidence.md and templates/TEMPLATE_PROVIDER.md for provider archive |
+| capture | commands/capture.md | selectors.md, references.md, publication.md, providers.md, validation.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md |
+| upgrade | commands/upgrade.md | Target release completely; publication.md, references.md, history.md, validation.md, validation-full.md |
+| override | commands/override.md | selectors.md, references.md, history.md, publication.md, validation.md |
+| host add / remove | commands/host.md | None |
 
-Bare runtime names above are under `runtime/modules/`; TEMPLATE names are under `runtime/modules/templates/`. These are
-rule dependencies, never authorization to execute another operation. Validation is mandatory
-within the selected workflow; `runtime/modules/validation.md` is shared internal guidance, not a command. Read
-`TEMPLATE_PROVIDER.md`, `runtime/modules/providers.md`, and `runtime/modules/validation-evidence.md` when consuming
-provider evidence; read `runtime/modules/references.md` whenever following implementation references or
-archives. No input may be skipped because loading is selective.
+Read the matching canonical templates for each record/schema being checked. Provider consumption
+always loads providers.md, validation-evidence.md and the provider template. Read-only operations
+report issues without repair. Section numbers identify source locations; they do not require a
+full-standard read for routine operations.
 
-Resolve selectors to canonical identities, report the binding, and follow only the selected
-workflow or normalized queue. Ask for ambiguous targets or missing payload/proof before mutation.
-Check current state again before writing.
-Section numbers in modules identify their source, not instructions to load the full standard.
+Before every mutation, verify canonical scope and current state and follow publication.md. Apply
+repository guidance; targets describe ownership, not blanket authorization to edit their paths.

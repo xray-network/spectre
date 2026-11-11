@@ -1,39 +1,25 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.3.0
-Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
+Runtime-Version: 1.0.0
+Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
 
 **Provider evidence**
 
-20. Pins: new provider inputs pin an explicit numbered SNAPSHOT.md and its hashes, use the `SELF`
-    owning repository, and resolve the complete effective inventory, including reused earlier files.
-    No pin silently follows latest or substitutes a Git revision for missing numbered evidence.
-21. Guides: provider guides contain purpose and authority, official links, tracking intent, domain
-    boundaries, summarization and consumer guidance. They have no Provider-Version field or versions
-    directory.
-22. Captures: every new numbered capture has a complete SNAPSHOT.md and advisory CAPTURE.md.
-    Specification, counts, and verification rules live only in SNAPSHOT.md or its pinned manifests;
-    the summary's hash matches the snapshot; metadata links and hashes form no self-hashing cycles.
-23. Inventory: the full logical inventory resolves directly to regular files in this or earlier
-    same-provider captures. Every earlier artifact owner is hash-pinned; predecessor and owner
-    references decrease, with no cycles, forward references, duplicate logical paths, unsafe paths,
-    or missing files.
-24. Counts: effective logical inventory, newly stored files, reused entries, and corpus or case
-    counts are distinguished and exact. Inventory and source membership agree through the declared
-    mapping; all local control files are declared and hashed. A zero-file delta is valid only for a
-    justified removal or specification change; the first baseline is nonempty.
-25. Comparison: changes exactly match the predecessor comparison. Removed logical paths are absent
-    from the new inventory while their old files remain intact. Unchanged artifacts reuse earlier
-    physical paths; renames and reintroductions reuse verified earlier bytes when available. No
-    duplicate full trees exist.
-26. Summary: each summary records a baseline or update, artifact-backed findings, maintained-consumer
-    mapping, recommended tests and work, exclusions, and unresolved questions, without unsupported
-    parity claims.
-27. Outcomes: NO-CHANGE creates no number, directory, timestamp, summary, guide update, or other
-    tracked write. A changed capture publishes one new immutable numbered directory and an optional
-    guide index entry, preserving every existing capture file, with no persistent duplicate copies.
-28. History: captures from earlier versions remain valid under their own version's rules and may
-    serve as pinned baselines and artifact owners. No capture contains a status, instruction,
-    result, executable tooling, symlink, or undeclared artifact. No ordinary command deletes
-    historical evidence or rewrites terminal records; a provider archive moves a whole provider
-    unchanged and deletes nothing else. No active record references an archived provider, and no
-    live capture uses an archived capture as predecessor or artifact owner.
+20. Pins: new inputs name numbered SNAPSHOT.md and hashes with SELF ownership; resolve complete
+    inventories including reused files. No latest alias, Git ref or replacement for missing evidence.
+21. Guides: unversioned purpose, authority, official sources, tracking, boundaries and consumer
+    guidance; no provider-version directory or capture specification duplicated in the guide.
+22. Captures: snapshots own complete specification/inventory and hash their advisory capture summary;
+    no self-hashing cycles. Captures from another release keep their own schema requirements.
+23. Inventory: exact membership, regular files, sizes/hashes, unique safe paths; decreasing acyclic
+    predecessor/owner references within the same provider; no forward/cross-provider ownership.
+24. Counts: effective/new/reused/artifact/corpus/case counts and independent source enumeration agree.
+    Every physical control file is declared and hashed. Zero-new-file deltas require a real change;
+    an initial baseline is nonempty.
+25. Comparison: exact added/changed/removed/unchanged mapping; old bytes are preserved, unchanged
+    evidence reuses earlier physical files, and no duplicate full baseline is manufactured.
+26. Summary: artifact-backed findings, maintained-consumer mapping, recommended checks/work and
+    uncertainty; advisory content never authorizes execution or claims unsupported parity.
+27. Outcomes: NO-CHANGE has no tracked writes or ID; CAPTURED commits a new immutable capture and
+    optional guide index update together; BLOCKED never masquerades as upstream removal/no change.
+28. Retention: earlier captures keep their schemas/bytes. No live record pins an archived provider;
+    no live capture reuses an archived predecessor/owner. Only whole-provider archive moves evidence.

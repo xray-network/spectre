@@ -166,7 +166,7 @@ Provider-Capture-Version: v1
 Provider: <provider>
 Capture: <NNNN>
 Snapshot: SNAPSHOT.md
-Previous-Capture: <provider-root-relative CAPTURE.md path, the predecessor's SNAPSHOT.md when it has no CAPTURE.md, or NONE>
+Previous-Capture: <provider-root-relative CAPTURE.md path or NONE>
 
 ## Summary
 
@@ -193,8 +193,8 @@ second specification. Hash the completed summary in SNAPSHOT.md; the summary lin
 without a reciprocal hash, avoiding a cycle. Both become immutable together with their artifacts.
 
 Distinguish behavior from documentation, tests and refactoring, and observation from inference.
-Summarize language-neutral semantics first, then map actual maintained consumers. TypeScript may
-be the initial maintained target; C++ and any other unmaintained target remain opt-in. Include
+Summarize language-neutral semantics first, then map actual maintained consumers. Consumers the
+guide does not list as maintained remain opt-in. Include
 justified no-change recommendations and unresolved questions. Summaries never authorize execution
 or imply feature parity. New implementation plans still need their own command or explicitly stated
 compound-queue item and input pins.

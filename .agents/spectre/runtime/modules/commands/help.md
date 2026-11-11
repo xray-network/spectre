@@ -1,43 +1,38 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.3.0
-Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
+Runtime-Version: 1.0.0
+Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
 
 | Syntax | Operation and stopping boundary |
 | --- | --- |
-| `/spectre plan <target>: <objective>` | Run the §8 planning workflow for one target: first capture every existing provider the plan relies on, then create the instruction and `PLANNED` row, and stop without modifying product source. A plan that relies on no provider captures nothing. |
-| `/spectre implement <record>` | Run the §9 implementation workflow for the identified `PLANNED` record, validate it, write its result, move it to `REVIEW`, and stop. |
-| `/spectre implement --batch <records>` | Resolve a fixed set of existing plans and run §9 sequentially, completing each result and `REVIEW` transition before the next item. Stop on a blocker or after the selected set; never accept work automatically. |
-| `/spectre revise <record>: <changes>` | Run the §9 revision workflow for one identified active record. Refine a `PLANNED` instruction without modifying product source and keep it `PLANNED`, or change a `REVIEW` implementation within its instruction, update its result, and keep it `REVIEW`. Then stop. |
-| `/spectre status <record>` | Find the unique record in the active ledger or archives, read its row, instruction, and result when present, and report status and location without changing files or state. |
-| `/spectre recall [target]: <question>` | Answer a question about past work from the active ledger and archives, citing the records that support each statement, without changing files or state. |
-| `/spectre list [target] [state] [--archived]` | List active-ledger records by default, or archived records only with `--archived`. Optional target and state arguments filter that set; no arguments include every target and state in the active ledger. |
-| `/spectre accept <records>: <proof>` | Resolve one or a bounded set of `REVIEW` records and record the current human's acceptance in only their matching ledger decision fields. |
-| `/spectre reject <records>: <proof>` | Resolve one or a bounded set of `REVIEW` records and record the current human's rejection in only their matching ledger decision fields. |
-| `/spectre cancel <records>: <reason>` | Resolve one or a bounded set of `PLANNED` records and record the human-authorized cancellation in only their matching ledger decision fields. |
-| `/spectre archive` | Short form of `/spectre archive implementations` for all targets; it takes no target or flag. |
-| `/spectre archive implementations [target]` | Run the §9 archive workflow for all targets or one selected target, move only terminal implementations and their ledger rows into a dated archive, preserve active work, validate, and stop. |
-| `/spectre archive implementations [target] --force: <reason>` | Run the §9 forced archive: close every `PLANNED` and `REVIEW` record in scope as `CANCELLED` with the human reason, archive every terminal record, list existing defects in the manifest instead of failing, and stop. |
-| `/spectre archive providers <provider> [<provider>...] [--force: <reason>]` | Run the §9 provider archive: move each named provider whole, with its guide and every capture, into a dated archive when no active record references it, warn about files outside SPECTRE that name it, validate, and stop. `--force` only lists existing defects in the manifest instead of failing. |
-| `/spectre override <scope>: <changes> because <reason>` | Run the §9 override: apply exactly the human's requested change to the named SPECTRE files, even where it breaks other SPECTRE rules, update the hashes and links that depend on it, note every changed file in the informational `logs/OVERRIDES.md`, validate, and stop. |
-| `/spectre capture <provider>` | Run only §12 to track upstream changes between plans: publish a numbered full baseline or incremental capture; unchanged evidence creates no folder or tracked writes. Do not create or implement a target record. Planning captures its own providers, so a standalone capture is never a planning prerequisite. |
-| `/spectre addslash <host> [<host>...]` | Add the §2 slash command for each named agent host at the repository root, write no SPECTRE record or state, tell the human to reload or restart that agent, and stop. |
-| `/spectre removeslash <host> [<host>...]` | Remove each named host's §2 slash command, write no SPECTRE record or state, tell the human to reload or restart that agent, and stop. |
-| `/spectre help [operation]` | Report every command, or one named operation, with its syntax, purpose, and stopping boundary without changing tracked files or lifecycle state. |
+| `/spectre plan <target>: <objective>` | Capture the plan's declared providers if any, register its target on first use, and publish one instruction and `PLANNED` row together. No product changes. |
+| `/spectre implement <record>` | Implement an existing `PLANNED` instruction, validate, and publish its result and `REVIEW` row together; interrupted work remains `PLANNED` with a partial result. |
+| `/spectre implement --batch <records>` | Resolve and report a bounded set and order; complete each item's implementation, validation, result and ledger update before the next. |
+| `/spectre revise <record>: <changes>` | Refine a `PLANNED` instruction without source changes, or revise a `REVIEW` implementation and its result within the existing objective; retain its state. |
+| `/spectre status [scope] [state] [--archived]` | Read installation/target summaries or a record's details. Default summaries show live rows; `--archived` summaries show archived rows. Record lookup searches both locations. |
+| `/spectre recall [target]: <question>` | Answer from recorded evidence and decisions with citations; no writes. |
+| `/spectre check [scope]` | Diagnose consistency without writing. Omitted scope checks the complete installation; report checked scope and failures. |
+| `/spectre sync [scope]` | Apply only deterministic bookkeeping corrections, including finishing provably interrupted writes, validate, and report; never infer lifecycle state or reconstruct missing records. |
+| `/spectre accept <records>: <proof>` | Record the current human's acceptance of existing `REVIEW` results, with applicable proof. |
+| `/spectre reject <records>: <proof>` | Record the current human's rejection of existing `REVIEW` results, with applicable proof. |
+| `/spectre cancel <records>: <reason>` | Cancel existing `PLANNED` or `REVIEW` records with the human reason; preserve results and product changes. |
+| `/spectre archive [scope]` | Archive selected terminal implementations; omitted scope means eligible live records across all targets. Record sets, targets and `all` are supported. Never close open work. |
+| `/spectre archive implementations [scope]` | Explicit spelling of implementation archiving, with the same scope rules. |
+| `/spectre archive providers <provider> [<provider>...]` | Archive whole named providers only when no live record references them; preserve evidence and warn about external consumers. |
+| `/spectre target move <target>: <path>` | Update an existing target's current source path and live section together; preserve IDs, records and history. Does not move product files. |
+| `/spectre target retire <target>: <reason>` | Retire an existing target with no live rows; retain its identity, last path, and history. |
+| `/spectre target reactivate <target>: <path>` | Reactivate the same logical target at an existing path; continue its original sequence. |
+| `/spectre capture <provider>` | Discover, compare, validate and publish a numbered baseline/update when needed; no change creates no tracked writes. |
+| `/spectre upgrade <version>` | Explicitly migrate this installation to a verified named release using §14; never upgrade from a moving mirror implicitly. |
+| `/spectre override <scope>: <changes> because <reason>` | Apply an exceptional human-ordered SPECTRE change, update affected live references, and record an informational override log. Standalone only. |
+| `/spectre host add <host> [<host>...]` | Add only named host adapters and report their invocation/reload requirements. Standalone setup. |
+| `/spectre host remove <host> [<host>...]` | Remove only named SPECTRE host adapters. Standalone setup. |
+| `/spectre help [operation]` | Explain operations, natural-language queues, checkpoints, and stopping boundaries without writes. |
 
-`help` reads only the router, shared core, and its command module. Its unqualified form reports every command in the table;
-its qualified form reports one command. If the command name is unknown, report that it is not
-recognized and suggest `/spectre help` without selecting or running another operation.
+In accept and reject, a record may carry the digest of the result the human reviewed,
+`api/0004@3f9a1c0b7d2e`; the decision applies only while the result still matches.
+There is no generic `delete`, `set-state`, unrestricted `repair`, or mandatory `target add` command.
+Open work is closed by explicit cancellation, never by an archive flag.
 
-Unqualified help also explains that a current-human message mentioning SPECTRE may queue multiple
-explicitly stated non-decision operations in natural language without another command,
-and that accept, reject, and cancel remain standalone commands that may select a bounded eligible
-record set; forced archive and override are standalone human decisions too. `addslash` and
-`removeslash` are standalone setup commands: installation adds no slash command, and the adapter
-file each one writes or removes is its only state.
-
-Record, target, and provider selectors accept IDs/slugs or natural descriptions. A unique match
-resolves to its canonical identity; bounded plural record selectors are also valid for implementation
-and decision batches. Ambiguity or missing decision proof requires clarification. Examples:
-`/spectre status last implementation`, `/spectre reject the login change: missing checks`, and
-`/spectre accept the three implementations just completed: reviewed their results and checks`.
-Describing a target never authorizes another operation or bypasses its state requirements.
+`help` loads only core and its own module. An unknown operation is reported without executing a
+different one; suggest help. Unknown/repeated flags or malformed explicit IDs never trigger fuzzy
+fallback. Natural-language synonyms resolve only when their operation and scope are unambiguous.

@@ -1,87 +1,81 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.3.0
-Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
+Runtime-Version: 1.0.0
+Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
 
 ## 13. Validation invariants
 
-Validation is an internal requirement, not a public operation. Installation, explicit protocol
-updates and archive workflows validate the complete installation, including every runtime file,
-template, active record and archive. Full validation re-extracts runtime from the complete
-protocol and compares bytes. A record-scoped validation checks its identity, schema, state, links,
-and transitive declared inputs, including relevant archive manifests and provider inventories;
-it does not claim that unrelated records or runtime files were fully validated. Planning,
-implementation, revision and decisions validate affected records and their required inputs; capture
-validates the complete candidate and referenced evidence. Validate before publication/state changes
-and verify the resulting records/evidence before reporting success. Required checks cannot be skipped
-because no standalone command exists. Other workflow checks use the affected scope unless full
-validation is explicitly required. This scope limits reads, never the applicable checks.
-Upgrades (§14) validate the complete installation before and after the change. Read the
-status/implementation templates for record validation and the provider template when provider
-inputs or capture are involved.
+Validation is mandatory within every operation; a separate check is optional read-only diagnosis,
+never a prerequisite command. Install, upgrade and unscoped check validate the complete installation.
+Routine writes, including archive, validate the affected dependency closure and shared identity
+indexes without revalidating unrelated evidence. Full validation re-extracts every runtime module
+and template byte-for-byte. Scoped validation verifies loaded module headers and selected schemas,
+states, inputs, containment and references. Report the exact checked scope, never imply a full pass
+from a scoped check. Always verify the final affected records before reporting success.
 
-Run every applicable check below. Each states its pass condition; a check passes only when that
-condition holds exactly. A failed check blocks the operation, except an existing defect that a
-forced archive records as a known issue (§9). Archives are kept as is: beyond checks 11, 29, 30,
-and 32, nothing in them is validated.
+Read the canonical status/implementation/target templates for matching checks; provider consumption
+loads its template, providers.md and validation-evidence.md. Archives and captures written by another
+release use their own documented schemas. Missing normative evidence blocks its consumer;
+stale historical source links alone do not invalidate terminal decisions.
 
-Checks are split by who needs them. This module holds the record, reference, and operation checks
-that every workflow applies. `validation-full.md` holds the installation and archive checks (1–9,
-29–33) for full validation during installation, archive, and upgrade. `validation-evidence.md` holds
-the provider-evidence checks (20–28) for any workflow that captures or consumes provider evidence.
+Every applicable failed invariant blocks the selected write except the exact mechanically
+correctable bookkeeping defects ordinary sync is authorized to fix. Existing unrelated defects
+are reported, not silently waived or expanded into repairs. Override exceptions are explicit and
+reported under §9. Read-only diagnosis can report multiple failures instead of stopping at the first.
+
+Checks below are split between this module (records/references/operations), validation-full.md
+(installation and archive indexes), and validation-evidence.md (captured/provider inputs).
 
 **Ledger and records**
 
-10. Format: every ledger and manifest table follows the §11 canonical table format, and every ID
-    cell holds a qualified `target/NNNN` ID.
-11. Identity: target and provider slugs and four-digit IDs are valid, and no target is named
-    `implementations` or `providers`. IDs are unique across active records and all archives in each
-    sequence, ascending, and never reused; a provider's capture numbers are unique across its live
-    directory and every provider archive.
-12. Rows: every ledger row has a concise Title that agrees with its instruction objective, exactly
-    one matching instruction, and, for states that require one, exactly one matching result
-    (optional states have at most one).
-13. Agreement: instruction, result, and ledger IDs, evidence modes, and links agree. Each result
-    disposition maps to exactly one instruction Change ID; no required Change ID is missing or
-    duplicated.
-14. Completion: every item reported implementation-complete has a matching result, required
-    validation evidence, and a `REVIEW` row or later human decision. A partial `PLANNED` result
-    states actual work and blockers. Source edits alone are not completion, and batches never bypass
-    this.
-15. Immutability: active terminal record bytes and decision values are unchanged since entering
-    their terminal state; archived files are kept as is and not checked. Only §9 archive relocation of records or whole providers and rebased manifest links are permitted, plus changes a human
-    ordered through an override (§9), whose dependent hashes and links the override updated.
+10. Format: live ledger/registry and new manifest tables use §11 canonical delimiters/columns; live
+    sections are unique, sorted, populated and match registry Label/Path/ACTIVE status. Historical
+    manifest table syntax is read under its original version, never normalized by sync.
+11. Identity: valid target/provider slugs and four-digit IDs; no new target is all/implementations/
+    providers. Each record ID has one authoritative live or archived row. Sequence allocation scans
+    live records and manifest indexes, never fills gaps or reuses published IDs. Duplicate IDs from
+    parallel branches are blockers resolved under publication.md.
+12. Rows: each live row has one matching instruction, matching title/evidence mode and at most one
+    result. REVIEW/ACCEPTED/REJECTED require results; a started PLANNED instruction has a partial result.
+    Detect orphan files rather than reconstructing/deleting them automatically.
+13. Agreement: row/instruction/result IDs and modes agree; each required Change ID has exactly one
+    disposition. Instructions carry a valid Target-Path snapshot. Current ownership must be clear
+    before implementation; historical location never authorizes silent input rebinding.
+14. Completion: implementation-complete reports have matching results, actual required validation,
+    and REVIEW or a later human decision. Partial work states its real checks and blockers.
+15. Immutability: terminal record bytes and decisions remain unchanged except authorized archive
+    relocation or explicit override. Every live ACCEPTED or REJECTED row's recorded digests match its
+    current result bytes; a mismatch is a structural blocker. Source renames do not rewrite terminal
+    inputs/history.
 
-**References**
+**References and targets**
 
-16. Boundary: every reference in an active record, the ledger, or a provider file stays inside the
-    installation root (§3). No reference leaves it, including to another installation in the same
-    repository.
-17. Resolution: every reference resolves using original locations and the §9 archive path maps
-    to a unique existing file. Manifest links and other installation-relative
-    Markdown links resolve directly.
-18. Dependencies: `DERIVED` and `HYBRID` inputs resolve to results of this installation whose active
-    or archived decision row says `ACCEPTED`; an archived result is read as is.
-    Dependencies and evidence references resolve across active and archived records to the same
-    identity and state.
-19. Moves: every moved or renamed evidence or record file sits at the path its references name; no
-    reference relies on a lookup table or log to reach it.
+16. Boundary: local references and active target paths remain inside the installation, including
+    realpath/symlink containment. External official provenance URLs are not local input pointers.
+17. Resolution: required inputs and record links resolve uniquely through original-path archive
+    resolution. Historical source locations may be stale; missing normative evidence blocks its
+    consumer. Never guess replacement evidence or use log text as an input redirect.
+18. Dependencies: DERIVED/HYBRID consume accepted results of this installation, preserving identity
+    and decision through archive. Other projects enter through provider captures of their interfaces.
+19. Target ownership/moves: ACTIVE paths exist (a new project's path once any of its records reaches
+    REVIEW), registry IDs are stable, ownership does not overlap
+    except repository governance, RETIRED targets have no live rows and retain identity/last path.
+    Evidence/record moves use archive/override; target move changes current source binding only.
 
 **Operations**
 
-34. Batches: batch reports account for the fixed selected IDs, completion, and any blockers or
-    unstarted work; required `ACCEPTED` dependencies and human-only decisions remain enforced.
-35. Queues: compound-queue reports account for every normalized operation, dependency, deferred
-    binding, completion, blocker, and exact remaining item. Every item keeps its workflow boundary;
-    accept, reject, cancel, forced archive of either kind, override, addslash, and removeslash never
-    appear in a queue.
-36. Decisions: a decision batch uses one explicit human decision and one applicable proof or reason,
-    preflights a fixed nonempty eligible set, changes all selected rows in one ledger edit, and never
-    skips or partially decides an invalid selection. Only a single-record decision uses the verbatim
-    command and UTC date as its proof.
-37. Logs: when `.agents/spectre/logs/` exists, it holds a `.gitignore` whose single line is `*`, and
-    version control tracks no file in it. No other check reads `logs/`. Its files may be edited,
-    trimmed, or deleted, the whole folder included, and their absence or content never fails
-    validation or excuses another check.
+33. Batches: fixed IDs/order, honest outcomes, actual checks and acceptance gates; no silent skips.
+34. Queues: reports follow queues.md for scopes, deferred outputs, outcomes and checkpoints.
+35. Decisions: follow commands/decide.md: complete eligible set, explicit current-human intent, the
+    recorded proof shape with result digests, digest guards, one ledger edit changing only State and
+    Decision or status cells.
+36. Logs: logs/ is optional, ignored with a single-line * .gitignore, informational and never used
+    for validation authority, authorization, numbering or recovery. No tracked secrets or credentials.
+37. Publication: writes follow publication.md; a commit point is written last. Interrupted states are
+    reported with their next action; only the states marked safe sync are completed automatically.
+38. Sync: only the exhaustive safe corrections in commands/sync.md occur; no missing rows/records
+    reconstructed, no state inferred, no evidence/history deleted, no schema upgraded implicitly.
+39. Registry: TARGETS.md v1 uniquely owns IDs/labels/current paths/status/reasons. Empty live sections
+    are removable projections, never evidence that a target can be forgotten or its ID reused.
 
-Validation should use repository-native tools when available. Machine validation is helpful but
-does not replace human acceptance.
+Use repository-native validation tools when available. Machine checks verify structure and execution
+contracts; human acceptance remains a separate explicit decision. Never report checks that did not run.

@@ -1,53 +1,41 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.3.0
-Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
+Runtime-Version: 1.0.0
+Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
 
 **Installation**
 
-1. Runtime: all 19 modules equal their marked source extraction byte for byte, declare the
-   installed version and source hash, and contain no independent edits (full validation). Every
-   module loaded by an invocation has matching version and source-hash headers.
-2. Templates: exactly the three canonical templates exist, only under
-   `.agents/spectre/runtime/modules/templates/`. `runtime/` holds only the installed protocol and
-   `modules/`; `modules/` holds only the extracted modules and `templates/`. `ROUTER.md` is the
-   only file at the top of `.agents/spectre/`.
-3. Router: exactly one router exists at `.agents/spectre/ROUTER.md`, matches the §2 router, and
-   routes commands, compound queues, batches, and continuations only when the current-human message
-   mentions SPECTRE.
-4. Router behavior: the router accepts §1 natural-language selectors, sequential implementation
-   batches, all-or-nothing decision batches, and explicit non-decision operation queues; it
-   resolves and reports fixed canonical identities before mutation, binds deferred queue outputs
-   before their item writes, and pauses on ambiguity or missing proof.
-5. Activation: the router and the `AGENTS.md` pointer agree with `core.md` on per-message SPECTRE
-   mention activation, and neither enables global tracking or an automatic later operation.
-6. Host adapters: none is required. Every SPECTRE adapter found at a §2 table path carries only the
-   current §2 pointer body in its host's format and contains no protocol rule. No SPECTRE file
-   records which adapters exist.
-7. Bootstrap: exactly one `ACCEPTED` bootstrap row exists at the flat `<target>/0001` or monorepo
-   `repository/0001`, with the required human-request decision proof; while active, it has its
-   matching instruction and result. An archived bootstrap is kept as is. An empty active ledger never authorizes another bootstrap.
-8. Layout: exactly one aggregate root `SPECTRE.md` exists, with one repository section in flat mode
-   or exactly one section per target in monorepo mode. Flat installations store active records
-   directly under `.agents/spectre/implementations/`, monorepos under target directories; flat and
-   nested records never coexist; no target-local `STATUS.md` exists. Each implementations archive
-   preserves the same layout beneath its own `implementations/`; a provider archive holds only
-   whole provider directories beneath its own `providers/`.
-9. Installation does not modify product source.
+1. Runtime: all 25 modules equal marked source extraction, including installed version/source hash.
+   Templates match §11 byte-for-byte. Full checks verify bodies, not just headers.
+2. Layout of rules: runtime/ contains only SPECTRE-PROTOCOL.md and modules/; modules/ contains only
+   extracted modules and templates/. Four canonical templates exist. ROUTER.md and TARGETS.md are
+   the top-level installed files; no installation README is generated. Informational logs are
+   outside runtime/ and never protocol/decision authorities. No lock, transaction or staging files.
+3. Router: the installed router equals §2 and loads every operation's dependencies selectively.
+4. Natural language: selectors, queues and human checkpoints follow selectors.md and queues.md. Exact
+   command syntax is optional; ambiguous identity or missing decision intent/proof stops mutation.
+5. Activation: pointer and router agree with core.md: a new workflow needs a current-human mention;
+   uniquely pending bounded replies are the sole name-free exception. No global tracking mode.
+6. Adapters: none required; existing SPECTRE adapters carry only the §2 pointer in their host format.
+7. Bootstrap: exactly one accepted flat target/0001 or nested repository/0001 installation row exists
+   in live or archived history. Active bootstrap has its matching instruction/result and human
+   installation proof; an empty live ledger never authorizes another bootstrap.
+8. Storage: one root SPECTRE.md uses Status-Schema-Version v1 and the selected flat/nested layout. Sections exist exactly
+   for targets with live rows; every target identity has a registry binding. No target-local ledger
+   or mixed flat/nested active storage. Archives retain their original layout/schema.
+9. Installation changes only tracking structure and its pointer; no product implementation.
 
-**Archives**
+**Archive indexes**
 
-29. Manifests: each archive directory has an `ARCHIVE.md` whose Archive-ID matches the directory
-    name (UTC timestamp and optional collision suffix). In an implementations manifest, including
-    one without a `Kind` line, every row carries an ID, a terminal state, and a decision proof. In
-    a provider manifest, every row names a provider slug and its capture range.
-30. Version: every manifest, whatever its `Archive-Version` and `Protocol-Version`, is read only for
-    its header and those rows; its content is never judged under newer rules.
-31. As is: archived files, Record paths entries, links, paths, and recorded SHA-256 values are not
-    validated. A missing file, broken link, or changed hash in an archive is information, never a
-    failure.
-32. Separation: archived rows do not remain in the active ledger, and `PLANNED` or `REVIEW` records
-    never appear in archives. Root ledger metadata and every target table header remain present when
-    tables are empty. A batch holds implementations or providers, never both. Archiving
-    implementations moves no provider file; archiving providers changes no record or ledger row.
-    Neither modifies product source.
-33. Known issues: a manifest's `Known issues` table, when present, is informational and kept as is.
+29. Manifest identity: each archive has readable version/ID/kind headers and lifecycle or provider
+    index rows. IDs match directory names and remain
+    unique. Implementation rows retain terminal state and decision proof.
+30. Version: archives use the schema that created them. Do not rewrite or rejudge their record bytes,
+    paths, table syntax or hashes under a newer release. Read indexes needed for identity, decisions
+    and numbering.
+31. Historical files: missing/broken/changed archived content is informational for historical status;
+    a consumer requiring that content must still validate its own normative input. Do not fabricate
+    evidence to make a historical archive complete.
+32. Separation: no authoritative row exists both live and archived; no PLANNED/REVIEW archive rows.
+    New batches have one kind and preserve selected bytes/proof; affected dependencies resolve after
+    relocation. No empty live sections remain. Archive never edits product source or unrelated data.
+    No archive waives a failed selected-record check.

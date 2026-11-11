@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.3.0
-Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
+Runtime-Version: 1.0.0
+Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
 
 ### Optional host adapters
 
@@ -8,9 +8,9 @@ The router in `.agents/spectre/ROUTER.md` is the only router. A slash command, a
 adapter, is a small command file in one agent host's own format whose body only points to the
 router, so that host can invoke SPECTRE by name. Installation creates none. Natural-language
 mentions such as `Spectre: status last implementation` reach the router through the `AGENTS.md`
-pointer without one, so `Spectre addslash claude` works before any slash command exists.
+pointer without one, so `Spectre host add claude` works before any slash command exists.
 
-`/spectre addslash <host> [<host>...]` adds slash commands and `/spectre removeslash <host> [<host>...]`
+`/spectre host add <host> [<host>...]` adds adapters and `/spectre host remove <host> [<host>...]`
 removes them. Host names are ASCII case-insensitive and come only from this table:
 
 | Host | Agent | Adapter file | Invocation | Request line |
@@ -39,21 +39,19 @@ Request: <request line>
 `<request line>` is the host's argument placeholder from the table. For a host whose row says
 `the text after the command`, it is the literal text
 `the text that follows the command in the current message.` An adapter contains no other
-instruction and no protocol rule. Adapters never change activation: the current-human message must
-still mention SPECTRE, which the command itself does.
+instruction and no protocol rule. Adapters never change activation: invoking the command is itself
+the current-human SPECTRE mention; bounded direct replies follow core.md.
 
-A SPECTRE adapter is a file at a table path whose body is the pointer above, an earlier release's
-pointer (`Follow .agents/skills/spectre/SKILL.md for this SPECTRE request.`), or, at
-`.agents/skills/spectre/SKILL.md` only, an earlier release's router (`name: spectre` and
-`# SPECTRE command router`). Any other file at a table path belongs to someone else.
+A SPECTRE adapter is a file at a table path whose body is the pointer above in that host's format.
+Any other file at a table path belongs to someone else.
 
-The adapter file is the only state. `addslash` and `removeslash` write no ledger row, record,
+The adapter file is the only state. `host add` and `host remove` write no ledger row, record,
 README entry, log, or other SPECTRE file, and no SPECTRE file lists which adapters exist; validation
 finds them by checking the table's paths. Neither command touches product source, records, the
-ledger, runtime, templates, `ROUTER.md`, or `AGENTS.md`. Both read only the router, shared core, and
-this module, and both are standalone: never queue items and never combined with another operation.
+ledger, runtime, templates, `ROUTER.md`, or `AGENTS.md`. Both read the router, shared core and this
+module, and both are standalone: never queue items and never combined with another operation.
 
-`addslash`:
+`host add`:
 
 1. Require an installation with its `ROUTER.md`: the nearest one at or above the working
    directory, or, at a monorepo root that holds none, any installation in the repository. The
@@ -72,9 +70,9 @@ this module, and both are standalone: never queue items and never combined with 
    replaced adapter, tell the human to reload or restart that agent (its window, session, or CLI)
    before using the command, because hosts discover commands when they start.
 
-`removeslash`:
+`host remove`:
 
-1. Resolve every named host as `addslash` does.
+1. Resolve every named host as `host add` does.
 2. Delete each table path that holds a SPECTRE adapter, and its `spectre` folder when deleting the
    file leaves that folder empty. A missing file is a no-op. Any other file at that path refuses the
    whole command without deleting anything. Never remove host folders or unrelated files.

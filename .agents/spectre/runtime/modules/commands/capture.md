@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 2.3.0
-Source-SHA256: 2b39ac38b84a9fb53a675af760def170d9840f43b4748d51282509890212386e
+Runtime-Version: 1.0.0
+Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
 
 An ordinary `capture` command requires an existing unversioned provider guide. An explicit compound
 queue may first prepare a missing guide from a human-supplied provider identity and authoritative
@@ -14,8 +14,8 @@ bytes and reference unchanged files in earlier captures. No changes means no new
 Use this workflow only for an explicit `/spectre capture <provider>` invocation, its host-native
 equivalent, one explicitly stated capture item in a normalized compound queue, or the capture step
 of a plan (§8). An ordinary capture selects one existing provider guide and includes discovery,
-comparison, validation and publication when needed. No separate check or validation command is
-required or supported. All work is human-triggered: no schedules, GitHub Actions, background
+comparison, validation and publication when needed. No preliminary check command is required; `check` diagnoses local consistency without fetching
+upstream evidence, while capture performs its own discovery and validation. All work is human-triggered: no schedules, GitHub Actions, background
 monitoring, inferred plans or implementations.
 
 Planning captures the providers it relies on, so a standalone capture is never a planning
@@ -125,13 +125,12 @@ states. Never treat an earlier conversation report as a verified current source 
    file and owner snapshot hash, local-file inventory, exact comparison and summary hash. No
    artifact copies merely to make the directory independently contain every byte. Temporary
    materialization for checks is allowed outside tracked evidence and cleaned up afterward.
-5. Recheck the provider sequence, baseline, referenced files, guide and destination against the
-   preparation hashes. Publish only to a nonexistent final directory using a safe atomic directory
-   rename or equivalent transaction; never overwrite an existing capture. Add an optional guide
-   index entry linking the new snapshot and summary. Validate final paths and the full reference
-   graph. Treat directory and index publication as one recoverable operation. On failure roll back
-   only this invocation's new files/index edits with concurrency guards; preserve all earlier
-   captures and unrelated edits. Recover interrupted publication before allocating another number.
+5. Recheck the provider sequence, baseline, referenced files and guide against the hashes recorded
+   during discovery. Create the new numbered directory only where none exists; write its artifacts
+   and CAPTURE.md first and SNAPSHOT.md last, the commit point (publication.md). Never overwrite an
+   existing capture. Then add an optional guide index entry linking the new snapshot and summary,
+   and validate final paths and the full reference graph. On failure preserve all earlier captures
+   and unrelated edits; an unpublished directory blocks the next capture until sync removes it.
 6. Report provider/capture ID, snapshot and summary links, added/changed/removed/reused counts,
   newly stored file count, upstream identities and consumer findings, then stop. Do not auto
   commit, push, create plans, change implementation state or begin product work. A later explicitly

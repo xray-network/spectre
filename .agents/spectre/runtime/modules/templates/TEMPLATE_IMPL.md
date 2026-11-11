@@ -21,6 +21,7 @@ mode, and the human installation request is its decision proof.
 
 Implementation-Version: v1
 Implementation-ID: <target>/<NNNN>
+Target-Path: ./<owned-directory>/
 Created: YYYYMMDDTHHMMSSZ
 Evidence-Mode: <DIRECT|DERIVED|HYBRID|LOCAL>
 Depends-On: <accepted result links or NONE>
@@ -65,7 +66,8 @@ Input kinds are `PROVIDER`, `IMPLEMENTATION_RESULT`, and `LOCAL`. A `PLANNED` in
 implementation-ready; unresolved source selection, semantic mapping, ownership, compatibility,
 or validation design is a blocker. PROVIDER input rows reference their pin IDs. A latest-capture
 alias cannot replace a snapshot/hash pin. The owning repository is always `SELF`; record upstream
-sources separately. Every link in an instruction or result stays inside the installation.
+sources separately. Every local link stays inside the installation. Target-Path is the source-location snapshot
+at planning time, not a redirect or blanket source authorization.
 
 ## Result
 
