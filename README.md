@@ -16,7 +16,8 @@ queue item.
 
 - `https://wiki.xraynetwork.io/spectre/` — documentation
 - `https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md` — current-release mirror
-- `https://wiki.xraynetwork.io/spectre/protocol/v2.0.0/SPECTRE-PROTOCOL.md` — v2.0.0 protocol (current)
+- `https://wiki.xraynetwork.io/spectre/protocol/v2.1.0/SPECTRE-PROTOCOL.md` — v2.1.0 protocol (current)
+- `https://wiki.xraynetwork.io/spectre/protocol/v2.0.0/SPECTRE-PROTOCOL.md` — v2.0.0 protocol (frozen)
 - `https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md` — v1.0.0 protocol (frozen)
 
 ## Install
@@ -59,6 +60,7 @@ as separate summaries. Missing or stale modules block a command without an impli
 /spectre cancel <records>: <reason>
 /spectre archive [target]
 /spectre archive [target] --force: <reason>
+/spectre override <scope>: <changes> because <reason>
 /spectre capture <provider>
 /spectre help [operation]
 ```
@@ -130,7 +132,9 @@ lists existing defects in the manifest instead of failing.
 ├── protocol/
 │   ├── v1.0.0/                  # frozen
 │   │   └── SPECTRE-PROTOCOL.md
-│   └── v2.0.0/                  # current
+│   ├── v2.0.0/                  # frozen
+│   │   └── SPECTRE-PROTOCOL.md
+│   └── v2.1.0/                  # current
 │       └── SPECTRE-PROTOCOL.md
 ├── ideas/                       # proposals, not part of the protocol
 └── docs/

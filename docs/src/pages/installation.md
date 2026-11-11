@@ -21,7 +21,7 @@ It also extracts compact runtime files from marked sections of the protocol. Lat
 shared rules and their own operation files instead of rereading the complete specification.
 Required source, evidence, and validation checks still apply.
 
-SPECTRE 2.0.0 is the current release. Installation pins the protocol locally, so later releases
+SPECTRE 2.1.0 is the current release. Installation pins the protocol locally, so later releases
 cannot silently change your repository’s rules.
 
 ## 2. Check the setup
@@ -127,7 +127,7 @@ independently; upgrades follow the protocol's versioning rules.
 To choose a release explicitly, use its versioned URL and include the version in your request:
 
 ```text wrapCode
-Read https://wiki.xraynetwork.io/spectre/protocol/v2.0.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v2.0.0 in this repository.
+Read https://wiki.xraynetwork.io/spectre/protocol/v2.1.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v2.1.0 in this repository.
 ```
 
 An explicitly requested version takes precedence over the current-release mirror. Neither prompt
@@ -138,7 +138,7 @@ automatically upgrades or migrates an existing installation.
 Copy and send this prompt to your agent:
 
 ```text wrapCode
-Read https://wiki.xraynetwork.io/spectre/protocol/v2.0.0/SPECTRE-PROTOCOL.md completely and upgrade the existing SPECTRE installation in this repository to v2.0.0 using its upgrade procedure. Preserve all archived implementation records, provider evidence, and existing references. Validate the complete installation before and after, and report any blocker without rewriting history.
+Read https://wiki.xraynetwork.io/spectre/protocol/v2.1.0/SPECTRE-PROTOCOL.md completely and upgrade the existing SPECTRE installation in this repository to v2.1.0 using its upgrade procedure. Preserve all archived implementation records, provider evidence, and existing references. Validate the complete installation before and after, and report any blocker without rewriting history.
 ```
 
 The agent follows the target release's [upgrade procedure](./versioning#upgrading). A major release
@@ -166,7 +166,7 @@ If you prefer to download the protocol yourself, run this from the repository ro
 ```sh
 mkdir -p .agents/spectre
 curl -fsSLo .agents/spectre/SPECTRE-PROTOCOL.md \
-  https://wiki.xraynetwork.io/spectre/protocol/v2.0.0/SPECTRE-PROTOCOL.md
+  https://wiki.xraynetwork.io/spectre/protocol/v2.1.0/SPECTRE-PROTOCOL.md
 ```
 
 Then ask your coding agent to read the local file completely and perform its installation section.

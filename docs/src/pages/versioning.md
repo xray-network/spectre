@@ -11,7 +11,7 @@ stored in a repository. Each version field identifies one specific format or sou
 | `Protocol-Version` | Installed standard version recorded by a ledger or archive manifest |
 | `Runtime-Version` | Matches the installed standard version in each generated runtime module |
 
-SPECTRE `2.0.0` is the current version; `1.0.0` is frozen as published. Every release is
+SPECTRE `2.1.0` is the current version; earlier releases are frozen as published. Every release is
 immutable once published, and later changes always get a new version. Installed copies remain
 pinned to their own bytes and do not update automatically when the published source changes.
 
@@ -43,7 +43,7 @@ module with deterministic extraction; internal validation has no separate public
 | `Archive-Version` | Schema of an immutable archive manifest |
 
 The status, instruction, result, and archive formats started at `v1`. Their schema versions change
-independently from the standard version when a release defines a new format. SPECTRE 2.0.0 uses
+independently from the standard version when a release defines a new format. Since 2.0.0, SPECTRE uses
 `Status-Template-Version: v2`, `Status-Schema-Version: v2`, and `Archive-Version: v2`: one exact
 table format with qualified `target/NNNN` IDs, and a `Known issues` section in every manifest.
 Every active ledger and archive manifest also records the installed `Protocol-Version`. Terminal

@@ -7,6 +7,17 @@ current-release mirror to discover that version; you can also choose a specific 
 The <a href="/spectre/SPECTRE-PROTOCOL.md">current-release mirror</a> is convenient for reading and
 repository discovery. The build generates it directly from the latest versioned protocol source.
 
+## 2.1.0
+
+- <a href="/spectre/protocol/v2.1.0/SPECTRE-PROTOCOL.md">Read or download <code>SPECTRE-PROTOCOL.md</code></a>
+
+A minor release; 2.0.0 installations refresh in place without archiving.
+
+- **Override.** `override <scope>: <changes> because <reason>` applies a human-ordered change outside
+  the normal rules, such as renaming archived records or moving evidence. It is a human-only
+  decision, never a queue item, and every changed file is logged with its hashes in
+  `.agents/spectre/OVERRIDES.md`, which validation and reference resolution follow.
+
 ## 2.0.0
 
 - <a href="/spectre/protocol/v2.0.0/SPECTRE-PROTOCOL.md">Read or download <code>SPECTRE-PROTOCOL.md</code></a>

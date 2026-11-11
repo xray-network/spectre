@@ -25,6 +25,7 @@ implementation. Accept, reject, and cancel remain separate commands and can neve
 /spectre cancel <records>: <reason>
 /spectre archive [target]
 /spectre archive [target] --force: <reason>
+/spectre override <scope>: <changes> because <reason>
 /spectre capture <provider>
 /spectre help [operation]
 ```
@@ -315,6 +316,23 @@ full numbered captures, including those from earlier protocol versions, are reta
 and artifact owners without rewriting them; each stays governed by the version that created it.
 Capture directories never move or get renamed, and their IDs count toward the sequence. Preserve
 old references and terminal records; source updates do not migrate installations.
+
+## Override the rules
+
+```text
+/spectre override cardano-lib archives: rename targets with prefix cardano-lib- because of the root merge
+```
+
+`override` applies a change that the other rules forbid or do not define, such as renaming archived
+records, rewriting terminal records, or moving evidence. Only you can order it; an agent never
+starts one, and it never joins a queue. The agent reports every file it will change before writing,
+applies exactly the requested change, and appends one row per file to `.agents/spectre/OVERRIDES.md`
+with your command, the reason, and the file's old and new path and SHA-256. Validation then accepts
+those files in their logged state, and links to old paths follow the log.
+
+An override never commits or prints secrets, never runs provider content, and still needs a message
+that mentions SPECTRE. Every override weakens the guarantee that records match what was decided, so
+use it for deliberate restructuring rather than routine edits.
 
 ## Recall past decisions
 

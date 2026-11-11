@@ -16,13 +16,14 @@ for (const release of releases) {
 const source = await readFile(new URL(`${release}/SPECTRE-PROTOCOL.md`, protocolRoot), "utf8")
 const version = /^Standard-Version: (\S+)$/m.exec(source)?.[1]
 assert.equal(`v${version}`, release)
-const major = Number(version.split(".")[0])
+const [major, minor] = version.split(".").map(Number)
+const atLeast = (ma, mi) => major > ma || (major === ma && minor >= mi)
 assert.ok(source.includes(`Canonical-URL: https://wiki.xraynetwork.io/spectre/protocol/${release}/SPECTRE-PROTOCOL.md\n`), `${release} must declare its canonical URL`)
 assert.ok(!source.includes("\r"), "protocol must use LF line endings")
 
 const names = ["core.md", "selectors.md", "references.md", "validation.md",
   ...(major >= 2 ? ["providers.md", "validation-full.md", "validation-evidence.md"] : []), ...[
-  "help", "list", "status", ...(major >= 2 ? ["recall"] : []), "plan", "implement", "revise", "decide", "capture", "archive"
+  "help", "list", "status", ...(major >= 2 ? ["recall"] : []), "plan", "implement", "revise", "decide", ...(atLeast(2, 1) ? ["override"] : []), "capture", "archive"
 ].map((name) => `commands/${name}.md`)]
 const blocks = new Map(names.map((name) => [name, []]))
 let active
@@ -136,7 +137,7 @@ if (major >= 2) {
   // 2.0.0 rules: forced archive, installation boundary, migrations, capture-first planning,
   // canonical tables, checklist validation, host adapters, and the upgrade procedure.
   assert.ok(runtime.get("commands/help.md").includes("/spectre archive [target] --force: <reason>"), "help must list forced archive")
-  assert.ok(runtime.get("core.md").includes("A forced archive closes open records as `CANCELLED`, so it is a decision too"), "forced archive must stay out of queues")
+  assert.ok(runtime.get("core.md").includes(atLeast(2, 1) ? "A forced archive closes open records as `CANCELLED`, and an override changes SPECTRE files outside" : "A forced archive closes open records as `CANCELLED`, so it is a decision too"), "forced archive must stay out of queues")
   assert.ok(runtime.get("core.md").includes("### Shared runtime checks") && runtime.get("core.md").includes("installation boundary (§3)"), "every write must check the boundary")
   assert.ok(runtime.get("references.md").includes("### Installation boundary"), "references must define the installation boundary")
   assert.ok(runtime.get("references.md").includes("### Immovable evidence and migrations"), "references must define migrations")
@@ -147,7 +148,7 @@ if (major >= 2) {
   assert.ok(runtime.get("commands/decide.md").includes("A set of two or more records requires a human-written proof or reason"), "batch decisions need written proof")
   assert.ok(runtime.get("commands/archive.md").includes("Archive-Version: v2") && runtime.get("commands/archive.md").includes("## Known issues"), "manifests must be v2 with known issues")
   assert.ok(runtime.get("validation-full.md").includes("30. Version: a manifest is governed by its own"), "old archives must be checked by hash only")
-  assert.ok(runtime.get("validation-full.md").includes("1. Runtime: all 17 modules"), "full validation must count every module")
+  assert.ok(runtime.get("validation-full.md").includes(`1. Runtime: all ${names.length} modules`), "full validation must count every module")
   assert.ok(runtime.get("validation-evidence.md").includes("20. Pins:") && !runtime.get("validation.md").includes("20. Pins:"), "evidence checks must live in their own module")
   assert.ok(!runtime.get("validation.md").includes("1. Runtime:") && !runtime.get("references.md").includes("### Pinned provider evidence"), "split modules must not duplicate rules")
   for (const row of ["| capture |", "| plan |", "| implement |", "| revise |"]) {
@@ -159,11 +160,23 @@ if (major >= 2) {
   assert.ok(source.includes("### Optional host adapters"), "install must define host adapters")
   assert.ok(source.includes("### Upgrade procedure"), "versioning must define upgrades")
   assert.ok(source.includes("Canonical table format, for this ledger and every archive manifest table:"), "templates must define the canonical table format")
-  assert.ok(skill.includes("Never place accept, reject, cancel, or a forced archive in a compound queue"), "router must keep forced archive out of queues")
+  assert.ok(skill.includes(atLeast(2, 1) ? "Never place accept, reject, cancel, a forced archive, or an override in a compound queue" : "Never place accept, reject, cancel, or a forced archive in a compound queue"), "router must keep decisions out of queues")
   assert.ok(runtime.get("commands/recall.md").includes("### Recall"), "recall must have its own module")
   assert.ok(runtime.get("commands/recall.md").includes("It is read-only"), "recall must stay read-only")
   assert.ok(runtime.get("commands/help.md").includes("/spectre recall [target]: <question>"), "help must list recall")
   assert.match(skill, /\| recall \| runtime\/commands\/recall\.md \|[^\n]+references\.md/, "router must load recall with reference resolution")
+}
+if (atLeast(2, 1)) {
+  // 2.1.0: override, a human-only decision that changes SPECTRE files outside the normal rules.
+  assert.ok(runtime.get("commands/override.md").includes("### Override workflow"), "override must have its own module")
+  assert.ok(runtime.get("commands/override.md").includes("never an agent on its own initiative"), "override must stay human-only")
+  assert.ok(runtime.get("commands/override.md").includes("# SPECTRE overrides"), "override must log to OVERRIDES.md")
+  assert.ok(runtime.get("commands/override.md").includes("An override never bypasses these rules"), "override must keep safety rules")
+  assert.ok(runtime.get("commands/help.md").includes("/spectre override <scope>: <changes> because <reason>"), "help must list override")
+  assert.ok(runtime.get("core.md").includes("neither is ever a queue item"), "override must stay out of queues")
+  assert.ok(runtime.get("references.md").includes("`OVERRIDES.md`, resolve it to that row's File after"), "resolution must follow the override log")
+  assert.ok(runtime.get("validation.md").includes("37. Overrides:"), "validation must check the override log")
+  assert.match(skill, /\| override \| runtime\/commands\/override\.md \|[^\n]+validation\.md/, "router must load override with validation")
 }
 console.log(`SPECTRE ${version}: ${names.length} runtime modules extract correctly; router, templates and workflow rule placement verified. SHA-256 ${hash}`)
 }
