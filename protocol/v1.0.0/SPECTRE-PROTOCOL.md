@@ -57,11 +57,11 @@ for a formal command or redundant permission. `/spectre` is the cross-agent spel
 | `/spectre archive [scope]` | Archive selected terminal implementations; omitted scope means eligible live records across all targets. Record sets, targets and `all` are supported. Never close open work. |
 | `/spectre archive implementations [scope]` | Explicit spelling of implementation archiving, with the same scope rules. |
 | `/spectre archive providers <provider> [<provider>...]` | Archive whole named providers only when no live record references them; preserve evidence and warn about external consumers. |
-| `/spectre target move <target>: <path>` | Update an existing target's current source path and live section together; preserve IDs, records and history. Does not move product files. |
+| `/spectre target move <target>: <path>` | Update an existing target's current source path in the ledger's Targets table; preserve IDs, records and history. Does not move product files. |
 | `/spectre target retire <target>: <reason>` | Retire an existing target with no live rows; retain its identity, last path, and history. |
 | `/spectre target reactivate <target>: <path>` | Reactivate the same logical target at an existing path; continue its original sequence. |
 | `/spectre capture <provider>` | Discover, compare, validate and publish a numbered baseline/update when needed; no change creates no tracked writes. |
-| `/spectre upgrade <version>` | Explicitly migrate this installation to a verified named release using §14; never upgrade from a moving mirror implicitly. |
+| `/spectre upgrade <version>` | Explicitly migrate this installation to a verified named release using §14: replace generated files and migrate the live ledger and live records; archives and captures keep their bytes. Archive first to keep terminal records as written. Never upgrade from a moving mirror implicitly. |
 | `/spectre override <scope>: <changes> because <reason>` | Apply an exceptional human-ordered SPECTRE change, update affected live references, and record an informational override log. Standalone only. |
 | `/spectre host add <host> [<host>...]` | Add only named host adapters and report their invocation/reload requirements. Standalone setup. |
 | `/spectre host remove <host> [<host>...]` | Remove only named SPECTRE host adapters. Standalone setup. |
@@ -88,7 +88,7 @@ their canonical spelling or original text. Loading a module never authorizes its
 
 Parse `status [scope] [state] [--archived]` from the end: an optional final flag, then an optional
 state; the remaining words are one scope selector. A quoted state-like target name is not a filter.
-Summaries read only the registry, live ledger, and applicable archive indexes; no record bodies or
+Summaries read only the ledger (its Targets table and live rows) and applicable archive indexes; no record bodies or
 evidence are needed for them.
 
 `status` without scope summarizes registered targets, their paths/status, and live record counts.
@@ -96,7 +96,7 @@ A target scope lists its live records; `all` lists all live records. An explicit
 summary rows. `--archived` selects archived rows only for summaries. Include target, qualified ID,
 title, state, evidence mode, result availability, and location; order by target and numeric ID.
 Registered targets with no live rows remain visible in installation summaries without creating
-empty ledger sections. An absent archive directory means no archived rows.
+empty implementation subsections. An absent archive directory means no archived rows.
 
 A unique record scope searches the live ledger and every implementation archive, then reads the
 complete instruction and result when available. Report state, proof, location and usable links.
@@ -206,7 +206,7 @@ never joins. An empty output produces a reported no-op for its dependent items.
 
 Each item completes its own workflow, validation and record publication before the next begins.
 Bookkeeping required by an operation is included without another command: plan registers a target,
-archive prunes newly empty sections. Planning includes capture of its declared existing providers.
+archive prunes newly empty subsections. Planning includes capture of its declared existing providers.
 Explicit provider preparation from a human-supplied identity and authoritative source may precede
 capture (§12). These are not permission to add unrelated operations.
 
@@ -281,7 +281,7 @@ Record selectors accept qualified `target/NNNN`, a unique bare ID, title/objecti
 or verified conversational references such as "this plan". Target selectors accept stable IDs,
 current paths, labels and repository/package descriptions. Provider selectors accept existing slugs
 or guide descriptions. Explicit IDs take precedence; an invalid or missing explicit ID never gets
-a fuzzy replacement. Search the registry and live/archive indexes first; read only candidate bodies
+a fuzzy replacement. Search the Targets table and live/archive indexes first; read only candidate bodies
 needed to resolve meaning. A source folder is not automatically a registered target (§4).
 
 1. Parse operation and objective/changes/proof/reason, preserving the human payload. Colons are
@@ -397,14 +397,14 @@ The installer must:
 
 1. Read the repository's root instructions and discover its structure using the rules in §4.
 2. Refuse to overwrite conflicting non-SPECTRE files or rewrite existing records.
-3. Create `.agents/spectre/`, `.agents/spectre/runtime/modules/templates/` with the four templates in §11, one
+3. Create `.agents/spectre/`, `.agents/spectre/runtime/modules/templates/` with the three templates in §11, one
    aggregate `SPECTRE.md` in the repository root, and the flat or monorepo implementation layout
    selected by §4. Never create a product target directory merely because a target name can be
    inferred.
 4. Install the canonical protocol bytes as `.agents/spectre/runtime/SPECTRE-PROTOCOL.md` and extract
    the runtime modules into `.agents/spectre/runtime/modules/` using the marked-block rules below. Create
-   `.agents/spectre/ROUTER.md` from the router below and `TARGETS.md` from §11. Register only
-   the bootstrap target with Path `./`; no empty project sections or source directories are created.
+   `.agents/spectre/ROUTER.md` from the router below. Register only the bootstrap target, with Path
+   `./`, in the ledger's Targets table (§11); no empty project subsections or source directories are created.
    No README is installed (§10). Create no `logs/` folder; the first
    override creates it (§9).
 5. Add the `AGENTS.md` pointer below idempotently.
@@ -494,14 +494,14 @@ All paths below are relative to `.agents/spectre/runtime/modules/`.
 | Operation | Command file | Additional required reads |
 | --- | --- | --- |
 | help | commands/help.md | None |
-| status | commands/status.md | selectors.md, references.md; history.md for archived records; commands/target.md for registry summaries |
+| status | commands/status.md | selectors.md, references.md; history.md for archived records; commands/target.md for target summaries |
 | recall | commands/recall.md | selectors.md, references.md, history.md; providers.md for pinned evidence |
 | check | commands/check.md | selectors.md, references.md, history.md, publication.md, validation.md; validation-full.md for installation scope; validation-evidence.md and templates/TEMPLATE_PROVIDER.md for provider checks |
-| sync | commands/sync.md | selectors.md, references.md, history.md, publication.md, validation.md, commands/target.md, templates/TEMPLATE_STATUS.md, templates/TEMPLATE_TARGETS.md; validation-full.md for installation scope |
-| target | commands/target.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_TARGETS.md, templates/TEMPLATE_STATUS.md |
-| plan | commands/plan.md | selectors.md, references.md, publication.md, commands/target.md, validation.md, templates/TEMPLATE_IMPL.md, templates/TEMPLATE_STATUS.md, templates/TEMPLATE_TARGETS.md; history.md for archived inputs; commands/capture.md, providers.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md when relying on providers |
-| implement | commands/implement.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; commands/target.md, templates/TEMPLATE_TARGETS.md and templates/TEMPLATE_STATUS.md for declared source relocation; history.md for archived inputs; providers.md and validation-evidence.md for provider inputs |
-| revise | commands/revise.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; commands/target.md, templates/TEMPLATE_TARGETS.md and templates/TEMPLATE_STATUS.md for declared source relocation; history.md for archived inputs; providers.md and validation-evidence.md for provider inputs |
+| sync | commands/sync.md | selectors.md, references.md, history.md, publication.md, validation.md, commands/target.md, templates/TEMPLATE_STATUS.md; validation-full.md for installation scope |
+| target | commands/target.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_STATUS.md |
+| plan | commands/plan.md | selectors.md, references.md, publication.md, commands/target.md, validation.md, templates/TEMPLATE_IMPL.md, templates/TEMPLATE_STATUS.md; history.md for archived inputs; commands/capture.md, providers.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md when relying on providers |
+| implement | commands/implement.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; commands/target.md and templates/TEMPLATE_STATUS.md for declared source relocation; history.md for archived inputs; providers.md and validation-evidence.md for provider inputs |
+| revise | commands/revise.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; commands/target.md and templates/TEMPLATE_STATUS.md for declared source relocation; history.md for archived inputs; providers.md and validation-evidence.md for provider inputs |
 | accept / reject / cancel | commands/decide.md | selectors.md, references.md, publication.md, validation.md |
 | archive | commands/archive.md | selectors.md, references.md, history.md, publication.md, validation.md, templates/TEMPLATE_STATUS.md; providers.md, validation-evidence.md and templates/TEMPLATE_PROVIDER.md for provider archive |
 | capture | commands/capture.md | selectors.md, references.md, publication.md, providers.md, validation.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md |
@@ -655,7 +655,6 @@ SPECTRE.md
 .agents/
 └── spectre/
     ├── ROUTER.md                   # command router (not a skill)
-    ├── TARGETS.md                  # stable target identities and current paths
     ├── runtime/                    # everything agents read and nobody edits
     │   ├── SPECTRE-PROTOCOL.md     # the pinned standard; the only file here
     │   └── modules/                # all generated from the protocol; never edited
@@ -688,8 +687,7 @@ SPECTRE.md
     │       └── templates/
     │           ├── TEMPLATE_IMPL.md
     │           ├── TEMPLATE_PROVIDER.md
-    │           ├── TEMPLATE_STATUS.md
-    │           └── TEMPLATE_TARGETS.md
+    │           └── TEMPLATE_STATUS.md
     ├── logs/                       # created by the first override; informational; safe to wipe
     │   ├── .gitignore              # `*`: the folder keeps itself out of version control
     │   └── OVERRIDES.md            # override log (§9)
@@ -737,9 +735,9 @@ ownership and meaningful completion validation. Examples include `api`, `web`, `
 Each provider has an independent four-digit capture sequence. These numbers identify immutable
 evidence captures, not versions of the provider or upstream protocol.
 
-Root `SPECTRE.md` is the sole active lifecycle ledger and the project-facing implementation
-summary. It has sections only for targets with live rows. `TARGETS.md` owns target identity
-and current source location independently of whether a target has a live section. Each archived implementation has its sole historical decision row in
+Root `SPECTRE.md` is the sole active lifecycle ledger, the target registry and the project-facing
+implementation summary. Its Targets table holds every target identity and current source location;
+its implementation subsections exist only for targets with live rows. Each archived implementation has its sole historical decision row in
 one `archive/<archive-id>/ARCHIVE.md`; it has no row in the active ledger. Archive manifests are
 immutable history, not additional active ledgers. Target directories contain instructions and
 results, not status ledgers. Provider captures have no lifecycle ledger and never contain
@@ -774,7 +772,7 @@ it relies on instead of requiring another project's result to be `ACCEPTED`.
 <!-- spectre:runtime commands/target.md references.md -->
 ### Target identity and current paths
 
-`.agents/spectre/TARGETS.md` is the sole target registry (§11). Its rows contain stable Target ID,
+The Targets table at the top of root `SPECTRE.md` is the sole target registry (§11). Its rows contain stable Target ID,
 Label, Path, Status and Reason. It stores no implementation state or next-ID counter. Register only
 the bootstrap target at installation and another target on its first successful plan. Discovery
 does not pre-register filesystem folders. Every live or archived target identity remains registered;
@@ -791,21 +789,21 @@ context/ownership, not permission to read or modify every descendant. Nested own
 overlap; the `repository` governance target at `./` is the exception and owns governance only.
 Flat mode has exactly one registered repository target at `./`.
 
-Live sections display their registry ID, label and current Path, checked as a projection. Historical
-instructions/source paths and archive Path fields remain snapshots; a source-folder move never
-rewrites them. Target IDs and sequence ownership survive source renames. Record and evidence paths
-remain governed by §3/§9 and cannot be moved by changing this registry.
+Implementation subsections name only their target ID; label and current Path live in the Targets
+table alone. Historical instructions/source paths and archive Path fields remain snapshots; a
+source-folder move never rewrites them. Target IDs and sequence ownership survive source renames.
+Record and evidence paths remain governed by §3/§9 and cannot be moved by changing a Targets row.
 <!-- /spectre:runtime -->
 
 <!-- spectre:runtime commands/target.md -->
 ### Target operations
 
-Resolve and report exactly one existing identity before mutation. Check its registry row, live and
-archived identity history, ownership and affected references; write the registry, then the live
-projection (publication.md). Target operations never move/delete product files or records.
+Resolve and report exactly one existing identity before mutation. Check its Targets row, live and
+archived identity history, ownership and affected references, and change its row in one ledger edit
+(publication.md). Target operations never move/delete product files or records.
 
 - `target move <target>: <path>` requires an ACTIVE target and an existing new owned directory.
-  Update only its Path and any live section Path. A source-relocation instruction declares its old
+  Update only its Targets Path. A source-relocation instruction declares its old
   and new source paths; its implementation performs this binding update as required bookkeeping in
   the same result/ledger publication. Binding alone moves no source files.
   In flat mode the path remains `./`; moving the whole installation requires explicit setup/override.
@@ -837,15 +835,16 @@ capture. Content without its commit point was never published. Writes after the 
 as an archive's ledger edit and removal of originals, only finish a change already published. Every
 mutation follows this order:
 
-1. Read the selected inputs, registry, live ledger and the archive indexes the operation needs.
+1. Read the selected inputs, the ledger and the archive indexes the operation needs.
    Resolve canonical scope and compute any new ID from them.
 2. Create new files only at paths that do not exist, and never overwrite a file the operation did
    not read. Write record, evidence and archive content first; write `ARCHIVE.md` or `SNAPSHOT.md`
    only after every file it inventories exists and matches its recorded hash.
-3. Immediately before editing `TARGETS.md` or `SPECTRE.md`, reread it. If a row, section or ID the
-   operation depends on changed since step 1, stop and report it; never overwrite the other change.
-   Files already written in step 2 stay for `check` to report. Edit `TARGETS.md` before the ledger.
-4. Edit the ledger last, changing only the rows and cells the operation owns. After an archive's
+3. Immediately before editing `SPECTRE.md`, reread it. If a row, subsection or ID the operation
+   depends on changed since step 1, stop and report it; never overwrite the other change. Files
+   already written in step 2 stay for `check` to report.
+4. Edit the ledger last, in one write, changing only the Targets rows, rows and cells the
+   operation owns. After an archive's
    ledger edit, delete only the verified originals and prune newly empty directories.
 5. Validate the affected scope (§13) and report. Never report a check that did not run.
 
@@ -862,14 +861,13 @@ An interrupted operation leaves one of these states. `check` reports each with i
 | State | Cause | Next action |
 | --- | --- | --- |
 | Instruction file at a sequence maximum with no row and no result | Plan stopped before its commit point | Human deletes the file, or asks to plan the same objective again, which publishes it |
-| Registry row that no live row, archive row or record file uses, other than the bootstrap target | Plan stopped after registering its target | Safe sync removes the row |
-| Live section Label or Path that differs from its registry row | Target operation stopped before the ledger edit | Safe sync refreshes the section |
 | Result file not linked from its `PLANNED` row | Implement stopped before its commit point | Implement again; it reconciles the existing result |
 | Row title or evidence mode that differs from its `PLANNED` or `REVIEW` instruction | Revise stopped before its ledger edit | Revise again; it reconciles the row |
 | Archive batch without `ARCHIVE.md` whose every file equals a live original | Archive stopped before its commit point | Safe sync removes the unpublished batch |
 | `ARCHIVE.md` whose rows are still live or whose originals still exist byte-identical | Archive stopped after its commit point | Safe sync removes those live rows, then those originals |
 | Numbered capture directory without `SNAPSHOT.md` that nothing references | Capture stopped before its commit point | Safe sync removes the unpublished directory |
 | Runtime files whose Source-SHA256 differs from the installed protocol | Install or upgrade stopped | Repeat the same explicit install or upgrade |
+| Ledger Protocol-Version that differs from the installed protocol's version | Upgrade stopped before its commit point | Repeat the same explicit upgrade; it skips records already migrated |
 
 Anything else, such as a row changed by two writers, unexpected bytes or a missing record, is a
 structural blocker. The human restores it from version control or orders an explicit scoped override.
@@ -961,7 +959,7 @@ Choose targets using these rules:
 - A single application, package, or service uses flat mode. Do not create
   `implementations/<target>/` for it, even when its name or a plausible target slug is known.
 - A monorepo uses nested mode. Each independently versioned, owned, or validated package/service
-  usually becomes a target when first planned; discovery alone creates no registry row or directory.
+  usually becomes a target when first planned; discovery alone creates no Targets row or directory.
 - In monorepo mode, `repository` is the reserved repository-governance target. Its `0001` record is the
   SPECTRE installation; it is not a parent product target.
 - A current human may explicitly require nested target directories when repository metadata alone
@@ -991,7 +989,7 @@ directly in `implementations/`; nested mode uses `implementations/<target>/`. Ro
 the sole active ledger; archived rows live only in their archive manifests. Require one authoritative
 row and matching instruction per identity; REVIEW/ACCEPTED/REJECTED also require a matching result.
 Refuse missing, duplicate, corrupt, or contradictory records; never substitute another identity.
-Read target identity/current Path from TARGETS.md; a live section is only its checked projection.
+Read target identity and current Path from the ledger's Targets table.
 All tracking mutations follow publication.md. Use canonical IDs/paths in stored data: ledger and manifest rows always show the qualified
 `target/NNNN` ID and follow the canonical table format in §11. Every write checks local-reference containment and resolves normative inputs; historical source
 locations follow references.md. A historical missing source path does not invalidate a terminal decision.
@@ -1082,10 +1080,12 @@ to install SPECTRE is its explicit decision and proof. This exception applies on
 record and does not weaken the human-only rule for any later implementation.
 
 `ACCEPTED`, `REJECTED`, and `CANCELLED` rows are terminal. Their decision data, instruction, and
-result (when present) are immutable. The sole relocation exception is an explicit `/spectre archive`
-operation under §9: it moves record files without changing their bytes and transfers their ledger
+result (when present) are immutable, with two exceptions. An explicit `/spectre archive`
+operation under §9 moves record files without changing their bytes and transfers their ledger
 rows, rebasing only the Instruction and Result link destinations. State, ID, title, evidence mode,
-and decision proof remain unchanged. Archiving is a storage operation, not a lifecycle state;
+and decision proof remain unchanged. An explicit upgrade (§14) migrates live terminal records to
+the target release's formats and replaces each digest their proofs cite with the migrated result's
+digest; state, ID, decision source, date and wording remain unchanged. Archiving is a storage operation, not a lifecycle state;
 there is no `ARCHIVED` state. Correct terminal content with a new local sequence that references
 the prior record. Git history alone is not a substitute for this rule.
 
@@ -1110,7 +1110,7 @@ both when implementation of that objective is authorized under §1; a planning-o
 target selector using §1 and §4 before allocating an ID or creating records.
 
 1. Read repository guidance, relevant decisions, applicable source/tests/manifest/README, the
-   target registry, applicable live rows (the section may be absent), status/target/implementation templates, and candidate
+   ledger's Targets table and applicable live rows (the subsection may be absent), the status and implementation templates, and candidate
    declared inputs. Read the provider template only when provider evidence is involved.
 2. Capture first. If the plan relies on provider evidence, report every existing provider guide it
    relies on, then run the §12 capture workflow for each, in provider slug order, before allocating
@@ -1140,11 +1140,12 @@ target selector using §1 and §4 before allocating an ID or creating records.
    misleading `PLANNED` row.
 9. Following publication.md, create `NNNN-IMPL-INSTR.md` at a path that does not exist, with
    Target-Path as a source-location snapshot. Verify required inputs, reference containment and
-   current Path agreement. Reread the registry and ledger; if the sequence changed, stop. Register
-   the resolved target if first used, with its verified existing Path, or the new-project Path its
-   changes create (commands/target.md), and ACTIVE status; never
-   reactivate a retired target implicitly. Add the matching PLANNED row last, creating its live
-   section only now, with a short matching objective title. Do not create a result or modify source.
+   current Path agreement. Reread the ledger; if the sequence changed, stop. Then, in one ledger
+   edit, add the matching PLANNED row with a short matching objective title, creating its
+   implementation subsection only now, and, if the target is used for the first time, its Targets
+   row with ACTIVE status and its verified existing Path or the new-project Path its changes create
+   (commands/target.md). Never reactivate a retired target implicitly. Do not create a result or
+   modify source.
 
 Every change row receives a stable Change ID such as `C01`. IDs are unique within the instruction
 and are used unchanged by the result.
@@ -1168,10 +1169,10 @@ select bounded sets and follow §1 checkpoints or explicit existing-record decis
 
 An instruction that moves its owned source directory must declare old/new target paths and affected
 LOCAL source-input moves/removals in its change table. Before source work, resolve ownership under
-commands/target.md. After the actual move, publish the verified current registry Path and live Path
-projection with the result/ledger update (publication.md), including honest partial results
+commands/target.md. After the actual move, publish the verified current Targets Path with the
+result and ledger update (publication.md), including honest partial results
 when tests fail after a completed move. This bookkeeping is included in the authorized relocation;
-do not require a second path-update permission or leave the registry pointing at an absent folder.
+do not require a second path-update permission or leave the Targets row pointing at an absent folder.
 
 The instruction's Target-Path remains its planning-time snapshot. Explicitly consumed LOCAL owned
 source paths moved/deleted by that change may be historical afterward when their Change IDs and
@@ -1192,8 +1193,9 @@ For `/spectre implement <record>`, a selected batch or compound-queue item, or a
 continuation authorized under §1, complete this workflow for one record:
 
 1. Require one matching active `PLANNED` row and instruction. Refuse missing, duplicate,
-   terminal, or mismatched identities. A previously recorded blocker must be resolved before
-   dependent source work. Recheck required accepted inputs and provider integrity.
+   terminal, or mismatched identities, and an instruction that does not satisfy the installed
+   release's instruction format, including one an upgrade marked for revision; it needs `revise`
+   first. A previously recorded blocker must be resolved before dependent source work. Recheck required accepted inputs and provider integrity.
 2. Read the complete instruction, every declared input, any existing partial result, target
    source/tests, and current repository guidance. Inspect existing changes before editing.
 3. Implement only the bounded objective from declared inputs. Preserve ownership and exclusions,
@@ -1267,7 +1269,9 @@ For an explicit `/spectre revise <record>: <changes>` invocation (or its host-na
    - Refine the instruction to express the requested changes, including inputs, provider pins,
      requirements, validation, completion criteria, and exclusions where affected. Preserve its
      implementation ID and `Created` value. Preserve the Change ID for a requirement revised in
-     place, allocate new IDs only for added requirements, and never reuse a removed ID.
+     place, allocate new IDs only for added requirements, and never reuse a removed ID. Bring an
+     instruction an upgrade marked for revision to the installed release's format, and drop that
+     mark from its Decision or status cell.
    - Do not modify product source or tests, run implementation work, or create an empty result. If a
      partial result already exists, reconcile it with the revised instruction: preserve actual work
      and check outcomes, update dispositions for changed Change IDs, and identify superseded work
@@ -1446,7 +1450,7 @@ An explicit record set must be entirely terminal; open selections pause for a hu
 checkpoint, and no partial subset is archived. Already archived selected IDs are no-ops. Pronouns
 and deferred output scopes never expand to all rows or the parent target.
 
-1. Read registry, live ledger, archive manifest indexes, selected terminal instructions/results and
+1. Read the ledger, archive manifest indexes, selected terminal instructions/results and
    affected inbound/outbound SPECTRE references. Validate the affected dependency closure (§13), not
    unrelated product records/evidence. Global identity indexes must still be readable and unique.
    An unfinished earlier archive (publication.md) blocks publication. ACCEPTED/REJECTED require results;
@@ -1460,9 +1464,9 @@ and deferred output scopes never expand to all rows or the parent target.
    dependency resolution. Record IDs remain qualified identities. Archive relocation resolves
    existing embedded references by original paths; no redirect stubs or record rewrites.
 4. Reread the ledger. Remove the matching live rows, then only the verified originals, and prune
-   newly empty live sections and record directories. Keep ledger metadata, unrelated sections/rows,
-   registry bindings and earlier archives. A ledger with no rows has metadata only; never create
-   per-target empty-table markers.
+   newly empty implementation subsections and record directories. Keep ledger metadata, the Targets
+   table, unrelated subsections/rows and earlier archives. A ledger with no live rows keeps its
+   metadata, Targets table and Implementations heading; never create per-target empty-table markers.
 5. Verify exactly one authoritative row per selected ID, preserved state/proof/bytes, and affected
    reference resolution. An interruption leaves a state publication.md names; never overwrite
    concurrent edits or allocate from incomplete history.
@@ -1619,7 +1623,7 @@ must exist when consumed. Explicit owned-source moves/removals declared by a Cha
 become historical after consumption when the result records their verified disposition (§9). Other
 active PLANNED/REVIEW records with moved required inputs need an explicit revision before work; changing target Path cannot silently rebind them.
 SPECTRE record links, dependencies and provider pins always require identity-safe resolution when
-consumed. Registry Path defines current ownership, not an input redirect.
+consumed. The Targets Path defines current ownership, not an input redirect.
 
 Source/test paths describing completed changes, the Target-Path snapshot of an instruction, and
 source links in terminal records are historical context. A later legitimate move/removal may make
@@ -1633,7 +1637,7 @@ strict evidence, never treated as optional historical source links.
 
 SPECTRE installs no README in `.agents/spectre/`. People read the root `SPECTRE.md` ledger, the
 `AGENTS.md` pointer, and the published documentation; agents start from `ROUTER.md` and read the
-selected runtime rules, registry and records.
+selected runtime rules, ledger and records.
 
 ## 11. Canonical templates
 
@@ -1643,45 +1647,15 @@ required headings, state names and table columns. Repository guidance may add st
 requirements after the canonical content but may not weaken it.
 
 
-### `.agents/spectre/runtime/modules/templates/TEMPLATE_TARGETS.md`
-
-````markdown
-# Target registry
-
-Target-Template-Version: v1
-
-Create .agents/spectre/TARGETS.md with this shape:
-
-```markdown
-# SPECTRE targets
-
-Target-Schema-Version: v1
-
-| Target | Label | Path | Status | Reason |
-| --- | --- | --- | --- | --- |
-| `repository` | Repository | `./` | `ACTIVE` | Repository governance bootstrap |
-```
-
-Flat installations replace the example with their repository slug/label at ./ and keep one target.
-Nested installations register repository for governance; other targets appear on first planning.
-Rows are unique and sorted by canonical target ID. Active paths exist, use ./ or ./path/, and are
-contained in the installation. A new project's path may be absent until any of its records reaches
-REVIEW when its open plan creates it; retired paths retain the last location and may be absent. Status is
-ACTIVE or RETIRED. Reason gives registration context or explicit retirement/reactivation reason.
-Use §11 canonical table delimiters and no raw | inside cells. Labels are plain text. Never store
-record state, counters, inferred folder inventories or aliases silently. Retain identity forever;
-sync cannot remove a target merely because its ledger section is empty.
-````
-
 ### `.agents/spectre/runtime/modules/templates/TEMPLATE_STATUS.md`
 
 ````markdown
-# Aggregate implementation status
+# Ledger and target registry
 
 Status-Template-Version: v1
 
-Root SPECTRE.md is the sole live lifecycle ledger. Archive manifests own archived decision rows;
-TARGETS.md owns target identity and current location. Create sections only for targets with rows.
+Root SPECTRE.md is the sole live lifecycle ledger and the target registry. Archive manifests own
+archived decision rows.
 
 ```markdown
 # SPECTRE implementations
@@ -1690,29 +1664,40 @@ Protocol-Version: 1.0.0
 Protocol: [.agents/spectre/runtime/SPECTRE-PROTOCOL.md](.agents/spectre/runtime/SPECTRE-PROTOCOL.md)
 Status-Schema-Version: v1
 Storage-Mode: <flat|nested>
-Targets: [.agents/spectre/TARGETS.md](.agents/spectre/TARGETS.md)
 
-This is the sole live lifecycle ledger. Archived rows live in .agents/spectre/archive/ manifests.
+This is the sole live lifecycle ledger and target registry. Archived rows live in .agents/spectre/archive/ manifests.
 
-## <Label> implementation status
+## Targets
 
-Target: <target>
-Path: ./<current-owned-directory>/
+| Target | Label | Path | Status | Reason |
+| --- | --- | --- | --- | --- |
+| `repository` | Repository | `./` | `ACTIVE` | Repository governance bootstrap |
 
-### Implementation ledger
+## Implementations
+
+### `repository`
 
 | ID | Title | Instruction | State | Result | Evidence mode | Decision or status |
 | --- | --- | --- | --- | --- | --- | --- |
-| `<target>/0001` | Install SPECTRE | [Instruction](.agents/spectre/implementations/0001-IMPL-INSTR.md) | `ACCEPTED` | [Result](.agents/spectre/implementations/0001-IMPL-RESULT.md) | `LOCAL` | Human requested installation of SPECTRE. |
+| `repository/0001` | Install SPECTRE | [Instruction](.agents/spectre/implementations/repository/0001-IMPL-INSTR.md) | `ACCEPTED` | [Result](.agents/spectre/implementations/repository/0001-IMPL-RESULT.md) | `LOCAL` | Human requested installation of SPECTRE. |
 ```
 
-The example bootstrap links are flat; nested bootstrap uses implementations/repository/ and Path
-./. Other sections use their registered labels, IDs and current paths. Order sections by target,
-rows by numeric ID. Add a section with its first PLANNED row; remove it when the last row is archived.
-No empty table, per-target empty marker or discovered-folder section is canonical. Zero live rows
-means metadata and the introductory sentence only, with no target sections. Never delete the ledger.
+Targets: flat installations register their repository slug and label at ./ as the only target, and
+their bootstrap links point directly into implementations/. Nested installations register repository
+for governance; other targets are added by their first plan. Rows are unique and sorted by target
+ID. Active paths exist, use ./ or ./path/, and are contained in the installation. A new project's
+path may be absent until any of its records reaches REVIEW when its open plan creates it; retired
+paths retain the last location and may be absent. Status is ACTIVE or RETIRED. Reason gives
+registration context or explicit retirement/reactivation reason. Labels are plain text. Never store
+record state, counters, inferred folder inventories or aliases. Every target ever used keeps its
+row, with or without live rows.
 
-Canonical table format, for this ledger and every new archive/registry table:
+Implementations: one subsection per target with live rows, headed by the target ID in backticks
+(### `api`), ordered by target, rows by numeric ID. Add a subsection with its target's first live row and remove it when the last row is
+archived. The Implementations heading stays when no subsection remains. No empty table,
+per-target empty marker or discovered-folder subsection is canonical. Never delete the ledger.
+
+Canonical table format, for this ledger and every new archive table:
 
 - Each header/separator/row is one line starting | followed by a space, ending with a space and |,
   and separating cells with ` | ` (ordinary ASCII spaces and pipe). Separator cells are ---;
@@ -1737,24 +1722,14 @@ Canonical table format, for this ledger and every new archive/registry table:
 - Exactly one accepted bootstrap exists in live or archived history, never recreated after archive.
 - IDs remain unique across live and archived records and are allocated above the sequence maximum.
   Flat mode has one sequence; nested mode has one per stable target. No stored next-ID counter.
-- Every live section's Target/Path/label agrees with its ACTIVE registry row. Retired targets have
-  no live rows. Removing an empty section never removes registry identity or historical records.
+- Every implementation subsection names a target with an ACTIVE Targets row, and every row ID in it
+  belongs to that target. Retired targets have no live rows. Removing an empty subsection never
+  removes a Targets row or historical records.
 - Provider inventories, execution queues and global work plans do not belong in the ledger.
 ````
 
-An empty live ledger therefore contains only:
-
-```markdown
-# SPECTRE implementations
-
-Protocol-Version: 1.0.0
-Protocol: [.agents/spectre/runtime/SPECTRE-PROTOCOL.md](.agents/spectre/runtime/SPECTRE-PROTOCOL.md)
-Status-Schema-Version: v1
-Storage-Mode: <flat|nested>
-Targets: [.agents/spectre/TARGETS.md](.agents/spectre/TARGETS.md)
-
-This is the sole live lifecycle ledger. Archived rows live in .agents/spectre/archive/ manifests.
-```
+A ledger whose records are all archived therefore keeps its metadata, introduction, Targets table and
+`## Implementations` heading, with no subsections.
 
 ### `.agents/spectre/runtime/modules/templates/TEMPLATE_IMPL.md`
 
@@ -2227,7 +2202,7 @@ explicitly stated, separately executed plan item in a compound queue.
 
 `check [scope]` reads and diagnoses, never mutates or fetches upstream evidence. No scope means the
 complete installation. Scoped target/record/provider checks include their required dependency
-closure, registry bindings, shared indexes and loaded runtime integrity; report exactly what was
+closure, Targets rows, shared indexes and loaded runtime integrity; report exactly what was
 and was not checked. Read canonical templates for the checked schema and provider checks when
 consuming evidence. A full check re-extracts all modules/templates and checks the router/pointer.
 
@@ -2246,25 +2221,23 @@ that sync rather than being silently removed.
 
 `sync [scope]` reconciles only mechanically provable metadata. No scope means the installation.
 Inspect first, report the proposed correction set, then apply authorized safe changes without
-another confirmation, following publication.md. Check affected records, registry and references
+another confirmation, following publication.md. Check affected records, Targets rows and references
 before and after. A matching installation produces no writes.
 
 Allowed corrections are exhaustive:
 
-- Remove a target section with genuinely zero rows after proving there are no orphan instructions
-  or results for it and all ever-used identities are registered. An unregistered empty generated
-  heading can be removed only when no used identity is lost. Preserve prose
-  that cannot be identified as generated bookkeeping and report ambiguity instead.
-- Refresh live section Label/Path from the valid existing registry, preserving Target and row values.
-- Sort existing sections/rows and normalize table formatting where parsing is unambiguous, retaining
+- Remove an implementation subsection with genuinely zero rows after proving there are no orphan
+  instructions or results for its target; its Targets row always stays. Preserve prose that cannot
+  be identified as generated bookkeeping and report ambiguity instead.
+- Sort existing Targets rows, subsections and rows and normalize table formatting where parsing is unambiguous, retaining
   exact IDs, links, titles, states, evidence modes and Decision or status values.
 - Remove an empty active record directory, never a directory containing files, an archive or evidence.
 - Complete the interrupted states that publication.md marks safe sync, and only after verifying
-  every byte and row condition that table states: remove an unused non-bootstrap registry row,
-  remove an unpublished archive batch or capture directory, or finish removing live rows and
+  every byte and row condition that table states: remove an unpublished archive batch or capture
+  directory, or finish removing live rows and
   originals already copied into a written `ARCHIVE.md`.
 
-Refuse corrections in a target or provider that has missing registry identities used by
+Refuse corrections in a target or provider that has missing Targets rows for identities used by
 records/history, conflicting states, duplicate IDs, orphan instructions/results other than the
 interrupted states publication.md names, missing record files, invalid target ownership, corrupt
 pins, or interrupted writes outside that table.
@@ -2306,8 +2279,8 @@ Checks below are split between this module (records/references/operations), vali
 1. Runtime: all 25 modules equal marked source extraction, including installed version/source hash.
    Templates match §11 byte-for-byte. Full checks verify bodies, not just headers.
 2. Layout of rules: runtime/ contains only SPECTRE-PROTOCOL.md and modules/; modules/ contains only
-   extracted modules and templates/. Four canonical templates exist. ROUTER.md and TARGETS.md are
-   the top-level installed files; no installation README is generated. Informational logs are
+   extracted modules and templates/. Three canonical templates exist. ROUTER.md is the only
+   top-level installed file; no installation README is generated. Informational logs are
    outside runtime/ and never protocol/decision authorities. No lock, transaction or staging files.
 3. Router: the installed router equals §2 and loads every operation's dependencies selectively.
 4. Natural language: selectors, queues and human checkpoints follow selectors.md and queues.md. Exact
@@ -2318,8 +2291,9 @@ Checks below are split between this module (records/references/operations), vali
 7. Bootstrap: exactly one accepted flat target/0001 or nested repository/0001 installation row exists
    in live or archived history. Active bootstrap has its matching instruction/result and human
    installation proof; an empty live ledger never authorizes another bootstrap.
-8. Storage: one root SPECTRE.md uses Status-Schema-Version v1 and the selected flat/nested layout. Sections exist exactly
-   for targets with live rows; every target identity has a registry binding. No target-local ledger
+8. Storage: one root SPECTRE.md uses Status-Schema-Version v1 and the selected flat/nested layout.
+   Implementation subsections exist exactly for targets with live rows; every target identity used
+   by live or archived records has a Targets row. No target-local ledger
    or mixed flat/nested active storage. Archives retain their original layout/schema.
 9. Installation changes only tracking structure and its pointer; no product implementation.
 <!-- /spectre:runtime -->
@@ -2327,8 +2301,9 @@ Checks below are split between this module (records/references/operations), vali
 <!-- spectre:runtime validation.md -->
 **Ledger and records**
 
-10. Format: live ledger/registry and new manifest tables use §11 canonical delimiters/columns; live
-    sections are unique, sorted, populated and match registry Label/Path/ACTIVE status. Historical
+10. Format: the ledger and new manifest tables use §11 canonical delimiters/columns; Targets rows
+    and implementation subsections are unique and sorted; subsections are populated and name ACTIVE
+    targets. Historical
     manifest table syntax is read under its original version, never normalized by sync.
 11. Identity: valid target/provider slugs and four-digit IDs; no new target is all/implementations/
     providers. Each record ID has one authoritative live or archived row. Sequence allocation scans
@@ -2343,7 +2318,7 @@ Checks below are split between this module (records/references/operations), vali
 14. Completion: implementation-complete reports have matching results, actual required validation,
     and REVIEW or a later human decision. Partial work states its real checks and blockers.
 15. Immutability: terminal record bytes and decisions remain unchanged except authorized archive
-    relocation or explicit override. Every live ACCEPTED or REJECTED row's recorded digests match its
+    relocation, upgrade migration of live records (§14) or explicit override. Every live ACCEPTED or REJECTED row's recorded digests match its
     current result bytes; a mismatch is a structural blocker. Source renames do not rewrite terminal
     inputs/history.
 
@@ -2357,7 +2332,7 @@ Checks below are split between this module (records/references/operations), vali
 18. Dependencies: DERIVED/HYBRID consume accepted results of this installation, preserving identity
     and decision through archive. Other projects enter through provider captures of their interfaces.
 19. Target ownership/moves: ACTIVE paths exist (a new project's path once any of its records reaches
-    REVIEW), registry IDs are stable, ownership does not overlap
+    REVIEW), target IDs are stable, ownership does not overlap
     except repository governance, RETIRED targets have no live rows and retain identity/last path.
     Evidence/record moves use archive/override; target move changes current source binding only.
 <!-- /spectre:runtime -->
@@ -2400,7 +2375,7 @@ Checks below are split between this module (records/references/operations), vali
     evidence to make a historical archive complete.
 32. Separation: no authoritative row exists both live and archived; no PLANNED/REVIEW archive rows.
     New batches have one kind and preserve selected bytes/proof; affected dependencies resolve after
-    relocation. No empty live sections remain. Archive never edits product source or unrelated data.
+    relocation. No empty implementation subsections remain. Archive never edits product source or unrelated data.
     No archive waives a failed selected-record check.
 <!-- /spectre:runtime -->
 
@@ -2418,8 +2393,8 @@ Checks below are split between this module (records/references/operations), vali
     reported with their next action; only the states marked safe sync are completed automatically.
 38. Sync: only the exhaustive safe corrections in commands/sync.md occur; no missing rows/records
     reconstructed, no state inferred, no evidence/history deleted, no schema upgraded implicitly.
-39. Registry: TARGETS.md v1 uniquely owns IDs/labels/current paths/status/reasons. Empty live sections
-    are removable projections, never evidence that a target can be forgotten or its ID reused.
+39. Targets: the ledger's Targets table uniquely owns IDs, labels, current paths, status and reasons.
+    Removing an empty implementation subsection never removes a Targets row or frees its ID.
 
 Use repository-native validation tools when available. Machine checks verify structure and execution
 contracts; human acceptance remains a separate explicit decision. Never report checks that did not run.
@@ -2431,19 +2406,22 @@ contracts; human acceptance remains a separate explicit decision. Never report c
 
 SPECTRE uses semantic versioning. Published release directories and canonical URLs are immutable;
 changes produce a new release. Installed bytes remain pinned until an explicit upgrade. Protocol
-versions and document schemas are distinct. Release 1.0.0 defines Target-Schema v1, Status-Schema
-v1, Archive-Version v1, Implementation-Version v1, Result-Version v1 and the v1 provider schemas.
-A later release changes a schema version only when that format changes. Records, captures and
-archives always remain readable under the schema that created them.
+versions and document schemas are distinct. Release 1.0.0 defines Status-Schema v1 (ledger and
+targets), Archive-Version v1, Implementation-Version v1, Result-Version v1 and the v1 provider schemas.
+A later release changes a schema version only when that format changes, and then defines the
+mechanical migration of the live ledger and live records from the previous release. Archives and
+provider captures are frozen: they remain readable under the schema that created them and are never
+migrated. Live records are migrated by an explicit upgrade; archive terminal work first to keep its
+original bytes.
 
 | Release | Permitted change | Adoption |
 | --- | --- | --- |
 | Patch | Wording only; no format, rule or required-check change | Explicit verified refresh |
 | Minor | Optional additions compatible with existing records | Explicit verified refresh |
-| Major | Required formats, rules or checks | Explicit compatible migration or human resolution of incompatible work |
+| Major | Required formats, rules or checks | Explicit upgrade that migrates the live ledger and records; open work it cannot complete is marked for revision |
 
 Never edit a published protocol, hand-edit generated runtime, infer acceptance during migration,
-or rewrite historical evidence to make it match the newest format.
+or rewrite archives or captures to make them match the newest format.
 
 <!-- spectre:runtime commands/upgrade.md -->
 ### Upgrade procedure
@@ -2454,25 +2432,38 @@ release and verify Standard-ID, version, canonical URL and exact canonical bytes
 installation separately; a source-release edit never upgrades adopting repositories. The target
 release governs: when it defines its own migration steps, follow them in place of these.
 
-1. Read the current installation metadata, runtime, registry, ledger, all manifest indexes and
+1. Read the current installation metadata, runtime, ledger, all manifest indexes and
    active records. Run full current-version validation without changing files. Report conflicts,
    interrupted writes and missing evidence, and resolve blockers explicitly before writing.
 2. Recommend that the human commit or otherwise back up the installation first. Version control is
    the rollback path.
 3. Report the exact change before writing: generated files replaced, schema versions, ledger
-   metadata, retained records and any human blockers. A routine unambiguous upgrade is covered by
-   the upgrade request and needs no further confirmation.
-4. Preserve all PLANNED, REVIEW and terminal records, state and proof, numbering, archives, captures,
-   provider guides and decisions byte for byte. A major version alone never justifies closing work
-   or forcing records into archives. Pending checkpoints are invalidated and must be refreshed.
-5. Write the target protocol, then its extracted modules and four templates, then the router and the
-   SPECTRE section of AGENTS.md, and finally the ledger's Protocol-Version and schema metadata.
+   changes, live records to migrate with the proof digests that will change, records to be marked
+   for revision, frozen archives and captures, and any human blockers. Note that archiving terminal
+   work first keeps its original bytes. A routine unambiguous upgrade is covered by the upgrade
+   request and needs no further confirmation.
+4. Migrate the live ledger and every live record (PLANNED, REVIEW and terminal) to the target
+   release's formats, applying the migration each intervening release defines in release order. A
+   release that changes no format migrates nothing. Migration is mechanical and never invents
+   content: a required field it cannot derive reads `Not recorded in the original instruction.` or
+   `Not recorded in the original result.` A PLANNED instruction left without implementation-ready
+   content stays PLANNED, and its Decision or status cell begins `Needs revise after upgrade to
+   <version>.` In ACCEPTED and REJECTED proofs, replace each cited digest of a migrated result with
+   its new digest; the decision source, date and wording stay. Preserve IDs, states, numbering,
+   archives, provider captures and guides byte for byte. A major version alone never justifies
+   closing work or forcing records into archives. Pending checkpoints are invalidated and must be
+   refreshed.
+5. Write the target protocol, then its extracted modules and three templates, then the router and the
+   SPECTRE section of AGENTS.md, then each migrated live record, and finally the migrated ledger with
+   its Protocol-Version and schema metadata in one write, the commit point. Records already in the
+   target formats are left as they are, so repeating an interrupted upgrade completes it.
    Rewrite host adapters that already exist to the target pointer; never add absent ones. Remove
    obsolete generated runtime files; preserve human-owned files and unrelated AGENTS.md instructions.
 6. Validate the complete installation under the target release. Compare every generated byte, every
-   row and identity, and every numbering maximum with step 1. An interrupted upgrade is completed by
-   running the same upgrade again. Report old and new versions, changed paths, preserved work and
-   checks, and tell humans to reload changed host adapters.
+   row's identity, state and decision source, and every numbering maximum with step 1. An
+   interrupted upgrade is completed by running the same upgrade again. Report old and new versions,
+   changed paths, migrated records with old and new digests, records marked for revision, frozen
+   history and checks, and tell humans to reload changed host adapters.
 <!-- /spectre:runtime -->
 
 

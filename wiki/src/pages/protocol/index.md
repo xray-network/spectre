@@ -18,7 +18,7 @@ The first public release.
   a direct reply such as “Accept both and continue” can resume the authorized archive without
   repeating the protocol name. Unrelated messages never start tracking, and the word inside a path
   such as `.agents/spectre/` is not a mention.
-- **Stable targets and paths.** `TARGETS.md` owns identity, current Path and retirement. First planning
+- **Stable targets and paths.** The Targets table in `SPECTRE.md` owns identity, current Path and retirement. First planning
   registers targets; source moves preserve IDs; retirement retains history and numbering.
 - **Sparse ledger.** `SPECTRE.md` contains only populated sections with Target and Path. Archive removes
   terminal rows and newly empty sections.

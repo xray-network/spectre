@@ -10,22 +10,21 @@ installation remains pinned to its verified local bytes until explicitly upgrade
 | `Standard-Version` | `1.0.0`, complete protocol release |
 | `Protocol-Version` | Installed/source release associated with a ledger or manifest |
 | `Runtime-Version`, `Source-SHA256` | Exact binding of generated modules to the installed source |
-| `Target-Template-Version`, `Target-Schema-Version` | `v1`, target identity/current location registry |
-| `Status-Template-Version`, `Status-Schema-Version` | `v1`, sparse live ledger with current target paths |
+| `Status-Template-Version`, `Status-Schema-Version` | `v1`, ledger: Targets table plus sparse live implementation rows |
 | `Implementation-Workflow-Version`, `Implementation-Version` | `v1`, instruction with a `Target-Path` snapshot |
 | `Result-Version` | `v1`, implementation result |
 | `Archive-Version` | `v1`, implementations or providers archive manifest |
 | `Provider-Workflow-Version`, `Provider-Snapshot-Version`, `Provider-Capture-Version` | `v1`, provider formats |
 
-A later release changes a schema version only when that format changes. Records, captures and
-archives always remain readable under the schema that created them. Provider guides themselves are
-unversioned.
+A later release changes a schema version only when that format changes, and then defines how live
+records migrate to it. Archives and provider captures are frozen: they remain readable under the
+schema that created them and are never migrated. Provider guides themselves are unversioned.
 
 | Release | Permitted change | Adoption |
 | --- | --- | --- |
 | Patch | Wording only; no new format, rule or required check | Explicit verified refresh |
 | Minor | Optional additions compatible with existing records | Explicit verified refresh |
-| Major | Required format, rule or validation changes | Explicit compatibility migration or human resolution |
+| Major | Required format, rule or validation changes | Explicit upgrade migrating the live ledger and records |
 
 The build generates current/versioned raw assets and a release manifest with SHA-256 values.
 Installed runtime and templates are verbatim extractions, never separately maintained summaries.
@@ -37,18 +36,39 @@ affected dependency closure. No protocol publication silently updates an adoptin
 Ask for one installation and a named target release:
 
 ```text
-Spectre upgrade 1.0.1
+Spectre upgrade 2.0.0
 ```
 
-The upgrade validates the installation, recommends committing first, reports the exact change, and
-then rewrites only generated files and ledger metadata. Every record, decision, archive and capture
-keeps its bytes. A target release that defines its own migration steps replaces these generic ones.
-An interrupted upgrade is finished by running the same upgrade again; version control is the
-rollback path. Review checkpoints must be refreshed after an upgrade.
+The upgrade validates the installation, recommends committing first and reports the exact change.
+Then it replaces the generated files and migrates everything live to the target release's formats:
+
+| What | On upgrade |
+| --- | --- |
+| Protocol, runtime modules, templates, router, `AGENTS.md` section | Replaced by the target release |
+| Live ledger (`SPECTRE.md`) | Migrated to the new ledger format; written last, as the commit point |
+| Live records (`PLANNED`, `REVIEW`, `ACCEPTED`, `REJECTED`) | Migrated and rehashed |
+| Decision proofs of live accepted/rejected rows | Only the cited result digests change; source, date and wording stay |
+| Archives | Frozen: never migrated |
+| Provider captures and guides | Frozen: never migrated |
+
+Migration is mechanical: a required field it cannot derive reads "Not recorded in the original
+instruction." (or "result"). A planned instruction that is left without implementation-ready content
+stays `PLANNED` with `Needs revise after upgrade to <version>.` in its status, and `implement`
+refuses it until a `revise` brings it up to date. A release that changes no format migrates nothing.
+
+To keep finished work exactly as it was written, archive it first, commit, then upgrade:
+
+```text
+Spectre archive
+Spectre upgrade 2.0.0
+```
+
+An interrupted upgrade is finished by running the same upgrade again; records already migrated are
+skipped. Version control is the rollback path. Review checkpoints must be refreshed after an upgrade.
 
 ## History and current paths
 
-A target ID survives source-folder renames. Its registry Path is current context; instruction
+A target ID survives source-folder renames. Its Targets Path is current context; instruction
 Target-Path and archived source links are historical snapshots. Stale historical source locations
 do not invalidate decisions. Required evidence still must be present and valid when consumed.
 

@@ -17,5 +17,5 @@ for (const release of releases) {
   const source = await readFile(new URL("SPECTRE-PROTOCOL.md", releaseRoot), "utf8")
   const { version, runtime, hash } = verifyRelease(source)
   assert.equal(`v${version}`, release, `${release} declares Standard-Version ${version}`)
-  console.log(`SPECTRE ${version}: ${runtime.size} runtime modules, four templates, router and rule placement verified. SHA-256 ${hash}`)
+  console.log(`SPECTRE ${version}: ${runtime.size} runtime modules, three templates, router and rule placement verified. SHA-256 ${hash}`)
 }

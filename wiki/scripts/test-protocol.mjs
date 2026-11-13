@@ -7,11 +7,11 @@ import { extractRelease, moduleNames, splitRow, verifyRelease } from "./verify-p
 const releaseUrl = new URL("../../protocol/v1.0.0/", import.meta.url)
 const source = await readFile(new URL("SPECTRE-PROTOCOL.md", releaseUrl), "utf8")
 
-test("1.0.0 extracts all routed rules and four templates from one canonical source", () => {
+test("1.0.0 extracts all routed rules and three templates from one canonical source", () => {
   const release = verifyRelease(source)
   assert.equal(release.version, "1.0.0")
   assert.equal(release.runtime.size, 25)
-  assert.equal(release.templates.size, 4)
+  assert.equal(release.templates.size, 3)
   assert.equal(new Set(moduleNames).size, 25)
   assert.equal(release.hash, createHash("sha256").update(source).digest("hex"))
   for (const text of release.runtime.values()) {
@@ -69,7 +69,11 @@ const corruptions = [
   ["queue rules leak back into core", text => text.replace("<!-- spectre:runtime queues.md -->", "<!-- spectre:runtime core.md queues.md -->")],
   ["incorrect module inventory", text => text.replace("Require all 25 files.", "Require all 24 files.")],
   ["misversioned schema template", text => text.replace("Status-Schema-Version: v1\nStorage-Mode", "Status-Schema-Version: v3\nStorage-Mode")],
-  ["missing target registry template", text => text.replace("### `.agents/spectre/runtime/modules/templates/TEMPLATE_TARGETS.md`", "### Target template removed")],
+  ["missing status template", text => text.replace("### `.agents/spectre/runtime/modules/templates/TEMPLATE_STATUS.md`", "### Status template removed")],
+  ["upgrade stops migrating live records", text => text.replace("4. Migrate the live ledger and every live record", "4. Preserve the live ledger and every live record")],
+  ["upgrade rewrites frozen history", text => text.replace("archives, provider captures and guides byte for byte", "provider guides byte for byte")],
+  ["implement accepts records marked for revision", text => text.replace("including one an upgrade marked for revision; it needs `revise`", "including stale ones; it may need `revise`")],
+  ["separate target registry returns", text => text.replace("## Targets\n\n| Target |", "Targets: [.agents/spectre/TARGETS.md](.agents/spectre/TARGETS.md)\n\n| Target |")],
   ["router drops decision publication order", text => text.replace(/(\| accept \/ reject \/ cancel \|[^\n]*)publication\.md, /, "$1")],
   ["router points to missing module", text => text.replace("| sync | commands/sync.md |", "| sync | commands/repair.md |")],
   ["archive regresses to unrelated full validation", text => text.replace("| archive | commands/archive.md | selectors.md,", "| archive | commands/archive.md | validation-full.md, selectors.md,")],

@@ -107,7 +107,7 @@ context (`the plans just listed`). A batch accepts comma-separated qualified IDs
 inclusive range (`api/0004..0006`), or a bounded plural description. The complete set is fixed before
 mutation; duplicate/missing IDs or ineligible selections are not silently skipped.
 
-Target descriptions resolve through the registry and repository ownership. An invalid explicit ID
+Target descriptions resolve through the ledger's Targets table and repository ownership. An invalid explicit ID
 never gets a fuzzy substitute. Ambiguous matches require clarification. "Latest" means creation
 order within its scope; "last implemented" needs actual event-order evidence, not mtimes or archive
 dates. State eligibility is checked after identity resolution.
@@ -168,7 +168,7 @@ Spectre, archive completed work for the API target, then retire it because the s
 Spectre, reactivate the API target at ./services/api/.
 ```
 
-The registry owns stable IDs and current installation-relative paths. Target move updates that
+The Targets table at the top of `SPECTRE.md` owns stable IDs and current installation-relative paths. Target move updates that
 binding and live display; it does not move source files, records or evidence. When an implementation
 explicitly moves its source folder, its declared old/new path update is published with its result
 and ledger. Consumed owned source deliberately moved/deleted by that change can remain historical
@@ -188,8 +188,8 @@ distinguishing accepted, pending, superseded and rejected work. Neither changes 
 installation, including generated rule bytes; a scoped check reports its actual dependency closure.
 Historical stale source links are distinguished from missing required evidence.
 
-`sync` applies only proven bookkeeping corrections: empty section removal, display refresh from a
-valid registry, unambiguous sorting/formatting, empty active record-directory removal, and finishing
+`sync` applies only proven bookkeeping corrections: empty subsection removal, unambiguous
+sorting/formatting, empty active record-directory removal, and finishing
 the interrupted writes listed below as safe. It cannot reconstruct rows, infer lifecycle state,
 register/retire targets, remove evidence or upgrade schemas. Structural conflicts block corrections
 in the affected target or provider. Ordinary commands already do their own bookkeeping.
@@ -203,12 +203,12 @@ capture's `SNAPSHOT.md`. If an agent stops halfway, `check` names what it left:
 | Left behind | Next step |
 | --- | --- |
 | A plan's instruction without its ledger row | Delete it, or ask to plan the same objective again |
-| A registry row that nothing uses | `sync` removes it |
 | A result not yet linked from its `PLANNED` row | Implement again; it reconciles the result |
 | An archive copy without `ARCHIVE.md` | `sync` removes the copy |
 | An `ARCHIVE.md` whose rows or originals are still live | `sync` finishes the move |
 | A capture directory without `SNAPSHOT.md` | `sync` removes it |
 | Runtime files that do not match the protocol | Repeat the install or upgrade |
+| A ledger whose `Protocol-Version` differs from the installed protocol | Repeat the upgrade; it skips records already migrated |
 
 Anything else is a blocker: restore it from version control or order an explicit override.
 
@@ -237,8 +237,8 @@ terminal records and preserve open work. An explicit open record set pauses for 
 it never silently archives only some. Already archived records are reported as no-ops.
 
 Archive preserves instruction/result bytes, IDs, decisions and dependencies. It publishes a
-dated manifest, transfers selected rows out of `SPECTRE.md`, and removes newly empty live sections.
-Target registry identities remain. An empty ledger has metadata only; history stays discoverable.
+dated manifest, transfers selected rows out of `SPECTRE.md`, and removes newly empty subsections.
+Targets rows remain. A ledger with nothing live keeps its Targets table; history stays discoverable.
 Future IDs follow the maximum across live and archived history. Earlier archives remain unchanged.
 Nothing eligible means no files created. Archiving changes storage, not lifecycle state.
 
@@ -268,9 +268,12 @@ live baseline above its historical capture maximum. Ledger cleanup is never evid
 
 ## Upgrade, exceptions and host integration
 
-`upgrade <version>` explicitly migrates one installation to a verified named release. It preserves
-compatible work/history and pauses for ambiguous paths or incompatible inputs; publishing a source
-release never upgrades installations. See [versioning](./versioning).
+`upgrade <version>` explicitly migrates one installation to a verified named release. It replaces
+generated files and migrates the live ledger and every live record to the new formats; archives and
+provider captures stay as written, so archive finished work first to keep its original bytes.
+Planned work the migration cannot complete is marked `Needs revise after upgrade` and `implement`
+refuses it until revised. Publishing a source release never upgrades installations. See
+[versioning](./versioning).
 
 `override` requires an exact human-requested scope, change and reason. It updates dependent live
 references and logs file hashes informationally; it never executes provider content or exposes

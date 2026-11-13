@@ -43,20 +43,19 @@ hosts invoke `/spectre`. Supported names: `codex`, `antigravity`, `claude`, `cur
 ## What gets installed
 
 ```text
-SPECTRE.md                         # populated live sections only
+SPECTRE.md                         # Targets table and live implementation rows
 .agents/spectre/
 ├── ROUTER.md                      # selective runtime routing
-├── TARGETS.md                     # stable identities and current paths
 ├── runtime/
 │   ├── SPECTRE-PROTOCOL.md         # verified pinned release
 │   └── modules/                   # 25 extracted rule modules
-│       └── templates/             # status, targets, implementation, provider
+│       └── templates/             # status, implementation, provider
 └── implementations/               # bootstrap instruction and result
 ```
 
 Only the bootstrap target is registered initially: the repository slug in flat mode, or reserved
 `repository` governance target in nested mode. Other targets register on their first plan. No
-per-project empty ledger sections are created. Archives/providers appear only when needed.
+per-project empty ledger subsections are created. Archives/providers appear only when needed.
 
 Runtime modules include their version and source SHA-256. Routine operations load selected modules;
 full validation compares their bytes with extraction. Missing or stale runtime is reported without
@@ -84,9 +83,10 @@ Then ask the agent to read the file completely and perform its installation proc
 
 ## Upgrade an existing installation
 
-Ask for the named release, for example `Spectre upgrade 1.0.1`. Commit first: the upgrade rewrites
-only generated files and ledger metadata, and version control is its rollback path. Records,
-decisions, IDs, archives and captures keep their bytes. Review checkpoints must be refreshed after
-an upgrade. See [versioning](./versioning#upgrading).
+Ask for the named release, for example `Spectre upgrade 2.0.0`. Commit first: version control is
+the upgrade's rollback path. The upgrade replaces generated files and migrates the live ledger and
+live records to the new formats. Archives and provider captures keep their bytes, so archive
+finished work first if you want to keep it exactly as written. Review checkpoints must be refreshed
+after an upgrade. See [versioning](./versioning#upgrading).
 
 [Continue to the command reference →](./commands)

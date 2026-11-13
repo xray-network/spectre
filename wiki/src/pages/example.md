@@ -19,7 +19,6 @@ beacon-api/
 │   └── ...
 └── .agents/
     └── spectre/
-        ├── TARGETS.md               # Stable target identity and current source path
         ├── implementations/
         │   ├── 0001-IMPL-INSTR.md     # Install SPECTRE · ACCEPTED
         │   ├── 0001-IMPL-RESULT.md
@@ -52,16 +51,18 @@ Protocol-Version: 1.0.0
 Protocol: [.agents/spectre/runtime/SPECTRE-PROTOCOL.md](.agents/spectre/runtime/SPECTRE-PROTOCOL.md)
 Status-Schema-Version: v1
 Storage-Mode: flat
-Targets: [.agents/spectre/TARGETS.md](.agents/spectre/TARGETS.md)
 
-This is the sole live lifecycle ledger. Archived rows live in .agents/spectre/archive/ manifests.
+This is the sole live lifecycle ledger and target registry. Archived rows live in .agents/spectre/archive/ manifests.
 
-## Beacon API implementation status
+## Targets
 
-Target: beacon-api
-Path: ./
+| Target | Label | Path | Status | Reason |
+| --- | --- | --- | --- | --- |
+| `beacon-api` | Beacon API | `./` | `ACTIVE` | Repository bootstrap |
 
-### Implementation ledger
+## Implementations
+
+### `beacon-api`
 
 | ID | Title | Instruction | State | Result | Evidence mode | Decision or status |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -72,24 +73,12 @@ Path: ./
 | `beacon-api/0005` | Add readiness endpoint | [Instruction](.agents/spectre/implementations/0005-IMPL-INSTR.md) | `PLANNED` | — | `LOCAL` | Plan recorded; implementation has not started. |
 ```
 
-The ledger summarizes state and decisions; the linked instruction and result hold the detailed
-scope, changes, checks, and evidence. You can refer to a record naturally, such as
-`/spectre status the rate limiting change`, or directly with `/spectre status beacon-api/0004`.
-
-## Target registry
-
-The source path is independent of whether this target currently has live rows:
-
-```markdown
-# SPECTRE targets
-
-Target-Schema-Version: v1
-
-| Target | Label | Path | Status | Reason |
-| --- | --- | --- | --- | --- |
-| `beacon-api` | Beacon API | `./` | `ACTIVE` | Repository bootstrap |
-```
+The Targets table registers every target with its label, source folder and status, whether or not
+it has live rows. Below it, each target with live rows has one subsection. The linked instruction
+and result hold the detailed scope, changes, checks, and evidence. You can refer to a record
+naturally, such as `/spectre status the rate limiting change`, or directly with
+`/spectre status beacon-api/0004`.
 
 Archiving records 0001–0003 removes those rows while retaining 0004–0005. Once all records are
-terminal and archived, the live ledger contains metadata only; the target remains registered and
-its next implementation still receives 0006. No empty target section or per-folder marker remains.
+terminal and archived, the ledger keeps its Targets table and an empty `## Implementations`
+heading; the target remains registered and its next implementation still receives 0006.

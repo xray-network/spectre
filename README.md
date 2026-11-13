@@ -74,13 +74,15 @@ checks and record your decisions in the same files. See the
 
 | Source | Authority |
 | --- | --- |
-| `.agents/spectre/TARGETS.md` | Stable target identities, current source paths, active/retired status |
-| Root `SPECTRE.md` | Unarchived implementation rows, grouped only under populated targets |
+| Root `SPECTRE.md`, Targets table | Stable target identities, current source paths, active/retired status |
+| Root `SPECTRE.md`, Implementations | Unarchived implementation rows, grouped only under populated targets |
 | `.agents/spectre/archive/<id>/ARCHIVE.md` | Archived rows and preserved human decisions |
 
 Targets register on first planning; a folder rename changes `Path`, not historical IDs. Archiving
-preserves terminal record bytes and removes their live rows and newly empty sections. Target
+preserves terminal record bytes and removes their live rows and newly empty subsections. Target
 retirement keeps identity/history. IDs continue above all live and archived IDs, never restart.
+`upgrade <version>` migrates the live ledger and live records to the new release's formats; archives
+and captures stay frozen, so archive finished work first to keep it exactly as written.
 
 `check` diagnoses without writes; `sync` makes only deterministic bookkeeping corrections. Neither
 infers record state or deletes evidence. Tracking is plain Markdown with no locks or transaction
@@ -93,7 +95,7 @@ immutable numbered snapshots with full logical inventories and reused earlier ar
 
 `protocol/v1.0.0/SPECTRE-PROTOCOL.md` is the current canonical source. Released versions are frozen.
 The wiki build generates versioned raw assets, the latest mirror, and release hashes from `protocol/`.
-The protocol's marked sections define all 25 runtime modules and four canonical templates; adopters
+The protocol's marked sections define all 25 runtime modules and three canonical templates; adopters
 extract them verbatim, never maintain independent summaries. Protocol enhancements are planned
 and tracked through this repository’s SPECTRE records.
 
