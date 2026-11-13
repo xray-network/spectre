@@ -33,7 +33,8 @@ html:root {
   /* Native sidebar, outline, and anchor offsets include both fixed rows. */
   --rp-nav-height: calc(var(--spectre-header-height) + var(--spectre-tabs-height));
   --spectre-sidebar-bg: var(--xr-surface);
-  --spectre-sidebar-item: var(--xr-gray-500);
+  --spectre-sidebar-item: var(--xr-gray-700);
+  --spectre-sidebar-header: var(--xr-gray-400);
   --spectre-symbol-color: var(--xr-blue-500);
   --spectre-external-link-icon: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20fill='none'%20viewBox='0%200%2024%2024'%20stroke='%23000'%20stroke-width='1.6'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m12%205-7%207%207%207M5%2012h14'/%3E%3C/svg%3E");
   --rp-content-padding-x: 48px;
@@ -55,7 +56,8 @@ html:root {
 
 html:root:is(.rp-dark, .dark) {
   --spectre-sidebar-bg: color-mix(in srgb, var(--xr-gray-900) 30%, var(--xr-black));
-  --spectre-sidebar-item: var(--xr-gray-400);
+  --spectre-sidebar-item: var(--xr-gray-200);
+  --spectre-sidebar-header: var(--xr-gray-500);
   --spectre-symbol-color: var(--xr-blue-400);
 }
 
@@ -218,7 +220,7 @@ html .rp-search-button {
 }
 
 html .rp-sidebar-section-header {
-  color: var(--xr-fg);
+  color: var(--spectre-sidebar-header);
   font: 600 11px/1.5 var(--xr-font-mono);
   letter-spacing: .06em;
   text-transform: uppercase;
@@ -242,6 +244,25 @@ html .rp-sidebar-item {
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
+}
+
+html .rp-sidebar-item__left {
+  gap: 10px;
+}
+
+html .rp-sidebar-item__icon {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+  opacity: .85;
+}
+
+html .rp-sidebar-item__icon svg {
+  stroke-width: 2;
+}
+
+html .rp-sidebar-item--active .rp-sidebar-item__icon {
+  opacity: 1;
 }
 
 html .rp-sidebar-item:hover,
@@ -362,15 +383,17 @@ html :where(a, button, input):focus-visible {
   html .rp-doc-layout__sidebar {
     display: flex;
     flex-direction: column;
-    top: calc(var(--rp-nav-height) + 24px + var(--rp-banner-height, 0px));
-    height: calc(100dvh - var(--rp-nav-height) - 48px - var(--rp-banner-height, 0px));
-    max-height: calc(100dvh - var(--rp-nav-height) - 48px - var(--rp-banner-height, 0px));
-    margin: 24px 0;
+    top: calc(var(--rp-nav-height) + var(--rp-banner-height, 0px));
+    height: calc(100dvh - var(--rp-nav-height) - var(--rp-banner-height, 0px));
+    max-height: calc(100dvh - var(--rp-nav-height) - var(--rp-banner-height, 0px));
+    /* Item and section-header text starts 12px inside; pull it back in line with the nav logo. */
+    margin: 0 0 0 -12px;
     left: auto;
-    padding: 10px 8px;
+    padding: 32px 0 0;
     border: 0;
-    border-radius: var(--xr-radius);
-    background: var(--spectre-sidebar-bg);
+    border-right: 1px solid var(--xr-border);
+    border-radius: 0;
+    background: transparent;
   }
 
   html .rp-doc-layout__sidebar > * {
