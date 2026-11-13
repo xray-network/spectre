@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Runtime-Version: 1.0.0
-Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
+Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
 
 ### Natural-language operation queues
 
@@ -32,7 +32,7 @@ never joins. An empty output produces a reported no-op for its dependent items.
 
 Each item completes its own workflow, validation and record publication before the next begins.
 Bookkeeping required by an operation is included without another command: plan registers a target,
-archive prunes newly empty sections. Planning includes capture of its declared existing providers.
+archive prunes newly empty subsections. Planning includes capture of its declared existing providers.
 Explicit provider preparation from a human-supplied identity and authoritative source may precede
 capture (§12). These are not permission to add unrelated operations.
 

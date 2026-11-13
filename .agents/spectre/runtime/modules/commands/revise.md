@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Runtime-Version: 1.0.0
-Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
+Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
 
 ## 6. Evidence modes and inputs
 
@@ -34,10 +34,10 @@ Every normative input must be an explicit row in the instruction's input table. 
 
 An instruction that moves its owned source directory must declare old/new target paths and affected
 LOCAL source-input moves/removals in its change table. Before source work, resolve ownership under
-commands/target.md. After the actual move, publish the verified current registry Path and live Path
-projection with the result/ledger update (publication.md), including honest partial results
+commands/target.md. After the actual move, publish the verified current Targets Path with the
+result and ledger update (publication.md), including honest partial results
 when tests fail after a completed move. This bookkeeping is included in the authorized relocation;
-do not require a second path-update permission or leave the registry pointing at an absent folder.
+do not require a second path-update permission or leave the Targets row pointing at an absent folder.
 
 The instruction's Target-Path remains its planning-time snapshot. Explicitly consumed LOCAL owned
 source paths moved/deleted by that change may be historical afterward when their Change IDs and
@@ -67,7 +67,9 @@ For an explicit `/spectre revise <record>: <changes>` invocation (or its host-na
    - Refine the instruction to express the requested changes, including inputs, provider pins,
      requirements, validation, completion criteria, and exclusions where affected. Preserve its
      implementation ID and `Created` value. Preserve the Change ID for a requirement revised in
-     place, allocate new IDs only for added requirements, and never reuse a removed ID.
+     place, allocate new IDs only for added requirements, and never reuse a removed ID. Bring an
+     instruction an upgrade marked for revision to the installed release's format, and drop that
+     mark from its Decision or status cell.
    - Do not modify product source or tests, run implementation work, or create an empty result. If a
      partial result already exists, reconcile it with the revised instruction: preserve actual work
      and check outcomes, update dispositions for changed Change IDs, and identify superseded work

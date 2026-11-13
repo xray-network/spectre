@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Runtime-Version: 1.0.0
-Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
+Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
 
 | Syntax | Operation and stopping boundary |
 | --- | --- |
@@ -18,11 +18,11 @@ Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
 | `/spectre archive [scope]` | Archive selected terminal implementations; omitted scope means eligible live records across all targets. Record sets, targets and `all` are supported. Never close open work. |
 | `/spectre archive implementations [scope]` | Explicit spelling of implementation archiving, with the same scope rules. |
 | `/spectre archive providers <provider> [<provider>...]` | Archive whole named providers only when no live record references them; preserve evidence and warn about external consumers. |
-| `/spectre target move <target>: <path>` | Update an existing target's current source path and live section together; preserve IDs, records and history. Does not move product files. |
+| `/spectre target move <target>: <path>` | Update an existing target's current source path in the ledger's Targets table; preserve IDs, records and history. Does not move product files. |
 | `/spectre target retire <target>: <reason>` | Retire an existing target with no live rows; retain its identity, last path, and history. |
 | `/spectre target reactivate <target>: <path>` | Reactivate the same logical target at an existing path; continue its original sequence. |
 | `/spectre capture <provider>` | Discover, compare, validate and publish a numbered baseline/update when needed; no change creates no tracked writes. |
-| `/spectre upgrade <version>` | Explicitly migrate this installation to a verified named release using §14; never upgrade from a moving mirror implicitly. |
+| `/spectre upgrade <version>` | Explicitly migrate this installation to a verified named release using §14: replace generated files and migrate the live ledger and live records; archives and captures keep their bytes. Archive first to keep terminal records as written. Never upgrade from a moving mirror implicitly. |
 | `/spectre override <scope>: <changes> because <reason>` | Apply an exceptional human-ordered SPECTRE change, update affected live references, and record an informational override log. Standalone only. |
 | `/spectre host add <host> [<host>...]` | Add only named host adapters and report their invocation/reload requirements. Standalone setup. |
 | `/spectre host remove <host> [<host>...]` | Remove only named SPECTRE host adapters. Standalone setup. |

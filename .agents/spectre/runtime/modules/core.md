@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Runtime-Version: 1.0.0
-Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
+Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
 
 Operation names, flags, host names, archive kinds, state filters, and setup subcommands are ASCII
 case-insensitive. Lowercase is canonical; stored target IDs, paths, objectives and human proof keep
@@ -37,7 +37,7 @@ directly in `implementations/`; nested mode uses `implementations/<target>/`. Ro
 the sole active ledger; archived rows live only in their archive manifests. Require one authoritative
 row and matching instruction per identity; REVIEW/ACCEPTED/REJECTED also require a matching result.
 Refuse missing, duplicate, corrupt, or contradictory records; never substitute another identity.
-Read target identity/current Path from TARGETS.md; a live section is only its checked projection.
+Read target identity and current Path from the ledger's Targets table.
 All tracking mutations follow publication.md. Use canonical IDs/paths in stored data: ledger and manifest rows always show the qualified
 `target/NNNN` ID and follow the canonical table format in §11. Every write checks local-reference containment and resolves normative inputs; historical source
 locations follow references.md. A historical missing source path does not invalidate a terminal decision.
@@ -96,10 +96,12 @@ to install SPECTRE is its explicit decision and proof. This exception applies on
 record and does not weaken the human-only rule for any later implementation.
 
 `ACCEPTED`, `REJECTED`, and `CANCELLED` rows are terminal. Their decision data, instruction, and
-result (when present) are immutable. The sole relocation exception is an explicit `/spectre archive`
-operation under §9: it moves record files without changing their bytes and transfers their ledger
+result (when present) are immutable, with two exceptions. An explicit `/spectre archive`
+operation under §9 moves record files without changing their bytes and transfers their ledger
 rows, rebasing only the Instruction and Result link destinations. State, ID, title, evidence mode,
-and decision proof remain unchanged. Archiving is a storage operation, not a lifecycle state;
+and decision proof remain unchanged. An explicit upgrade (§14) migrates live terminal records to
+the target release's formats and replaces each digest their proofs cite with the migrated result's
+digest; state, ID, decision source, date and wording remain unchanged. Archiving is a storage operation, not a lifecycle state;
 there is no `ARCHIVED` state. Correct terminal content with a new local sequence that references
 the prior record. Git history alone is not a substitute for this rule.
 

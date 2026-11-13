@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Runtime-Version: 1.0.0
-Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
+Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
 
 ## 13. Validation invariants
 
@@ -27,8 +27,9 @@ Checks below are split between this module (records/references/operations), vali
 
 **Ledger and records**
 
-10. Format: live ledger/registry and new manifest tables use §11 canonical delimiters/columns; live
-    sections are unique, sorted, populated and match registry Label/Path/ACTIVE status. Historical
+10. Format: the ledger and new manifest tables use §11 canonical delimiters/columns; Targets rows
+    and implementation subsections are unique and sorted; subsections are populated and name ACTIVE
+    targets. Historical
     manifest table syntax is read under its original version, never normalized by sync.
 11. Identity: valid target/provider slugs and four-digit IDs; no new target is all/implementations/
     providers. Each record ID has one authoritative live or archived row. Sequence allocation scans
@@ -43,7 +44,7 @@ Checks below are split between this module (records/references/operations), vali
 14. Completion: implementation-complete reports have matching results, actual required validation,
     and REVIEW or a later human decision. Partial work states its real checks and blockers.
 15. Immutability: terminal record bytes and decisions remain unchanged except authorized archive
-    relocation or explicit override. Every live ACCEPTED or REJECTED row's recorded digests match its
+    relocation, upgrade migration of live records (§14) or explicit override. Every live ACCEPTED or REJECTED row's recorded digests match its
     current result bytes; a mismatch is a structural blocker. Source renames do not rewrite terminal
     inputs/history.
 
@@ -57,7 +58,7 @@ Checks below are split between this module (records/references/operations), vali
 18. Dependencies: DERIVED/HYBRID consume accepted results of this installation, preserving identity
     and decision through archive. Other projects enter through provider captures of their interfaces.
 19. Target ownership/moves: ACTIVE paths exist (a new project's path once any of its records reaches
-    REVIEW), registry IDs are stable, ownership does not overlap
+    REVIEW), target IDs are stable, ownership does not overlap
     except repository governance, RETIRED targets have no live rows and retain identity/last path.
     Evidence/record moves use archive/override; target move changes current source binding only.
 
@@ -74,8 +75,8 @@ Checks below are split between this module (records/references/operations), vali
     reported with their next action; only the states marked safe sync are completed automatically.
 38. Sync: only the exhaustive safe corrections in commands/sync.md occur; no missing rows/records
     reconstructed, no state inferred, no evidence/history deleted, no schema upgraded implicitly.
-39. Registry: TARGETS.md v1 uniquely owns IDs/labels/current paths/status/reasons. Empty live sections
-    are removable projections, never evidence that a target can be forgotten or its ID reused.
+39. Targets: the ledger's Targets table uniquely owns IDs, labels, current paths, status and reasons.
+    Removing an empty implementation subsection never removes a Targets row or frees its ID.
 
 Use repository-native validation tools when available. Machine checks verify structure and execution
 contracts; human acceptance remains a separate explicit decision. Never report checks that did not run.

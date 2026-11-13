@@ -1,10 +1,10 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Runtime-Version: 1.0.0
-Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
+Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
 
 ### Target identity and current paths
 
-`.agents/spectre/TARGETS.md` is the sole target registry (§11). Its rows contain stable Target ID,
+The Targets table at the top of root `SPECTRE.md` is the sole target registry (§11). Its rows contain stable Target ID,
 Label, Path, Status and Reason. It stores no implementation state or next-ID counter. Register only
 the bootstrap target at installation and another target on its first successful plan. Discovery
 does not pre-register filesystem folders. Every live or archived target identity remains registered;
@@ -21,19 +21,19 @@ context/ownership, not permission to read or modify every descendant. Nested own
 overlap; the `repository` governance target at `./` is the exception and owns governance only.
 Flat mode has exactly one registered repository target at `./`.
 
-Live sections display their registry ID, label and current Path, checked as a projection. Historical
-instructions/source paths and archive Path fields remain snapshots; a source-folder move never
-rewrites them. Target IDs and sequence ownership survive source renames. Record and evidence paths
-remain governed by §3/§9 and cannot be moved by changing this registry.
+Implementation subsections name only their target ID; label and current Path live in the Targets
+table alone. Historical instructions/source paths and archive Path fields remain snapshots; a
+source-folder move never rewrites them. Target IDs and sequence ownership survive source renames.
+Record and evidence paths remain governed by §3/§9 and cannot be moved by changing a Targets row.
 
 ### Target operations
 
-Resolve and report exactly one existing identity before mutation. Check its registry row, live and
-archived identity history, ownership and affected references; write the registry, then the live
-projection (publication.md). Target operations never move/delete product files or records.
+Resolve and report exactly one existing identity before mutation. Check its Targets row, live and
+archived identity history, ownership and affected references, and change its row in one ledger edit
+(publication.md). Target operations never move/delete product files or records.
 
 - `target move <target>: <path>` requires an ACTIVE target and an existing new owned directory.
-  Update only its Path and any live section Path. A source-relocation instruction declares its old
+  Update only its Targets Path. A source-relocation instruction declares its old
   and new source paths; its implementation performs this binding update as required bookkeeping in
   the same result/ledger publication. Binding alone moves no source files.
   In flat mode the path remains `./`; moving the whole installation requires explicit setup/override.

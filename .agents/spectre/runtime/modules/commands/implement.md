@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Runtime-Version: 1.0.0
-Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
+Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
 
 ## 6. Evidence modes and inputs
 
@@ -34,10 +34,10 @@ Every normative input must be an explicit row in the instruction's input table. 
 
 An instruction that moves its owned source directory must declare old/new target paths and affected
 LOCAL source-input moves/removals in its change table. Before source work, resolve ownership under
-commands/target.md. After the actual move, publish the verified current registry Path and live Path
-projection with the result/ledger update (publication.md), including honest partial results
+commands/target.md. After the actual move, publish the verified current Targets Path with the
+result and ledger update (publication.md), including honest partial results
 when tests fail after a completed move. This bookkeeping is included in the authorized relocation;
-do not require a second path-update permission or leave the registry pointing at an absent folder.
+do not require a second path-update permission or leave the Targets row pointing at an absent folder.
 
 The instruction's Target-Path remains its planning-time snapshot. Explicitly consumed LOCAL owned
 source paths moved/deleted by that change may be historical afterward when their Change IDs and
@@ -56,8 +56,9 @@ For `/spectre implement <record>`, a selected batch or compound-queue item, or a
 continuation authorized under §1, complete this workflow for one record:
 
 1. Require one matching active `PLANNED` row and instruction. Refuse missing, duplicate,
-   terminal, or mismatched identities. A previously recorded blocker must be resolved before
-   dependent source work. Recheck required accepted inputs and provider integrity.
+   terminal, or mismatched identities, and an instruction that does not satisfy the installed
+   release's instruction format, including one an upgrade marked for revision; it needs `revise`
+   first. A previously recorded blocker must be resolved before dependent source work. Recheck required accepted inputs and provider integrity.
 2. Read the complete instruction, every declared input, any existing partial result, target
    source/tests, and current repository guidance. Inspect existing changes before editing.
 3. Implement only the bounded objective from declared inputs. Preserve ownership and exclusions,

@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Runtime-Version: 1.0.0
-Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
+Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
 
 ## 4. Repository discovery and target selection
 
@@ -21,7 +21,7 @@ Choose targets using these rules:
 - A single application, package, or service uses flat mode. Do not create
   `implementations/<target>/` for it, even when its name or a plausible target slug is known.
 - A monorepo uses nested mode. Each independently versioned, owned, or validated package/service
-  usually becomes a target when first planned; discovery alone creates no registry row or directory.
+  usually becomes a target when first planned; discovery alone creates no Targets row or directory.
 - In monorepo mode, `repository` is the reserved repository-governance target. Its `0001` record is the
   SPECTRE installation; it is not a parent product target.
 - A current human may explicitly require nested target directories when repository metadata alone
@@ -77,7 +77,7 @@ both when implementation of that objective is authorized under §1; a planning-o
 target selector using §1 and §4 before allocating an ID or creating records.
 
 1. Read repository guidance, relevant decisions, applicable source/tests/manifest/README, the
-   target registry, applicable live rows (the section may be absent), status/target/implementation templates, and candidate
+   ledger's Targets table and applicable live rows (the subsection may be absent), the status and implementation templates, and candidate
    declared inputs. Read the provider template only when provider evidence is involved.
 2. Capture first. If the plan relies on provider evidence, report every existing provider guide it
    relies on, then run the §12 capture workflow for each, in provider slug order, before allocating
@@ -107,11 +107,12 @@ target selector using §1 and §4 before allocating an ID or creating records.
    misleading `PLANNED` row.
 9. Following publication.md, create `NNNN-IMPL-INSTR.md` at a path that does not exist, with
    Target-Path as a source-location snapshot. Verify required inputs, reference containment and
-   current Path agreement. Reread the registry and ledger; if the sequence changed, stop. Register
-   the resolved target if first used, with its verified existing Path, or the new-project Path its
-   changes create (commands/target.md), and ACTIVE status; never
-   reactivate a retired target implicitly. Add the matching PLANNED row last, creating its live
-   section only now, with a short matching objective title. Do not create a result or modify source.
+   current Path agreement. Reread the ledger; if the sequence changed, stop. Then, in one ledger
+   edit, add the matching PLANNED row with a short matching objective title, creating its
+   implementation subsection only now, and, if the target is used for the first time, its Targets
+   row with ACTIVE status and its verified existing Path or the new-project Path its changes create
+   (commands/target.md). Never reactivate a retired target implicitly. Do not create a result or
+   modify source.
 
 Every change row receives a stable Change ID such as `C01`. IDs are unique within the instruction
 and are used unchanged by the result.

@@ -1,9 +1,9 @@
-# Aggregate implementation status
+# Ledger and target registry
 
 Status-Template-Version: v1
 
-Root SPECTRE.md is the sole live lifecycle ledger. Archive manifests own archived decision rows;
-TARGETS.md owns target identity and current location. Create sections only for targets with rows.
+Root SPECTRE.md is the sole live lifecycle ledger and the target registry. Archive manifests own
+archived decision rows.
 
 ```markdown
 # SPECTRE implementations
@@ -12,29 +12,40 @@ Protocol-Version: 1.0.0
 Protocol: [.agents/spectre/runtime/SPECTRE-PROTOCOL.md](.agents/spectre/runtime/SPECTRE-PROTOCOL.md)
 Status-Schema-Version: v1
 Storage-Mode: <flat|nested>
-Targets: [.agents/spectre/TARGETS.md](.agents/spectre/TARGETS.md)
 
-This is the sole live lifecycle ledger. Archived rows live in .agents/spectre/archive/ manifests.
+This is the sole live lifecycle ledger and target registry. Archived rows live in .agents/spectre/archive/ manifests.
 
-## <Label> implementation status
+## Targets
 
-Target: <target>
-Path: ./<current-owned-directory>/
+| Target | Label | Path | Status | Reason |
+| --- | --- | --- | --- | --- |
+| `repository` | Repository | `./` | `ACTIVE` | Repository governance bootstrap |
 
-### Implementation ledger
+## Implementations
+
+### `repository`
 
 | ID | Title | Instruction | State | Result | Evidence mode | Decision or status |
 | --- | --- | --- | --- | --- | --- | --- |
-| `<target>/0001` | Install SPECTRE | [Instruction](.agents/spectre/implementations/0001-IMPL-INSTR.md) | `ACCEPTED` | [Result](.agents/spectre/implementations/0001-IMPL-RESULT.md) | `LOCAL` | Human requested installation of SPECTRE. |
+| `repository/0001` | Install SPECTRE | [Instruction](.agents/spectre/implementations/repository/0001-IMPL-INSTR.md) | `ACCEPTED` | [Result](.agents/spectre/implementations/repository/0001-IMPL-RESULT.md) | `LOCAL` | Human requested installation of SPECTRE. |
 ```
 
-The example bootstrap links are flat; nested bootstrap uses implementations/repository/ and Path
-./. Other sections use their registered labels, IDs and current paths. Order sections by target,
-rows by numeric ID. Add a section with its first PLANNED row; remove it when the last row is archived.
-No empty table, per-target empty marker or discovered-folder section is canonical. Zero live rows
-means metadata and the introductory sentence only, with no target sections. Never delete the ledger.
+Targets: flat installations register their repository slug and label at ./ as the only target, and
+their bootstrap links point directly into implementations/. Nested installations register repository
+for governance; other targets are added by their first plan. Rows are unique and sorted by target
+ID. Active paths exist, use ./ or ./path/, and are contained in the installation. A new project's
+path may be absent until any of its records reaches REVIEW when its open plan creates it; retired
+paths retain the last location and may be absent. Status is ACTIVE or RETIRED. Reason gives
+registration context or explicit retirement/reactivation reason. Labels are plain text. Never store
+record state, counters, inferred folder inventories or aliases. Every target ever used keeps its
+row, with or without live rows.
 
-Canonical table format, for this ledger and every new archive/registry table:
+Implementations: one subsection per target with live rows, headed by the target ID in backticks
+(### `api`), ordered by target, rows by numeric ID. Add a subsection with its target's first live row and remove it when the last row is
+archived. The Implementations heading stays when no subsection remains. No empty table,
+per-target empty marker or discovered-folder subsection is canonical. Never delete the ledger.
+
+Canonical table format, for this ledger and every new archive table:
 
 - Each header/separator/row is one line starting | followed by a space, ending with a space and |,
   and separating cells with ` | ` (ordinary ASCII spaces and pipe). Separator cells are ---;
@@ -59,6 +70,7 @@ Canonical table format, for this ledger and every new archive/registry table:
 - Exactly one accepted bootstrap exists in live or archived history, never recreated after archive.
 - IDs remain unique across live and archived records and are allocated above the sequence maximum.
   Flat mode has one sequence; nested mode has one per stable target. No stored next-ID counter.
-- Every live section's Target/Path/label agrees with its ACTIVE registry row. Retired targets have
-  no live rows. Removing an empty section never removes registry identity or historical records.
+- Every implementation subsection names a target with an ACTIVE Targets row, and every row ID in it
+  belongs to that target. Retired targets have no live rows. Removing an empty subsection never
+  removes a Targets row or historical records.
 - Provider inventories, execution queues and global work plans do not belong in the ledger.

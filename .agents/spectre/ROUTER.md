@@ -25,14 +25,14 @@ All paths below are relative to `.agents/spectre/runtime/modules/`.
 | Operation | Command file | Additional required reads |
 | --- | --- | --- |
 | help | commands/help.md | None |
-| status | commands/status.md | selectors.md, references.md; history.md for archived records; commands/target.md for registry summaries |
+| status | commands/status.md | selectors.md, references.md; history.md for archived records; commands/target.md for target summaries |
 | recall | commands/recall.md | selectors.md, references.md, history.md; providers.md for pinned evidence |
 | check | commands/check.md | selectors.md, references.md, history.md, publication.md, validation.md; validation-full.md for installation scope; validation-evidence.md and templates/TEMPLATE_PROVIDER.md for provider checks |
-| sync | commands/sync.md | selectors.md, references.md, history.md, publication.md, validation.md, commands/target.md, templates/TEMPLATE_STATUS.md, templates/TEMPLATE_TARGETS.md; validation-full.md for installation scope |
-| target | commands/target.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_TARGETS.md, templates/TEMPLATE_STATUS.md |
-| plan | commands/plan.md | selectors.md, references.md, publication.md, commands/target.md, validation.md, templates/TEMPLATE_IMPL.md, templates/TEMPLATE_STATUS.md, templates/TEMPLATE_TARGETS.md; history.md for archived inputs; commands/capture.md, providers.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md when relying on providers |
-| implement | commands/implement.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; commands/target.md, templates/TEMPLATE_TARGETS.md and templates/TEMPLATE_STATUS.md for declared source relocation; history.md for archived inputs; providers.md and validation-evidence.md for provider inputs |
-| revise | commands/revise.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; commands/target.md, templates/TEMPLATE_TARGETS.md and templates/TEMPLATE_STATUS.md for declared source relocation; history.md for archived inputs; providers.md and validation-evidence.md for provider inputs |
+| sync | commands/sync.md | selectors.md, references.md, history.md, publication.md, validation.md, commands/target.md, templates/TEMPLATE_STATUS.md; validation-full.md for installation scope |
+| target | commands/target.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_STATUS.md |
+| plan | commands/plan.md | selectors.md, references.md, publication.md, commands/target.md, validation.md, templates/TEMPLATE_IMPL.md, templates/TEMPLATE_STATUS.md; history.md for archived inputs; commands/capture.md, providers.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md when relying on providers |
+| implement | commands/implement.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; commands/target.md and templates/TEMPLATE_STATUS.md for declared source relocation; history.md for archived inputs; providers.md and validation-evidence.md for provider inputs |
+| revise | commands/revise.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; commands/target.md and templates/TEMPLATE_STATUS.md for declared source relocation; history.md for archived inputs; providers.md and validation-evidence.md for provider inputs |
 | accept / reject / cancel | commands/decide.md | selectors.md, references.md, publication.md, validation.md |
 | archive | commands/archive.md | selectors.md, references.md, history.md, publication.md, validation.md, templates/TEMPLATE_STATUS.md; providers.md, validation-evidence.md and templates/TEMPLATE_PROVIDER.md for provider archive |
 | capture | commands/capture.md | selectors.md, references.md, publication.md, providers.md, validation.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md |

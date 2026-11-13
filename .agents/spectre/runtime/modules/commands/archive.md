@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Runtime-Version: 1.0.0
-Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
+Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
 
 ### Archive workflow
 
@@ -25,7 +25,7 @@ An explicit record set must be entirely terminal; open selections pause for a hu
 checkpoint, and no partial subset is archived. Already archived selected IDs are no-ops. Pronouns
 and deferred output scopes never expand to all rows or the parent target.
 
-1. Read registry, live ledger, archive manifest indexes, selected terminal instructions/results and
+1. Read the ledger, archive manifest indexes, selected terminal instructions/results and
    affected inbound/outbound SPECTRE references. Validate the affected dependency closure (§13), not
    unrelated product records/evidence. Global identity indexes must still be readable and unique.
    An unfinished earlier archive (publication.md) blocks publication. ACCEPTED/REJECTED require results;
@@ -39,9 +39,9 @@ and deferred output scopes never expand to all rows or the parent target.
    dependency resolution. Record IDs remain qualified identities. Archive relocation resolves
    existing embedded references by original paths; no redirect stubs or record rewrites.
 4. Reread the ledger. Remove the matching live rows, then only the verified originals, and prune
-   newly empty live sections and record directories. Keep ledger metadata, unrelated sections/rows,
-   registry bindings and earlier archives. A ledger with no rows has metadata only; never create
-   per-target empty-table markers.
+   newly empty implementation subsections and record directories. Keep ledger metadata, the Targets
+   table, unrelated subsections/rows and earlier archives. A ledger with no live rows keeps its
+   metadata, Targets table and Implementations heading; never create per-target empty-table markers.
 5. Verify exactly one authoritative row per selected ID, preserved state/proof/bytes, and affected
    reference resolution. An interruption leaves a state publication.md names; never overwrite
    concurrent edits or allocate from incomplete history.

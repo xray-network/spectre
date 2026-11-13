@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Runtime-Version: 1.0.0
-Source-SHA256: 687625436908d6aa614773a7dd0ce9a8629be1929c66635d825efdcdefd56b6c
+Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
 
 The two implementation forms in the tree are alternatives and must not be mixed:
 
@@ -16,9 +16,9 @@ ownership and meaningful completion validation. Examples include `api`, `web`, `
 Each provider has an independent four-digit capture sequence. These numbers identify immutable
 evidence captures, not versions of the provider or upstream protocol.
 
-Root `SPECTRE.md` is the sole active lifecycle ledger and the project-facing implementation
-summary. It has sections only for targets with live rows. `TARGETS.md` owns target identity
-and current source location independently of whether a target has a live section. Each archived implementation has its sole historical decision row in
+Root `SPECTRE.md` is the sole active lifecycle ledger, the target registry and the project-facing
+implementation summary. Its Targets table holds every target identity and current source location;
+its implementation subsections exist only for targets with live rows. Each archived implementation has its sole historical decision row in
 one `archive/<archive-id>/ARCHIVE.md`; it has no row in the active ledger. Archive manifests are
 immutable history, not additional active ledgers. Target directories contain instructions and
 results, not status ledgers. Provider captures have no lifecycle ledger and never contain
@@ -51,7 +51,7 @@ it relies on instead of requiring another project's result to be `ACCEPTED`.
 
 ### Target identity and current paths
 
-`.agents/spectre/TARGETS.md` is the sole target registry (§11). Its rows contain stable Target ID,
+The Targets table at the top of root `SPECTRE.md` is the sole target registry (§11). Its rows contain stable Target ID,
 Label, Path, Status and Reason. It stores no implementation state or next-ID counter. Register only
 the bootstrap target at installation and another target on its first successful plan. Discovery
 does not pre-register filesystem folders. Every live or archived target identity remains registered;
@@ -68,10 +68,10 @@ context/ownership, not permission to read or modify every descendant. Nested own
 overlap; the `repository` governance target at `./` is the exception and owns governance only.
 Flat mode has exactly one registered repository target at `./`.
 
-Live sections display their registry ID, label and current Path, checked as a projection. Historical
-instructions/source paths and archive Path fields remain snapshots; a source-folder move never
-rewrites them. Target IDs and sequence ownership survive source renames. Record and evidence paths
-remain governed by §3/§9 and cannot be moved by changing this registry.
+Implementation subsections name only their target ID; label and current Path live in the Targets
+table alone. Historical instructions/source paths and archive Path fields remain snapshots; a
+source-folder move never rewrites them. Target IDs and sequence ownership survive source renames.
+Record and evidence paths remain governed by §3/§9 and cannot be moved by changing a Targets row.
 
 ### Current inputs and historical source locations
 
@@ -80,7 +80,7 @@ must exist when consumed. Explicit owned-source moves/removals declared by a Cha
 become historical after consumption when the result records their verified disposition (§9). Other
 active PLANNED/REVIEW records with moved required inputs need an explicit revision before work; changing target Path cannot silently rebind them.
 SPECTRE record links, dependencies and provider pins always require identity-safe resolution when
-consumed. Registry Path defines current ownership, not an input redirect.
+consumed. The Targets Path defines current ownership, not an input redirect.
 
 Source/test paths describing completed changes, the Target-Path snapshot of an instruction, and
 source links in terminal records are historical context. A later legitimate move/removal may make
