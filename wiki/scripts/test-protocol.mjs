@@ -72,6 +72,7 @@ const corruptions = [
   ["missing status template", text => text.replace("### `.agents/spectre/runtime/modules/templates/TEMPLATE_STATUS.md`", "### Status template removed")],
   ["upgrade stops rewriting live files", text => text.replace("5. Rewrite every live file to the latest templates", "5. Preserve every live file")],
   ["upgrade touches archives", text => text.replace("archive records or providers, or touch `archive/`.", "or archive records or providers.")],
+  ["upgrade rewrites historical hashes", text => text.replace("Historical notes, such as\n     migration hash tables in guides or provenance notes in snapshots, keep the hashes they\n     recorded.", "All recorded hashes are refreshed.")],
   ["upgrade stops logging as an override", text => text.replace("7. Append one override log row", "7. Optionally note")],
   ["upgrade takes a version argument again", text => text.replace("| `/spectre upgrade` |", "| `/spectre upgrade <version>` |")],
   ["implement accepts records marked for revision", text => text.replace("including one an upgrade marked for revision; it needs `revise`", "including stale ones; it may need `revise`")],

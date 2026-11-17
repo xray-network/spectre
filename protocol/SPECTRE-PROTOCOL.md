@@ -906,9 +906,10 @@ never overwrite those files.
 
 Every live capture follows the installed protocol's provider template. Only an explicit upgrade
 (§14) rewrites existing PROVIDER.md, SNAPSHOT.md and CAPTURE.md files to a newer format, as a
-human-ordered override that recomputes their hashes and every live pin, predecessor and reuse
-reference to them. Artifact files are captured provider data, not SPECTRE format, and are never
-rewritten. If an earlier capture's inventory cannot be resolved, report a blocker instead of
+human-ordered override that recomputes their hashes and every live pin, predecessor, reuse and
+summary reference to them. Historical notes, such as migration hash tables in guides or provenance
+notes in snapshots, keep the hashes they recorded. Artifact files are captured provider data, not
+SPECTRE format, and are never rewritten. If an earlier capture's inventory cannot be resolved, report a blocker instead of
 guessing.
 
 <!-- /spectre:runtime -->
@@ -2429,6 +2430,10 @@ and only the current human may order it.
    - Preserve IDs, states, numbering, paths, decision sources, dates and wording, and every artifact
      file. In ACCEPTED and REJECTED proofs, replace each cited digest of a rewritten result with its
      new digest.
+   - Update only references that bind bytes: provider pins, summary, predecessor and reuse hashes,
+     and cited result digests, each to the final hash of its file. Historical notes, such as
+     migration hash tables in guides or provenance notes in snapshots, keep the hashes they
+     recorded.
    - Never close work, archive records or providers, or touch `archive/`. Pending checkpoints are
      invalidated and must be refreshed.
 6. Write in this order. First the protocol, its extracted modules and three templates, the router

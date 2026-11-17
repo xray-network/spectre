@@ -129,6 +129,8 @@ SPECTRE file. It runs on its own, never as part of a queue, and proceeds as foll
      `revise` brings it up to date.
    - IDs, states, numbering, paths, decision sources, dates and wording are kept. Accepted and
      rejected proofs get the new digests of their rewritten results.
+   - Only references that bind bytes change: provider pins, summary, predecessor and reuse hashes.
+     Historical notes, such as migration hash tables in guides, keep the hashes they recorded.
    - Artifact files and `archive/` are never touched, and no work is closed or archived.
 6. Writes the protocol, runtime modules, templates, router and `AGENTS.md` section first; then each
    provider's captures in ascending order with recomputed hashes, then its guide; then live
