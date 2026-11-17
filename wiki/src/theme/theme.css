@@ -729,8 +729,8 @@ html :where(a, button, input):focus-visible {
   color: var(--rp-c-text-0);
   font-size: clamp(25px, 2.6vw, 32px);
   line-height: 1.25;
-  letter-spacing: -.035em;
-  font-weight: 500;
+  letter-spacing: -.025em;
+  font-weight: 700;
 }
 
 .spectre-text-link,
@@ -852,9 +852,9 @@ html :where(a, button, input):focus-visible {
 .spectre-workflow-title h3 {
   color: var(--rp-c-text-0);
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.4;
-  letter-spacing: -.02em;
+  letter-spacing: -.025em;
 }
 
 .spectre-workflow-content > p {
@@ -965,6 +965,8 @@ html :where(a, button, input):focus-visible {
   font-weight: 500;
   letter-spacing: -.025em;
 }
+
+.spectre-home .spectre-resource h2 { font-weight: 700; }
 
 .spectre-resource p {
   font-size: 16px;
