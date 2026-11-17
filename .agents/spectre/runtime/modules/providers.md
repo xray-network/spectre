@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 1ae4c43cd1f1ad8e6cc942c5b573490f5cd3e332ff3acda5e920cfd2186a33f5
+Source-SHA256: 8aa83ba3ac50feb3cc7a4e25c1a945fc25695fa146bbf4d246abb407ba3c9aad
 
 ### Pinned provider evidence
 
@@ -36,7 +36,8 @@ never overwrite those files.
 
 Every live capture follows the installed protocol's provider template. Only an explicit upgrade
 (§14) rewrites existing PROVIDER.md, SNAPSHOT.md and CAPTURE.md files to a newer format, as a
-human-ordered override that recomputes their hashes and every live pin, predecessor and reuse
-reference to them. Artifact files are captured provider data, not SPECTRE format, and are never
-rewritten. If an earlier capture's inventory cannot be resolved, report a blocker instead of
+human-ordered override that recomputes their hashes and every live pin, predecessor, reuse and
+summary reference to them. Historical notes, such as migration hash tables in guides or provenance
+notes in snapshots, keep the hashes they recorded. Artifact files are captured provider data, not
+SPECTRE format, and are never rewritten. If an earlier capture's inventory cannot be resolved, report a blocker instead of
 guessing.

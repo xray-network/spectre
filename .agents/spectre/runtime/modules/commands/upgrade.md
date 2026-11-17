@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 1ae4c43cd1f1ad8e6cc942c5b573490f5cd3e332ff3acda5e920cfd2186a33f5
+Source-SHA256: 8aa83ba3ac50feb3cc7a4e25c1a945fc25695fa146bbf4d246abb407ba3c9aad
 
 ### Upgrade procedure
 
@@ -33,6 +33,10 @@ and only the current human may order it.
    - Preserve IDs, states, numbering, paths, decision sources, dates and wording, and every artifact
      file. In ACCEPTED and REJECTED proofs, replace each cited digest of a rewritten result with its
      new digest.
+   - Update only references that bind bytes: provider pins, summary, predecessor and reuse hashes,
+     and cited result digests, each to the final hash of its file. Historical notes, such as
+     migration hash tables in guides or provenance notes in snapshots, keep the hashes they
+     recorded.
    - Never close work, archive records or providers, or touch `archive/`. Pending checkpoints are
      invalidated and must be refreshed.
 6. Write in this order. First the protocol, its extracted modules and three templates, the router
