@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 1.0.0
-Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
+Protocol-Version: 1.0.0
+Source-SHA256: 1ae4c43cd1f1ad8e6cc942c5b573490f5cd3e332ff3acda5e920cfd2186a33f5
 
 ### Publication order
 
@@ -47,7 +47,7 @@ An interrupted operation leaves one of these states. `check` reports each with i
 | `ARCHIVE.md` whose rows are still live or whose originals still exist byte-identical | Archive stopped after its commit point | Safe sync removes those live rows, then those originals |
 | Numbered capture directory without `SNAPSHOT.md` that nothing references | Capture stopped before its commit point | Safe sync removes the unpublished directory |
 | Runtime files whose Source-SHA256 differs from the installed protocol | Install or upgrade stopped | Repeat the same explicit install or upgrade |
-| Ledger Protocol-Version that differs from the installed protocol's version | Upgrade stopped before its commit point | Repeat the same explicit upgrade; it skips records already migrated |
+| Ledger Protocol-SHA256 that differs from the installed protocol's SHA-256 | Upgrade stopped before its commit point | Repeat the explicit upgrade; it skips files already in the current formats |
 
 Anything else, such as a row changed by two writers, unexpected bytes or a missing record, is a
 structural blocker. The human restores it from version control or orders an explicit scoped override.

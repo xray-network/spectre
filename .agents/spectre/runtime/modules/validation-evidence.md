@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 1.0.0
-Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
+Protocol-Version: 1.0.0
+Source-SHA256: 1ae4c43cd1f1ad8e6cc942c5b573490f5cd3e332ff3acda5e920cfd2186a33f5
 
 **Provider evidence**
 
@@ -9,7 +9,7 @@ Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
 21. Guides: unversioned purpose, authority, official sources, tracking, boundaries and consumer
     guidance; no provider-version directory or capture specification duplicated in the guide.
 22. Captures: snapshots own complete specification/inventory and hash their advisory capture summary;
-    no self-hashing cycles. Captures from another release keep their own schema requirements.
+    no self-hashing cycles. Live captures follow the installed provider template.
 23. Inventory: exact membership, regular files, sizes/hashes, unique safe paths; decreasing acyclic
     predecessor/owner references within the same provider; no forward/cross-provider ownership.
 24. Counts: effective/new/reused/artifact/corpus/case counts and independent source enumeration agree.
@@ -21,5 +21,5 @@ Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
     uncertainty; advisory content never authorizes execution or claims unsupported parity.
 27. Outcomes: NO-CHANGE has no tracked writes or ID; CAPTURED commits a new immutable capture and
     optional guide index update together; BLOCKED never masquerades as upstream removal/no change.
-28. Retention: earlier captures keep their schemas/bytes. No live record pins an archived provider;
+28. Retention: earlier captures keep their paths and artifact bytes. No live record pins an archived provider;
     no live capture reuses an archived predecessor/owner. Only whole-provider archive moves evidence.

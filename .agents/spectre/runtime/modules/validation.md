@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 1.0.0
-Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
+Protocol-Version: 1.0.0
+Source-SHA256: 1ae4c43cd1f1ad8e6cc942c5b573490f5cd3e332ff3acda5e920cfd2186a33f5
 
 ## 13. Validation invariants
 
@@ -8,13 +8,13 @@ Validation is mandatory within every operation; a separate check is optional rea
 never a prerequisite command. Install, upgrade and unscoped check validate the complete installation.
 Routine writes, including archive, validate the affected dependency closure and shared identity
 indexes without revalidating unrelated evidence. Full validation re-extracts every runtime module
-and template byte-for-byte. Scoped validation verifies loaded module headers and selected schemas,
+and template byte-for-byte. Scoped validation verifies loaded module headers and selected formats,
 states, inputs, containment and references. Report the exact checked scope, never imply a full pass
 from a scoped check. Always verify the final affected records before reporting success.
 
 Read the canonical status/implementation/target templates for matching checks; provider consumption
-loads its template, providers.md and validation-evidence.md. Archives and captures written by another
-release use their own documented schemas. Missing normative evidence blocks its consumer;
+loads its template, providers.md and validation-evidence.md. Live files follow the installed
+templates; archives are read as written. Missing normative evidence blocks its consumer;
 stale historical source links alone do not invalidate terminal decisions.
 
 Every applicable failed invariant blocks the selected write except the exact mechanically
@@ -30,7 +30,7 @@ Checks below are split between this module (records/references/operations), vali
 10. Format: the ledger and new manifest tables use §11 canonical delimiters/columns; Targets rows
     and implementation subsections are unique and sorted; subsections are populated and name ACTIVE
     targets. Historical
-    manifest table syntax is read under its original version, never normalized by sync.
+    manifest table syntax is read as written, never normalized by sync or upgrade.
 11. Identity: valid target/provider slugs and four-digit IDs; no new target is all/implementations/
     providers. Each record ID has one authoritative live or archived row. Sequence allocation scans
     live records and manifest indexes, never fills gaps or reuses published IDs. Duplicate IDs from
@@ -44,7 +44,7 @@ Checks below are split between this module (records/references/operations), vali
 14. Completion: implementation-complete reports have matching results, actual required validation,
     and REVIEW or a later human decision. Partial work states its real checks and blockers.
 15. Immutability: terminal record bytes and decisions remain unchanged except authorized archive
-    relocation, upgrade migration of live records (§14) or explicit override. Every live ACCEPTED or REJECTED row's recorded digests match its
+    relocation, an upgrade's rewrite of live records (§14) or explicit override. Every live ACCEPTED or REJECTED row's recorded digests match its
     current result bytes; a mismatch is a structural blocker. Source renames do not rewrite terminal
     inputs/history.
 
@@ -74,7 +74,7 @@ Checks below are split between this module (records/references/operations), vali
 37. Publication: writes follow publication.md; a commit point is written last. Interrupted states are
     reported with their next action; only the states marked safe sync are completed automatically.
 38. Sync: only the exhaustive safe corrections in commands/sync.md occur; no missing rows/records
-    reconstructed, no state inferred, no evidence/history deleted, no schema upgraded implicitly.
+    reconstructed, no state inferred, no evidence/history deleted, no format upgraded implicitly.
 39. Targets: the ledger's Targets table uniquely owns IDs, labels, current paths, status and reasons.
     Removing an empty implementation subsection never removes a Targets row or frees its ID.
 

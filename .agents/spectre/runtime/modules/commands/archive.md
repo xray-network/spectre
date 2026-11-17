@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 1.0.0
-Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
+Protocol-Version: 1.0.0
+Source-SHA256: 1ae4c43cd1f1ad8e6cc942c5b573490f5cd3e332ff3acda5e920cfd2186a33f5
 
 ### Archive workflow
 
@@ -82,10 +82,9 @@ batches use:
 ```markdown
 # SPECTRE archive <archive-id>
 
-Archive-Version: v1
 Archive-ID: <archive-id>
 Created: YYYYMMDDTHHMMSSZ
-Protocol-Version: 1.0.0
+Protocol-Version: <Protocol-Version of the installed protocol>
 Kind: implementations
 Storage-Mode: <flat|nested>
 Scope: <sorted qualified record IDs>
@@ -112,10 +111,9 @@ Provider batches use:
 ```markdown
 # SPECTRE archive <archive-id>
 
-Archive-Version: v1
 Archive-ID: <archive-id>
 Created: YYYYMMDDTHHMMSSZ
-Protocol-Version: 1.0.0
+Protocol-Version: <Protocol-Version of the installed protocol>
 Kind: providers
 Scope: <sorted provider IDs>
 
@@ -135,5 +133,5 @@ is historical context, never a current-directory existence requirement on an arc
 
 The table format is canonical under §11. One batch contains implementations or providers, never
 both. A manifest has no section for waiving defects; a failed selected-record check stops the
-archive. A manifest written by another release is read under its own Archive-Version and
-Protocol-Version; never rewrite a manifest into a newer schema.
+archive. Protocol-Version is provenance only. A manifest written under an earlier protocol keeps
+its original format; never rewrite it into the current one.

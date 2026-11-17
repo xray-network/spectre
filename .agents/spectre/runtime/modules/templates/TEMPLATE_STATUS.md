@@ -1,16 +1,14 @@
 # Ledger and target registry
 
-Status-Template-Version: v1
-
 Root SPECTRE.md is the sole live lifecycle ledger and the target registry. Archive manifests own
 archived decision rows.
 
 ```markdown
 # SPECTRE implementations
 
-Protocol-Version: 1.0.0
+Protocol-Version: <Protocol-Version of the installed protocol>
+Protocol-SHA256: <SHA-256 of the installed protocol>
 Protocol: [.agents/spectre/runtime/SPECTRE-PROTOCOL.md](.agents/spectre/runtime/SPECTRE-PROTOCOL.md)
-Status-Schema-Version: v1
 Storage-Mode: <flat|nested>
 
 This is the sole live lifecycle ledger and target registry. Archived rows live in .agents/spectre/archive/ manifests.

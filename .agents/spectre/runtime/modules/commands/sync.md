@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 1.0.0
-Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
+Protocol-Version: 1.0.0
+Source-SHA256: 1ae4c43cd1f1ad8e6cc942c5b573490f5cd3e332ff3acda5e920cfd2186a33f5
 
 ### Deterministic bookkeeping synchronization
 
@@ -29,5 +29,5 @@ pins, or interrupted writes outside that table.
 Corrections elsewhere proceed; report every blocker. A scoped sync never masks blockers in its
 dependency closure. Beyond those safe states, do not
 add/reconstruct/delete record rows, register/retire/reactivate targets, infer REVIEW or acceptance,
-move files, archive work, garbage-collect evidence, reset counters, upgrade schemas/runtime, or
+move files, archive work, garbage-collect evidence, reset counters, upgrade formats/runtime, or
 rewrite terminal records. Known formatting corrections cannot excuse structural errors.

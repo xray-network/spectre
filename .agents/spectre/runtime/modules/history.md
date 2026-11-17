@@ -1,11 +1,13 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 1.0.0
-Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
+Protocol-Version: 1.0.0
+Source-SHA256: 1ae4c43cd1f1ad8e6cc942c5b573490f5cd3e332ff3acda5e920cfd2186a33f5
 
 ### Immovable evidence
 
 Published capture directories, their files, and every record file keep their path forever. Never
-rename, move, or rewrite them, including to adopt a new naming scheme. Before deleting, merging, or
+rename, move, or rewrite them, including to adopt a new naming scheme. The only content rewrite is
+an explicit upgrade (§14), which brings live records and provider files to the current formats in
+place and never changes a path or an artifact file. Before deleting, merging, or
 moving an installation, run full §13 validation and preserve its tracking/evidence dependencies.
 Moving an owned source directory within the same installation changes its target Path through
 `target move`; that operation does not move evidence or immutable record files.
@@ -19,14 +21,18 @@ a copy at the original path only when the human asks for one. No lookup table re
 
 ### Archives are kept as is
 
-Archives preserve history under the schemas that created them. Ordinary maintenance does not
-rewrite, reformat or refresh their records, manifests, source links or digests. Their identity
+Archives are frozen. Neither ordinary maintenance nor upgrade (§14) rewrites, reformats or
+refreshes their records, manifests, source links or digests, and they are never checked against
+the current formats. Earlier protocol texts are not kept: read an archive created under an earlier
+protocol by its identity headers, rows and Record paths, as written. Because upgrade rewrites live
+files in place, a digest an archived record cites for a live capture or record may no longer match;
+that is information, not damage. Their identity
 headers and row IDs, terminal states and decision proofs remain authoritative; original-path maps
 locate records without rewriting them. Missing/changed historical files or stale source navigation
 are information for status/recall, not automatic authority to repair or invalidate a decision.
 
 A live operation declaring an archived result as a normative input must still obtain that exact
-input, confirm its accepted identity/schema and verify recorded digests when available. Missing or
+input, confirm its accepted identity and verify recorded digests when available. Missing or
 altered required evidence blocks that consumer; it does not erase the historical row. Never replace
 missing evidence with Git history or a similar file silently. Explicit scoped overrides remain the
 only exception to historical immutability and must preserve affected live references.

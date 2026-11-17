@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 1.0.0
-Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
+Protocol-Version: 1.0.0
+Source-SHA256: 1ae4c43cd1f1ad8e6cc942c5b573490f5cd3e332ff3acda5e920cfd2186a33f5
 
 ## 4. Repository discovery and target selection
 
@@ -36,7 +36,7 @@ Choose targets using these rules:
 - When two plausible models would assign the same source to different targets, stop before
   creating target directories and ask a human to choose.
 
-Choose the storage mode and target layout during installation. This release does not define
+Choose the storage mode and target layout during installation. This protocol does not define
 in-place conversion between layouts or historical target-ID renaming. Terminal records retain their original paths except for
 the explicit archive relocation defined in §9; their logical identity and original path remain recorded.
 

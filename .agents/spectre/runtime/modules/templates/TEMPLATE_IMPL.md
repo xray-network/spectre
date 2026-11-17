@@ -1,7 +1,5 @@
 # Implementation instruction and result workflow
 
-Implementation-Workflow-Version: v1
-
 Sequences are four digits and begin at `0001`. Flat mode has one repository-wide sequence;
 monorepo mode has one independent sequence per target. Both modes allocate IDs above the highest
 active or archived ID in their sequence. Archiving never resets numbering.
@@ -19,7 +17,6 @@ mode, and the human installation request is its decision proof.
 ```markdown
 # <Target> implementation <NNNN> instruction
 
-Implementation-Version: v1
 Implementation-ID: <target>/<NNNN>
 Target-Path: ./<owned-directory>/
 Created: YYYYMMDDTHHMMSSZ
@@ -78,7 +75,6 @@ its ledger stays `PLANNED`. Do not create an empty result during planning.
 ```markdown
 # <Target> implementation <NNNN> result
 
-Result-Version: v1
 Implementation-ID: <target>/<NNNN>
 Instruction: ./<NNNN>-IMPL-INSTR.md
 Evidence-Mode: <DIRECT|DERIVED|HYBRID|LOCAL>

@@ -1,6 +1,5 @@
 # Repository implementation 0001 result
 
-Result-Version: v1
 Implementation-ID: repository/0001
 Instruction: ./0001-IMPL-INSTR.md
 Evidence-Mode: LOCAL

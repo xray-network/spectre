@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 1.0.0
-Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
+Protocol-Version: 1.0.0
+Source-SHA256: 1ae4c43cd1f1ad8e6cc942c5b573490f5cd3e332ff3acda5e920cfd2186a33f5
 
 An ordinary `capture` command requires an existing unversioned provider guide. An explicit compound
 queue may first prepare a missing guide from a human-supplied provider identity and authoritative
@@ -54,11 +54,11 @@ preparation is a reported no-op and capture uses it; never overwrite or silently
 
 PROVIDER.md explains source authority, tracking and maintained-consumer context. Each numbered
 SNAPSHOT.md owns the complete specification and resolved inventory; CAPTURE.md summarizes only
-that capture. All published capture files remain immutable. Load core, selectors, references,
+that capture. Published capture files are immutable outside an explicit upgrade (§14). Load core, selectors, references,
 providers, the provider template, validation and evidence checks, repository guidance, the guide and
 applicable snapshots.
-Reconcile every numbered directory and guide entry; never trust a latest link alone. Captures
-from earlier versions remain valid baselines without rewriting them (`providers.md`).
+Reconcile every numbered directory and guide entry; never trust a latest link alone. Every live
+capture follows the installed provider template (`providers.md`).
 
 ### Discovery and comparison
 
@@ -136,8 +136,8 @@ states. Never treat an earlier conversation report as a verified current source 
   commit, push, create plans, change implementation state or begin product work. A later explicitly
   queued item begins only after this capture has stopped successfully.
 
-Every published numbered capture is immutable. Fixes require a separately authorized new capture
-with an honest comparison, not edits to old files. Plans pin the chosen snapshot and artifact
+Every published numbered capture is immutable except for an explicit upgrade's format rewrite (§14).
+Fixes require a separately authorized new capture with an honest comparison, not edits to old files. Plans pin the chosen snapshot and artifact
 hashes. Keep earlier referenced captures available; Git history is not a replacement for these
 physical dependencies. Planning still requires its own `/spectre plan <target>: <objective>` or an
 explicitly stated, separately executed plan item in a compound queue.

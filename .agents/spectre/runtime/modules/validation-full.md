@@ -1,10 +1,10 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 1.0.0
-Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
+Protocol-Version: 1.0.0
+Source-SHA256: 1ae4c43cd1f1ad8e6cc942c5b573490f5cd3e332ff3acda5e920cfd2186a33f5
 
 **Installation**
 
-1. Runtime: all 25 modules equal marked source extraction, including installed version/source hash.
+1. Runtime: all 25 modules equal marked source extraction, including installed Protocol-Version/source hash.
    Templates match §11 byte-for-byte. Full checks verify bodies, not just headers.
 2. Layout of rules: runtime/ contains only SPECTRE-PROTOCOL.md and modules/; modules/ contains only
    extracted modules and templates/. Three canonical templates exist. ROUTER.md is the only
@@ -19,20 +19,20 @@ Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
 7. Bootstrap: exactly one accepted flat target/0001 or nested repository/0001 installation row exists
    in live or archived history. Active bootstrap has its matching instruction/result and human
    installation proof; an empty live ledger never authorizes another bootstrap.
-8. Storage: one root SPECTRE.md uses Status-Schema-Version v1 and the selected flat/nested layout.
+8. Storage: one root SPECTRE.md whose Protocol-Version and Protocol-SHA256 equal the installed protocol's, in the selected flat/nested layout.
    Implementation subsections exist exactly for targets with live rows; every target identity used
    by live or archived records has a Targets row. No target-local ledger
-   or mixed flat/nested active storage. Archives retain their original layout/schema.
+   or mixed flat/nested active storage. Archives retain their original layout and format.
 9. Installation changes only tracking structure and its pointer; no product implementation.
 
 **Archive indexes**
 
-29. Manifest identity: each archive has readable version/ID/kind headers and lifecycle or provider
+29. Manifest identity: each archive has readable ID/kind headers and lifecycle or provider
     index rows. IDs match directory names and remain
     unique. Implementation rows retain terminal state and decision proof.
-30. Version: archives use the schema that created them. Do not rewrite or rejudge their record bytes,
-    paths, table syntax or hashes under a newer release. Read indexes needed for identity, decisions
-    and numbering.
+30. Frozen: archives keep the format that created them. Do not rewrite or rejudge their record bytes,
+    paths, table syntax or hashes under the current protocol. Read indexes needed for identity,
+    decisions and numbering.
 31. Historical files: missing/broken/changed archived content is informational for historical status;
     a consumer requiring that content must still validate its own normative input. Do not fabricate
     evidence to make a historical archive complete.

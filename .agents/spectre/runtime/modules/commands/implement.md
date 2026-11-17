@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 1.0.0
-Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
+Protocol-Version: 1.0.0
+Source-SHA256: 1ae4c43cd1f1ad8e6cc942c5b573490f5cd3e332ff3acda5e920cfd2186a33f5
 
 ## 6. Evidence modes and inputs
 
@@ -50,14 +50,14 @@ record the blocker, and resolve it before claiming a valid binding or REVIEW com
 Follow the instruction's declared compatibility contract. Preserve published consumers where
 required; remove obsolete paths only when the bounded objective authorizes it. Never add
 speculative compatibility layers or silently break the declared public interface. Engineering style
-and design choices come from repository guidance, not from this standard.
+and design choices come from repository guidance, not from this protocol.
 
 For `/spectre implement <record>`, a selected batch or compound-queue item, or an implementation
 continuation authorized under §1, complete this workflow for one record:
 
 1. Require one matching active `PLANNED` row and instruction. Refuse missing, duplicate,
    terminal, or mismatched identities, and an instruction that does not satisfy the installed
-   release's instruction format, including one an upgrade marked for revision; it needs `revise`
+   protocol's instruction format, including one an upgrade marked for revision; it needs `revise`
    first. A previously recorded blocker must be resolved before dependent source work. Recheck required accepted inputs and provider integrity.
 2. Read the complete instruction, every declared input, any existing partial result, target
    source/tests, and current repository guidance. Inspect existing changes before editing.

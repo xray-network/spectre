@@ -1,12 +1,10 @@
 # Provider information and numbered incremental captures
 
-Provider-Workflow-Version: v1
-
 A provider is not versioned. PROVIDER.md explains its purpose, authority and sources. Each numbered
 capture directory contains a frozen SNAPSHOT.md specification, an advisory CAPTURE.md summary, and
 only the artifact files newly stored by that capture. The first baseline stores all selected
 artifacts. Later captures reuse earlier immutable files through explicit inventory references.
-Provider-Snapshot-Version and Provider-Capture-Version identify document schemas, not providers.
+Only an explicit upgrade rewrites a published SNAPSHOT.md or CAPTURE.md, and never an artifact.
 
 ## Provider guide
 
@@ -46,7 +44,6 @@ to each SNAPSHOT.md, never to the guide or summary. Later guide edits cannot rei
 ```markdown
 # <Provider> snapshot <NNNN>
 
-Provider-Snapshot-Version: v1
 Provider: <provider>
 Snapshot: <NNNN>
 Created: YYYYMMDDTHHMMSSZ
@@ -123,9 +120,8 @@ The logical inventory describes the entire effective snapshot, including unchang
 not merely a delta list. Physical references are explicit regular-file paths from the provider
 root, either inside this capture's artifacts/ or inside an earlier same-provider capture's
 artifacts/. Resolve them directly, never via latest aliases, symlinks, hardlinks or patch replay.
-Every reused file must be owned by a hash-pinned earlier snapshot and match its size/hash. Earlier
-snapshots may come from an earlier protocol version. Predecessor references strictly decrease;
-artifact owners never point forward. Do not consult today's guide to interpret a past specification.
+Every reused file must be owned by a hash-pinned earlier snapshot and match its size/hash.
+Predecessor references strictly decrease; artifact owners never point forward. Do not consult today's guide to interpret a past specification.
 
 Source and artifact inventories must agree through the declared mapping, using independently
 complete source enumeration. File-download counts alone do not establish completeness. Reject
@@ -162,7 +158,6 @@ files; record exact zero counts and omit artifacts/ when empty. Do not copy evid
 ```markdown
 # <Provider> capture <NNNN> summary
 
-Provider-Capture-Version: v1
 Provider: <provider>
 Capture: <NNNN>
 Snapshot: SNAPSHOT.md

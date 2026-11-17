@@ -1,6 +1,5 @@
 # Harness implementation 0001 instruction
 
-Implementation-Version: v1
 Implementation-ID: harness/0001
 Target-Path: ./harness/
 Created: 20261111T100920Z

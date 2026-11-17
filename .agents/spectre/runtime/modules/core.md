@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 1.0.0
-Source-SHA256: fde9185b15eff04d2b0e301a91c8dffbb9f633b6a8b76fc5064ff6d67057d590
+Protocol-Version: 1.0.0
+Source-SHA256: 1ae4c43cd1f1ad8e6cc942c5b573490f5cd3e332ff3acda5e920cfd2186a33f5
 
 Operation names, flags, host names, archive kinds, state filters, and setup subcommands are ASCII
 case-insensitive. Lowercase is canonical; stored target IDs, paths, objectives and human proof keep
@@ -30,7 +30,7 @@ module and the dependencies the router lists.
 
 ### Shared runtime checks
 
-Runtime modules are rules from the pinned local protocol; loading one does not invoke its command.
+Runtime modules are rules from the installed local protocol; loading one does not invoke its command.
 Preserve the installed flat/nested layout. Logical IDs are `target/NNNN` (four digits); slugs match
 `^[a-z0-9]+(?:-[a-z0-9]+)*$`. In flat mode the target is the repository slug and record files live
 directly in `implementations/`; nested mode uses `implementations/<target>/`. Root `SPECTRE.md` is
@@ -52,7 +52,7 @@ Within an installed repository, apply this order when instructions conflict:
 1. System, platform, and current human instructions.
 2. The closest applicable repository agent instructions.
 3. Repository governance, security policy, and active architecture decisions.
-4. This `.agents/spectre/runtime/SPECTRE-PROTOCOL.md` standard.
+4. This `.agents/spectre/runtime/SPECTRE-PROTOCOL.md` protocol.
 5. The templates under `.agents/spectre/runtime/modules/templates/`.
 6. The selected target's instruction.
 7. Provider guides, captures, accepted results, and other declared evidence.
@@ -99,8 +99,8 @@ record and does not weaken the human-only rule for any later implementation.
 result (when present) are immutable, with two exceptions. An explicit `/spectre archive`
 operation under §9 moves record files without changing their bytes and transfers their ledger
 rows, rebasing only the Instruction and Result link destinations. State, ID, title, evidence mode,
-and decision proof remain unchanged. An explicit upgrade (§14) migrates live terminal records to
-the target release's formats and replaces each digest their proofs cite with the migrated result's
+and decision proof remain unchanged. An explicit upgrade (§14) rewrites live terminal records to
+the current formats and replaces each digest their proofs cite with the rewritten result's
 digest; state, ID, decision source, date and wording remain unchanged. Archiving is a storage operation, not a lifecycle state;
 there is no `ARCHIVED` state. Correct terminal content with a new local sequence that references
 the prior record. Git history alone is not a substitute for this rule.

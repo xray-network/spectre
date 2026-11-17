@@ -9,10 +9,10 @@ workflow. Otherwise follow ordinary instructions and leave tracking untouched.
 
 Resolve the nearest installation at or above the working directory by `.agents/spectre/ROUTER.md`,
 or the installation explicitly named in the request. Ask when several installations match. Require
-the pinned `runtime/SPECTRE-PROTOCOL.md`; check its metadata and SHA-256 with local tools. Verify
-Runtime-Version and Source-SHA256 in each loaded module. Missing/stale files block ordinary work;
-never implicitly install, regenerate, repair or upgrade. Explicit upgrade reads the target release
-and follows its procedure; it does not follow a moving mirror.
+the installed `runtime/SPECTRE-PROTOCOL.md`; check its metadata and SHA-256 with local tools. Verify
+Protocol-Version and Source-SHA256 in each loaded module. Missing/stale files block ordinary work;
+never implicitly install, regenerate, repair or upgrade. Only an explicit upgrade fetches the latest
+protocol and follows its upgrade procedure.
 
 Always load `runtime/modules/core.md`. Resolve natural language to supported operations, not exact
 command wording. For several operations, deferred outputs, a human decision checkpoint or a reply to
@@ -36,14 +36,14 @@ All paths below are relative to `.agents/spectre/runtime/modules/`.
 | accept / reject / cancel | commands/decide.md | selectors.md, references.md, publication.md, validation.md |
 | archive | commands/archive.md | selectors.md, references.md, history.md, publication.md, validation.md, templates/TEMPLATE_STATUS.md; providers.md, validation-evidence.md and templates/TEMPLATE_PROVIDER.md for provider archive |
 | capture | commands/capture.md | selectors.md, references.md, publication.md, providers.md, validation.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md |
-| upgrade | commands/upgrade.md | Target release completely; publication.md, references.md, history.md, validation.md, validation-full.md |
+| upgrade | commands/upgrade.md | Latest protocol completely; commands/override.md, publication.md, references.md, providers.md, validation.md, validation-full.md, validation-evidence.md, the three latest templates |
 | override | commands/override.md | selectors.md, references.md, history.md, publication.md, validation.md |
 | host add / remove | commands/host.md | None |
 
 Read the matching canonical templates for each record/schema being checked. Provider consumption
 always loads providers.md, validation-evidence.md and the provider template. Read-only operations
 report issues without repair. Section numbers identify source locations; they do not require a
-full-standard read for routine operations.
+full-protocol read for routine operations.
 
 Before every mutation, verify canonical scope and current state and follow publication.md. Apply
 repository guidance; targets describe ownership, not blanket authorization to edit their paths.
