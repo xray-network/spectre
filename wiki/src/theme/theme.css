@@ -7,7 +7,7 @@ html:root {
   --rp-c-brand: var(--xr-link);
   --rp-c-brand-light: var(--xr-action-hover);
   --rp-c-brand-lighter: var(--xr-blue-50);
-  --rp-c-brand-dark: var(--xr-action-pressed);
+  --rp-c-brand-dark: var(--xr-link-hover); /* Rspress draws hover and active text with it */
   --rp-c-brand-darker: var(--xr-blue-700);
   --rp-c-brand-tint: var(--xr-selection-bg);
   --rp-c-bg: var(--xr-canvas);
@@ -58,7 +58,8 @@ html:root:is(.rp-dark, .dark) {
   --spectre-sidebar-bg: color-mix(in srgb, var(--xr-gray-900) 30%, var(--xr-black));
   --spectre-sidebar-item: var(--xr-gray-200);
   --spectre-sidebar-header: var(--xr-gray-500);
-  --spectre-symbol-color: var(--xr-blue-400);
+  --spectre-symbol-color: var(--xr-link);
+  --rp-c-brand-light: var(--xr-link-hover);
 }
 
 html,
@@ -389,7 +390,9 @@ html :where(a, button, input):focus-visible {
     /* Item and section-header text starts 12px inside; pull it back in line with the nav logo. */
     margin: 0 0 0 -12px;
     left: auto;
-    padding: 32px 0 0;
+    /* 12px on the right keeps item fills off the border, where no scrollbar gutter does it;
+       12px at the bottom keeps the version tag (and the last item when the list scrolls) off the edge. */
+    padding: 32px 12px 12px 0;
     border: 0;
     border-right: 1px solid var(--xr-border);
     border-radius: 0;
@@ -757,7 +760,7 @@ html :where(a, button, input):focus-visible {
 
 .spectre-start .rp-codeblock {
   margin: 0 0 16px;
-  border-top: 6px solid var(--rp-c-brand);
+  border-top: 6px solid var(--xr-action); /* a band: the fill blue in both themes */
 }
 
 .spectre-start .rp-codeblock__title {
@@ -1059,4 +1062,147 @@ html :where(a, button, input):focus-visible {
     animation: none;
     transition: none;
   }
+}
+
+/* Accent: fills (buttons, bands, the current search result behind white text) use the brand blue
+   in both themes; thin marks (links, focus, borders, icons) use the link blue, lighter on dark. */
+html .rp-suggest-item--current .rp-suggest-item__link { background-color: var(--xr-action); }
+
+/* The project version: plain text just before the search box, on every screen size. */
+html .wiki-version {
+  flex: none;
+  color: var(--xr-fg-secondary);
+  font: 500 12px/1 var(--xr-font-mono);
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+
+/* Home hero: a small label above the headline and room around the copy, as on the project wikis. */
+.spectre-hero-copy > .spectre-eyebrow {
+  margin-bottom: 24px;
+}
+
+.spectre-home:not(.wiki-placeholder):not(.wiki-directory) .spectre-hero-grid {
+  padding-block: 88px 80px;
+}
+
+@media (max-width: 768px) {
+  .spectre-home:not(.wiki-placeholder):not(.wiki-directory) .spectre-hero-grid {
+    padding-block: 56px 48px;
+  }
+}
+
+/* Versioning: file types as expandable rows, drawn like the docs tables. */
+html .rp-doc .spectre-fields {
+  margin: 20px 0;
+  border: var(--rp-code-block-border);
+  border-radius: var(--rp-radius);
+  overflow: hidden;
+  font-size: 14px;
+}
+
+html .rp-doc .spectre-fields__head,
+html .rp-doc .spectre-fields__row > summary {
+  display: grid;
+  grid-template-columns: minmax(8rem, 11rem) 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+}
+
+html .rp-doc .spectre-fields__head {
+  grid-template-columns: minmax(8rem, 11rem) 1fr;
+  background: var(--xr-surface);
+  color: var(--xr-fg);
+  font-weight: 600;
+  border-bottom: 1px solid var(--rp-c-divider-light);
+}
+
+html .rp-doc .spectre-fields__row {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+html .rp-doc .spectre-fields__row + .spectre-fields__row {
+  border-top: 1px solid var(--rp-c-divider-light);
+}
+
+html .rp-doc .spectre-fields__row > summary {
+  cursor: pointer;
+  list-style: none;
+  color: var(--rp-c-text-1);
+}
+
+html .rp-doc .spectre-fields__row > summary::-webkit-details-marker {
+  display: none;
+}
+
+html .rp-doc .spectre-fields__row > summary::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  margin-right: 4px;
+  border-right: 1.5px solid var(--xr-fg-muted);
+  border-bottom: 1.5px solid var(--xr-fg-muted);
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.15s ease;
+}
+
+html .rp-doc .spectre-fields__row[open] > summary::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+
+html .rp-doc .spectre-fields__row > summary:hover {
+  background: var(--xr-surface);
+}
+
+html .rp-doc .spectre-fields__row > summary:focus-visible {
+  outline: 2px solid var(--xr-link);
+  outline-offset: -2px;
+}
+
+html .rp-doc .spectre-fields__name {
+  color: var(--xr-fg);
+  font-weight: 600;
+}
+
+html .rp-doc .spectre-fields__row > summary code {
+  justify-self: start;
+  overflow-wrap: anywhere;
+}
+
+html .rp-doc .spectre-fields__row > :not(summary) {
+  margin: 0;
+  padding: 0 1rem 0.75rem calc(min(11rem, 30%) + 2rem);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+html .rp-doc .spectre-fields__row > ul {
+  padding-top: 0.25rem;
+  list-style: none;
+}
+
+html .rp-doc .spectre-fields__row li {
+  margin: 0.25rem 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+html .rp-doc .spectre-fields__row > p {
+  color: var(--xr-fg-muted);
+}
+
+@media (max-width: 640px) {
+  html .rp-doc .spectre-fields__head { display: none; }
+  html .rp-doc .spectre-fields__row > summary {
+    grid-template-columns: 1fr auto;
+    row-gap: 0.25rem;
+  }
+  html .rp-doc .spectre-fields__row > summary code { grid-column: 1; }
+  html .rp-doc .spectre-fields__row > summary::after { grid-column: 2; grid-row: 1 / span 2; }
+  html .rp-doc .spectre-fields__row > :not(summary) { padding-left: 1rem; }
 }

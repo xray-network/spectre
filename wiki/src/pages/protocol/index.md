@@ -1,15 +1,14 @@
-# Protocol releases
+# Releases
 
-Release directories are immutable once published; installed copies remain pinned to their own
-bytes. Installation pins a complete versioned URL. The default prompt starts from the
-current-release mirror to discover that version; you can also choose a specific release directly.
-
-The <a href="/spectre/SPECTRE-PROTOCOL.md">current-release mirror</a> is convenient for reading and
-repository discovery. The build generates it directly from the latest versioned protocol source.
+Only the latest protocol is published, at
+<a href="/spectre/SPECTRE-PROTOCOL.md"><code>/spectre/SPECTRE-PROTOCOL.md</code></a>; earlier versions
+are not kept. The protocol may be updated under the same version, and its SHA-256 identifies the
+exact bytes. Installed copies keep their own bytes until an explicit `Spectre upgrade` brings them
+to the latest. See [versioning](../versioning).
 
 ## 1.0.0
 
-- <a href="/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md">Read or download <code>SPECTRE-PROTOCOL.md</code></a>
+- <a href="/spectre/SPECTRE-PROTOCOL.md">Read or download <code>SPECTRE-PROTOCOL.md</code></a>
 
 The first public release.
 
@@ -36,11 +35,10 @@ The first public release.
 - **Selective runtime.** Installation extracts 25 rule modules. Each operation loads only its own
   dependencies; queue and checkpoint rules and archive-history rules load only when a request needs
   them.
-- **Schemas.** Target, status, implementation, result, archive and provider schemas all start at v1.
+- **One versioned protocol.** Files carry no schema versions of their own. Live files follow the
+  installed templates, and `Spectre upgrade` rewrites them in place to the latest protocol.
+  Archives are frozen.
 
 The complete file contains marked runtime sections. Installation extracts shared rules and command
-modules locally from the pinned protocol, with its SHA-256 in each header. Separate runtime
-downloads are not published.
-
-Machine-readable release metadata is available from
-<a href="/spectre/protocol/index.json"><code>protocol/index.json</code></a>.
+modules locally from the installed protocol, with its version and SHA-256 in each header. Separate
+runtime downloads are not published.

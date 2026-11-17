@@ -1,11 +1,11 @@
-import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationPrompt, Link } from '@rspress/core/theme';
+import { CodeBlock, HeroArtwork, CopyPromptButton, installationPrompt, Link } from '@rspress/core/theme';
 
 <div className="spectre-home rp-not-doc">
   <section className="spectre-hero" aria-labelledby="every-change-leaves-a-trace">
     <div className="spectre-hero-grid">
       <HeroArtwork />
-      <HeroDiagram />
       <div className="spectre-hero-copy">
+        <span className="spectre-eyebrow">Implementation protocol</span>
         <h1 id="every-change-leaves-a-trace">Plan, track, and review code changes with AI.</h1>
         <p className="spectre-lead">Turn work with your coding agent into a clear sequence of plans, evidence, and decisions. All in your repository.</p>
         <div className="spectre-actions">
@@ -18,10 +18,10 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
 
   <section className="spectre-about" aria-labelledby="about-spectre-title">
     <div className="spectre-section-heading">
-      <div><span className="spectre-eyebrow">01 / What is SPECTRE</span><h2 id="about-spectre-title" data-outline>A clear record for every change</h2></div>
+      <div><span className="spectre-eyebrow">01 / What is XRAY/SPECTRE</span><h2 id="about-spectre-title" data-outline>A clear record for every change</h2></div>
     </div>
-    <p>SPECTRE is a Markdown-only workflow for making code changes with an AI agent. The agent first writes an implementation plan for a human to check. When implementation is requested, the agent updates the code, runs the required checks, and records the results. A human then reviews the code updates and decides whether to accept or reject the change. Every step stays in the repository beside the code.</p>
-    <p>It solves the lack of visibility between asking an AI agent for a change and receiving the finished code. SPECTRE connects the request, plan, implementation, test evidence, and final decision in one clear record.</p>
+    <p>XRAY/SPECTRE is a Markdown-only workflow for making code changes with an AI agent. The agent first writes an implementation plan for a human to check. When implementation is requested, the agent updates the code, runs the required checks, and records the results. A human then reviews the code updates and decides whether to accept or reject the change. Every step stays in the repository beside the code.</p>
+    <p>It solves the lack of visibility between asking an AI agent for a change and receiving the finished code. XRAY/SPECTRE connects the request, plan, implementation, test evidence, and final decision in one clear record.</p>
   </section>
 
   <section className="spectre-start" id="get-started" aria-labelledby="get-started-title">
@@ -77,15 +77,15 @@ import { CodeBlock, HeroArtwork, HeroDiagram, CopyPromptButton, installationProm
     </ol>
   </section>
 
-  <nav className="spectre-resources" aria-label="Explore SPECTRE documentation">
+  <nav className="spectre-resources" aria-label="Explore XRAY/SPECTRE documentation">
     <Link className="spectre-resource" href="/commands">
       <span className="spectre-resource-label">REFERENCE <span aria-hidden="true">↗</span></span>
       <h2>Command reference</h2><p>Revise a change, check status, capture evidence, or archive completed work.</p>
     </Link>
-    <Link className="spectre-resource" href="/protocol/">
+    <a className="spectre-resource" href="/spectre/SPECTRE-PROTOCOL.md">
       <span className="spectre-resource-label">SPECIFICATION <span aria-hidden="true">↗</span></span>
-      <h2>Read the protocol</h2><p>Explore the workflows, evidence rules, and record formats behind SPECTRE.</p>
-    </Link>
+      <h2>Read the protocol</h2><p>Explore the workflows, evidence rules, and record formats behind XRAY/SPECTRE.</p>
+    </a>
   </nav>
-  <div className="spectre-home-footer"><span>SPECTRE <span aria-hidden="true">/</span> A record of how your code changes.</span><Link href="/versioning">About versions <span aria-hidden="true">→</span></Link></div>
+  <div className="spectre-home-footer"><span>XRAY/SPECTRE <span aria-hidden="true">·</span> A record of how your code changes.</span><Link href="/versioning">About versions <span aria-hidden="true">→</span></Link></div>
 </div>

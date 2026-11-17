@@ -23,12 +23,11 @@ export const documentationSections = [
       { sectionHeaderText: "Get started" },
       { text: "Overview", link: "/", icon: icons.home },
       { text: "Installation", link: "/installation", icon: icons.arrowDownTray },
+      { sectionHeaderText: "Reference" },
       { text: "Commands", link: "/commands", icon: icons.commandLine },
       { text: "Example repository", link: "/example", icon: icons.folder },
-      { sectionHeaderText: "Reference" },
       { text: "Versioning", link: "/versioning", icon: icons.tag },
-      { text: "Protocol releases", link: "/protocol/", icon: icons.documentText },
-      { text: "v1.0.0", link: "/protocol/", context: "spectre-version" },
+      { text: "Releases", link: "/protocol/", icon: icons.documentText },
     ]
   }
 ] satisfies { text: string; href: string; paths: string[]; icon: string; sidebar: Sidebar[string] }[]

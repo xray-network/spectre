@@ -1,6 +1,6 @@
 # Example repository
 
-A fictional `beacon-api` project with SPECTRE installed: two accepted product changes, one
+A fictional `beacon-api` project with XRAY/SPECTRE installed: two accepted product changes, one
 implementation awaiting review, and one plan ready to start. This is a single application, so it
 uses flat storage and one sequence of implementation IDs. All records use local repository evidence.
 
@@ -48,8 +48,8 @@ This is the complete text of the example's repository-root ledger. Its links are
 # SPECTRE implementations
 
 Protocol-Version: 1.0.0
+Protocol-SHA256: <SHA-256 of the installed protocol>
 Protocol: [.agents/spectre/runtime/SPECTRE-PROTOCOL.md](.agents/spectre/runtime/SPECTRE-PROTOCOL.md)
-Status-Schema-Version: v1
 Storage-Mode: flat
 
 This is the sole live lifecycle ledger and target registry. Archived rows live in .agents/spectre/archive/ manifests.

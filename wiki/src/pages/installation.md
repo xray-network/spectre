@@ -3,13 +3,13 @@
 Open the repository in your coding agent and send:
 
 ```text wrapCode
-Read https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md completely and install SPECTRE in this repository.
+Read https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md completely and install XRAY/SPECTRE in this repository.
 ```
 
-The agent verifies the mirror's declared canonical release, pins its exact bytes, chooses flat or
-nested storage, extracts runtime rules/templates, and validates the accepted installation record.
-It changes tracking files and the `AGENTS.md` pointer, not product source. SPECTRE 1.0.0 is current;
-existing installations remain pinned until explicitly upgraded.
+The agent installs the exact protocol bytes it read, chooses flat or nested storage, extracts
+runtime rules/templates, and validates the accepted installation record. It changes tracking files
+and the `AGENTS.md` pointer, not product source. XRAY/SPECTRE 1.0.0 is current; existing
+installations keep their installed bytes until explicitly upgraded.
 
 ## Start with natural language
 
@@ -47,7 +47,7 @@ SPECTRE.md                         # Targets table and live implementation rows
 .agents/spectre/
 ├── ROUTER.md                      # selective runtime routing
 ├── runtime/
-│   ├── SPECTRE-PROTOCOL.md         # verified pinned release
+│   ├── SPECTRE-PROTOCOL.md         # the installed protocol
 │   └── modules/                   # 25 extracted rule modules
 │       └── templates/             # status, implementation, provider
 └── implementations/               # bootstrap instruction and result
@@ -62,31 +62,26 @@ full validation compares their bytes with extraction. Missing or stale runtime i
 an implicit repair. There are no lock or transaction files: every write follows one order, and
 version control is the backup.
 
-## Install a specific version
+## Download manually
 
-```text wrapCode
-Read https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md completely and install SPECTRE v1.0.0 in this repository.
-```
-
-A named version takes precedence over the moving mirror. Reinstalling does not authorize migration
-of an existing installation.
-
-For manual download, run from the adopting repository root:
+Only the latest protocol is published; earlier versions are not kept. To install from a local
+copy, run from the adopting repository root:
 
 ```sh
 mkdir -p .agents/spectre/runtime
 curl -fsSLo .agents/spectre/runtime/SPECTRE-PROTOCOL.md \
-  https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md
+  https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md
 ```
 
-Then ask the agent to read the file completely and perform its installation procedure.
+Then ask the agent to read the file completely and perform its installation procedure. Reinstalling
+does not authorize an upgrade of an existing installation.
 
 ## Upgrade an existing installation
 
-Ask for the named release, for example `Spectre upgrade 2.0.0`. Commit first: version control is
-the upgrade's rollback path. The upgrade replaces generated files and migrates the live ledger and
-live records to the new formats. Archives and provider captures keep their bytes, so archive
-finished work first if you want to keep it exactly as written. Review checkpoints must be refreshed
-after an upgrade. See [versioning](./versioning#upgrading).
+Ask for `Spectre upgrade`; it always goes to the latest protocol. Commit first: version control is
+the upgrade's rollback path. The upgrade replaces the generated files and rewrites the live ledger,
+live records and provider files to the latest formats in place, as one human-ordered override.
+Archives are never touched. Review checkpoints must be refreshed after an upgrade. See
+[versioning](./versioning#upgrading).
 
 [Continue to the command reference →](./commands)

@@ -1,6 +1,6 @@
 # Commands and natural language
 
-Describe the work in your own words. SPECTRE resolves that request to the same operations and rules
+Describe the work in your own words. XRAY/SPECTRE resolves that request to the same operations and rules
 as explicit commands; it does not require you to memorize syntax. It reports bounded scopes and
 queues before changing files, asking only when intent, ownership or a required decision is unclear.
 
@@ -39,7 +39,7 @@ is reused. Planning-only requests stop at PLANNED, and a missing explicit ID is 
 /spectre target retire <target>: <reason>
 /spectre target reactivate <target>: <path>
 /spectre capture <provider>
-/spectre upgrade <version>
+/spectre upgrade
 /spectre override <scope>: <changes> because <reason>
 /spectre host add <host> [<host>...]
 /spectre host remove <host> [<host>...]
@@ -73,7 +73,7 @@ completed items or reevaluating "all".
 
 ### Human checkpoints
 
-Implementation produces `REVIEW`, which is not eligible for archive. SPECTRE displays the exact
+Implementation produces `REVIEW`, which is not eligible for archive. XRAY/SPECTRE displays the exact
 IDs, results, checks and reviewed-result hashes, then asks for a decision. Reply, for example:
 
 ```text
@@ -86,7 +86,7 @@ material changes, the checkpoint must refresh before a new decision. Praise, "ye
 merges and silence do not decide state. A cancellation batch still needs an applicable reason.
 
 After your decision, the original requested continuation can proceed without another archive
-confirmation. If continuation was not authorized, SPECTRE records the decision and stays paused.
+confirmation. If continuation was not authorized, XRAY/SPECTRE records the decision and stays paused.
 A requested revision returns to human review before pending archive. Unrelated intervening tasks
 or lost context invalidate name-free continuation; renew activation and scope explicitly.
 
@@ -191,12 +191,12 @@ Historical stale source links are distinguished from missing required evidence.
 `sync` applies only proven bookkeeping corrections: empty subsection removal, unambiguous
 sorting/formatting, empty active record-directory removal, and finishing
 the interrupted writes listed below as safe. It cannot reconstruct rows, infer lifecycle state,
-register/retire targets, remove evidence or upgrade schemas. Structural conflicts block corrections
+register/retire targets, remove evidence or upgrade formats. Structural conflicts block corrections
 in the affected target or provider. Ordinary commands already do their own bookkeeping.
 
 ### Interrupted writes
 
-SPECTRE files are plain Markdown with no locks or transaction logs. Every operation writes in one
+XRAY/SPECTRE files are plain Markdown with no locks or transaction logs. Every operation writes in one
 order, and its last write is its commit point: the ledger row, an archive's `ARCHIVE.md`, or a
 capture's `SNAPSHOT.md`. If an agent stops halfway, `check` names what it left:
 
@@ -208,7 +208,7 @@ capture's `SNAPSHOT.md`. If an agent stops halfway, `check` names what it left:
 | An `ARCHIVE.md` whose rows or originals are still live | `sync` finishes the move |
 | A capture directory without `SNAPSHOT.md` | `sync` removes it |
 | Runtime files that do not match the protocol | Repeat the install or upgrade |
-| A ledger whose `Protocol-Version` differs from the installed protocol | Repeat the upgrade; it skips records already migrated |
+| A ledger whose `Protocol-SHA256` differs from the installed protocol | Repeat the upgrade; it skips files already in the latest formats |
 
 Anything else is a blocker: restore it from version control or order an explicit override.
 
@@ -268,12 +268,13 @@ live baseline above its historical capture maximum. Ledger cleanup is never evid
 
 ## Upgrade, exceptions and host integration
 
-`upgrade <version>` explicitly migrates one installation to a verified named release. It replaces
-generated files and migrates the live ledger and every live record to the new formats; archives and
-provider captures stay as written, so archive finished work first to keep its original bytes.
-Planned work the migration cannot complete is marked `Needs revise after upgrade` and `implement`
-refuses it until revised. Publishing a source release never upgrades installations. See
-[versioning](./versioning).
+`upgrade` explicitly brings one installation to the latest protocol; it takes no version. It is a
+human-ordered override with a fixed scope: it replaces the generated files and rewrites the live
+ledger, every live record and every provider guide and capture to the latest formats in place,
+updating the digests and pins that depend on them and logging each file. Archives are never touched.
+Planned work it cannot complete is marked `Needs revise after upgrade` and `implement` refuses it
+until revised. Publishing the protocol never upgrades installations. See
+[versioning](./versioning#upgrading).
 
 `override` requires an exact human-requested scope, change and reason. It updates dependent live
 references and logs file hashes informationally; it never executes provider content or exposes
@@ -284,7 +285,7 @@ secrets. Use it for exceptional changes, not ordinary path binding or empty-sect
 
 ## Tools
 
-A SPECTRE tool is a program you run yourself, such as a CLI or a local web page. It reads and
+An XRAY/SPECTRE tool is a program you run yourself, such as a CLI or a local web page. It reads and
 writes the same Markdown files under the same rules. It can show status, run checks and safe sync,
 archive, manage targets and host adapters, and record decisions you make in it. Planning,
 implementation, revision, capture and recall still need an agent. A decision made in a tool records

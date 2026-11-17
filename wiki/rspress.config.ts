@@ -9,9 +9,9 @@ export default defineConfig({
   siteOrigin: "https://wiki.xraynetwork.io",
   icon: "https://cdn.xraynetwork.io/favicon.png",
   themeDir: "src/theme",
-  title: "SPECTRE",
+  title: "XRAY/SPECTRE",
   logo: "/xray-blue.svg",
-  logoText: "SPECTRE",
+  logoText: "XRAY/SPECTRE",
   description: "Evidence-backed implementation protocol for humans and coding agents.",
   i18nSource: source => ({
     ...source,
@@ -19,7 +19,7 @@ export default defineConfig({
   }),
   head: [
     ["meta", { property: "og:type", content: "website" }],
-    ["meta", { property: "og:title", content: "SPECTRE — Every change leaves a trace" }],
+    ["meta", { property: "og:title", content: "XRAY/SPECTRE — Every change leaves a trace" }],
     ["meta", { property: "og:description", content: "Evidence-backed implementation protocol for humans and coding agents." }],
     ["meta", { property: "og:image", content: "https://wiki.xraynetwork.io/spectre/og.png" }],
     ["meta", { name: "twitter:card", content: "summary_large_image" }],

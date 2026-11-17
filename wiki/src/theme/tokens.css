@@ -2,7 +2,7 @@
  * XRAY tokens from xray-app/packages/frontend/app/shared/design-system:
  * tokens.ts, antd-theme.ts, and styles/tailwind.css.
  * Dark blue shades have explicit --xr-dark-blue-* names so the existing
- * SPECTRE palette stays stable. Semantic/component roles switch with the theme.
+ * XRAY/SPECTRE palette stays stable. Semantic/component roles switch with the theme.
  * Ant Design variables contain explicit source overrides, not generated defaults.
  */
 html:root {
@@ -181,7 +181,7 @@ html:root {
   --xr-antd-drawer-box-shadow-drawer-down: none;
   --xr-antd-drawer-box-shadow-drawer-up: none;
 
-  /* SPECTRE geometry and semantic roles. */
+  /* XRAY/SPECTRE geometry and semantic roles. */
   --xr-radius-panel: 20px;
   --xr-radius-pill: 100px;
   --xr-ease: cubic-bezier(.16, 1, .3, 1);
@@ -203,6 +203,7 @@ html:root {
   --xr-on-action: var(--xr-white);
   --xr-link: var(--xr-blue-500);
   --xr-focus: var(--xr-blue-500);
+  --xr-link-hover: var(--xr-blue-600); /* hover and active text */
   --xr-selection-bg: var(--xr-gray-100);
   --xr-selection-fg: var(--xr-blue-500);
   --xr-success-bg: var(--xr-green-200);
@@ -298,7 +299,7 @@ html:root:is(.rp-dark, .dark) {
   --xr-antd-drawer-color-bg-elevated: #000000;
   --xr-antd-drawer-color-bg-mask: rgba(10, 10, 12, .6);
 
-  /* SPECTRE dark roles. */
+  /* XRAY/SPECTRE dark roles. */
   --xr-canvas: var(--xr-black);
   --xr-panel: var(--xr-gray-950);
   --xr-surface: var(--xr-gray-950);
@@ -312,6 +313,8 @@ html:root:is(.rp-dark, .dark) {
   /* One source-palette step brighter for readable small links on dark panels. */
   --xr-link: var(--xr-blue-300);
   --xr-focus: var(--xr-blue-300);
+  /* Hover and active text gets lighter on dark, never one of the darker fill blues. */
+  --xr-link-hover: var(--xr-blue-200);
   --xr-selection-bg: var(--xr-gray-800);
   --xr-selection-fg: var(--xr-white);
   --xr-success-bg: var(--xr-green-950);
