@@ -25,10 +25,9 @@ export function splitRow(line) {
 // This is release validation, not an execution harness or an alternative lifecycle store.
 export function extractRelease(source) {
   assert.ok(!source.includes("\r"), "protocol must use LF line endings")
-  const version = /^Standard-Version: (\d+\.\d+\.\d+)$/m.exec(source)?.[1]
-  assert.ok(version, "missing Standard-Version")
-  assert.match(source, /^Standard-ID: xray\/spectre$/m)
-  assert.ok(source.includes(`Canonical-URL: https://wiki.xraynetwork.io/spectre/protocol/v${version}/SPECTRE-PROTOCOL.md\n`), "canonical version mismatch")
+  const version = /^Protocol-Version: (\d+\.\d+\.\d+)$/m.exec(source)?.[1]
+  assert.ok(version, "missing Protocol-Version")
+  assert.match(source, /^Protocol-ID: xray\/spectre$/m)
   const blocks = new Map(moduleNames.map(name => [name, []]))
   let active, start, markerCount = 0
   for (const match of source.matchAll(/<!-- (spectre:runtime ([^>\n]+)|\/spectre:runtime) -->/g)) {
@@ -52,7 +51,7 @@ export function extractRelease(source) {
   const hash = createHash("sha256").update(source).digest("hex")
   const runtime = new Map([...blocks].map(([name, bodies]) => {
     assert.ok(bodies.length, `missing runtime module: ${name}`)
-    return [name, `<!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->\nRuntime-Version: ${version}\nSource-SHA256: ${hash}\n\n${bodies.join("\n\n")}\n`]
+    return [name, `<!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->\nProtocol-Version: ${version}\nSource-SHA256: ${hash}\n\n${bodies.join("\n\n")}\n`]
   }))
   const templates = new Map()
   for (const name of templateNames) {
@@ -109,7 +108,7 @@ export function verifyRelease(source) {
       "| `Human reply \"<verbatim reply>\"` |", "| `Human decision \"<verbatim input>\" in <tool>` |",
       "proof is always dated", "fixed proof and has no digest", "one root SPECTRE.md edit",
       "only their State and Decision\nor status cells", "future-result acceptance", "never parse them for authority"]],
-    ["commands/archive.md", ["#### Implementations archive", "#### Provider archive", "Archive-Version: v1",
+    ["commands/archive.md", ["#### Implementations archive", "#### Provider archive", "Protocol-Version: <Protocol-Version of the installed protocol>",
       "selected terminal", "prune\n   newly empty", "if any live record references", "Record paths",
       "Already archived selected IDs are no-ops", "the commit point of the copy", "Then write ARCHIVE.md"]],
     ["commands/target.md", ["target move", "target retire", "target reactivate", "no live ledger rows",
@@ -118,12 +117,13 @@ export function verifyRelease(source) {
     ["commands/check.md", ["reads and diagnoses, never mutates", "exactly what was", "publication.md", "duplicate IDs"]],
     ["commands/sync.md", ["Allowed corrections are exhaustive", "Refuse", "orphan instructions/results",
       "reconstruct/delete record rows", "marks safe sync", "Corrections elsewhere proceed"]],
-    ["commands/upgrade.md", ["### Upgrade procedure", "Report", "Migrate the live ledger and every live record",
-      "Migration is mechanical and never invents", "Needs revise after upgrade to",
-      "replace each cited digest", "archives, provider captures and guides byte for byte", "the commit point",
-      "Version control is\n   the rollback path", "running the same upgrade again", "never add absent ones"]],
+    ["commands/upgrade.md", ["### Upgrade procedure", "human-ordered override", "Rewrite every live file to the latest templates",
+      "Never invent content", "Needs revise after upgrade to",
+      "replace each cited digest", "touch `archive/`", "every artifact\n     file", "ascending\n   capture order",
+      "the commit point", "Protocol-SHA256", "same Protocol-Version with a different SHA-256 still\n   upgrades", "Version control is the rollback path", "repeating an interrupted upgrade completes it",
+      "never add\n   absent ones", "Append one override log row"]],
     ["commands/host.md", ["### Optional host adapters", "`host add`:", "`host remove`:", "is itself\nthe current-human SPECTRE mention"]],
-    ["providers.md", ["### Pinned provider evidence", "### Capture schema versions",
+    ["providers.md", ["### Pinned provider evidence", "### Capture format",
       "complete resolved inventory", "a separate Git commit is not a protocol prerequisite"]],
     ["commands/capture.md", ["### Compound-queue provider preparation", "### Publish a numbered incremental capture",
       "stop without tracked writes for NO-CHANGE", "archived captures are never predecessors or artifact owners",
@@ -165,7 +165,7 @@ export function verifyRelease(source) {
     ["accept / reject / cancel", "commands/decide.md", ["publication.md", "validation.md"]],
     ["archive", "commands/archive.md", ["history.md", "publication.md", "validation.md", "TEMPLATE_STATUS.md", "validation-evidence.md"]],
     ["capture", "commands/capture.md", ["publication.md", "providers.md", "validation-evidence.md"]],
-    ["upgrade", "commands/upgrade.md", ["publication.md", "validation-full.md"]],
+    ["upgrade", "commands/upgrade.md", ["commands/override.md", "publication.md", "providers.md", "validation-full.md", "validation-evidence.md"]],
     ["override", "commands/override.md", ["history.md", "publication.md", "validation.md"]],
     ["host add / remove", "commands/host.md", []]
   ]) {
@@ -182,29 +182,33 @@ export function verifyRelease(source) {
   }
   for (const text of ["pending", "without", "No global tracking mode", "Do not install"]) requireText(pointer, text, "AGENTS pointer")
   for (const [name, fields] of [
-    ["STATUS", ["Status-Template-Version: v1", "Status-Schema-Version: v1", `Protocol-Version: ${version}`,
+    ["STATUS", ["Protocol-Version: <Protocol-Version of the installed protocol>", "Protocol-SHA256: <SHA-256 of the installed protocol>",
       "| Evidence mode | Decision or status |", "## Targets", "| Target | Label | Path | Status | Reason |",
       "## Implementations", "### `repository`", "RETIRED", "Every target ever used keeps its", "Escaping:", "Metadata lines are"]],
-    ["IMPL", ["Implementation-Workflow-Version: v1", "Implementation-Version: v1", "Target-Path:", "Result-Version: v1"]],
-    ["PROVIDER", ["Provider-Workflow-Version: v1", "Provider-Snapshot-Version: v1", "Provider-Capture-Version: v1", "### Complete resolved artifact inventory", "Capture-Summary-SHA256:"]]
+    ["IMPL", ["Implementation-ID:", "Target-Path:", "## Result"]],
+    ["PROVIDER", ["Only an explicit upgrade rewrites", "### Complete resolved artifact inventory", "Capture-Summary-SHA256:"]]
   ]) {
     const template = templates.get(`templates/TEMPLATE_${name}.md`)
     for (const field of fields) requireText(template, field, `${name} template`)
   }
   const help = runtime.get("commands/help.md")
-  assert.match(help, /\| `\/spectre upgrade <version>` \|/)
+  assert.match(help, /\| `\/spectre upgrade` \|/)
   assert.match(help, /\| `\/spectre sync \[scope\]` \|/)
   assert.ok(!/--force|--recover|\blist\b/.test(help), "retired command advertised in help")
   for (const section of ["## 16. Tools", "## 17. Compact operating model", "A conforming tool:"]) {
     requireText(source, section, "protocol")
   }
-  // Release 1.0.0 carries no rules for earlier releases, aliases or transaction recovery.
+  // The protocol keeps only its latest version: no rules for earlier versions, schema versions,
+  // versioned release URLs, aliases or transaction recovery.
   for (const oldRule of ["transactions.md", "Transaction-Version", "sync --recover", "TRANSACTION.md",
     "addslash", "removeslash", "vacuum", "--force", "compatibility alias", "Legacy", "legacy",
     "pre-v3", "Known issues", "TypeScript may be", "No implementation records.",
     "earlier release's", "commands/list.md", "commands/slash.md", "Status-Schema-Version: v3", "Archive-Version: v3",
     "| Decision proof |", "its last tracking write", "TARGETS.md", "TEMPLATE_TARGETS", "Target-Schema-Version",
-    "Targets: [", "live section", "Preserve all PLANNED, REVIEW and terminal records", "rewrite historical evidence"]) {
+    "Targets: [", "live section", "Preserve all PLANNED, REVIEW and terminal records", "rewrite historical evidence",
+    "Standard-ID", "Standard-Version", "Canonical-URL", "Runtime-Version", "-Schema-Version", "Archive-Version",
+    "-Workflow-Version", "Implementation-Version", "Result-Version", "Provider-Capture-Version",
+    "Status-Template-Version", "/spectre/protocol/v", "upgrade <version>", "intervening release"]) {
     assert.ok(!source.includes(oldRule), `contradictory legacy rule: ${oldRule}`)
   }
   let tableColumns

@@ -4,18 +4,17 @@ import { readFile } from "node:fs/promises"
 import test from "node:test"
 import { extractRelease, moduleNames, splitRow, verifyRelease } from "./verify-protocol.mjs"
 
-const releaseUrl = new URL("../../protocol/v1.0.0/", import.meta.url)
-const source = await readFile(new URL("SPECTRE-PROTOCOL.md", releaseUrl), "utf8")
+const source = await readFile(new URL("../../protocol/SPECTRE-PROTOCOL.md", import.meta.url), "utf8")
 
-test("1.0.0 extracts all routed rules and three templates from one canonical source", () => {
+test("the protocol extracts all routed rules and three templates from one canonical source", () => {
   const release = verifyRelease(source)
-  assert.equal(release.version, "1.0.0")
+  assert.match(release.version, /^\d+\.\d+\.\d+$/)
   assert.equal(release.runtime.size, 25)
   assert.equal(release.templates.size, 3)
   assert.equal(new Set(moduleNames).size, 25)
   assert.equal(release.hash, createHash("sha256").update(source).digest("hex"))
   for (const text of release.runtime.values()) {
-    assert.ok(text.startsWith(`<!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->\nRuntime-Version: 1.0.0\nSource-SHA256: ${release.hash}\n\n`))
+    assert.ok(text.startsWith(`<!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->\nProtocol-Version: ${release.version}\nSource-SHA256: ${release.hash}\n\n`))
     assert.ok(text.endsWith("\n") && !text.endsWith("\n\n"))
     assert.ok(!text.includes("<!-- spectre:runtime"))
   }
@@ -41,12 +40,11 @@ test("extraction preserves repeated block order and shared rules byte-for-byte",
   assert.ok(refs.includes(shared))
 })
 
-test("all 1.0.0 schemas start at v1", () => {
+test("documents carry no schema versions; only the protocol is versioned", () => {
   const { templates } = verifyRelease(source)
-  for (const field of ["Status-Schema-Version", "Status-Template-Version"]) assert.match(templates.get("templates/TEMPLATE_STATUS.md"), new RegExp(`^${field}: v1$`, "m"))
-  for (const field of ["Implementation-Version", "Implementation-Workflow-Version", "Result-Version"]) assert.match(templates.get("templates/TEMPLATE_IMPL.md"), new RegExp(`^${field}: v1$`, "m"))
-  assert.match(templates.get("templates/TEMPLATE_PROVIDER.md"), /^Provider-Snapshot-Version: v1$/m)
-  assert.match(source, /^Archive-Version: v1$/m)
+  for (const template of templates.values()) assert.doesNotMatch(template, /^[A-Za-z-]+-Version: v\d+$/m)
+  assert.doesNotMatch(source, /^[A-Za-z-]+-Version: v\d+$/m)
+  assert.match(templates.get("templates/TEMPLATE_STATUS.md"), /^Protocol-Version: <Protocol-Version of the installed protocol>$/m)
 })
 
 test("table rows split on unescaped separators and unescape literal pipes", () => {
@@ -68,10 +66,14 @@ const corruptions = [
   ["missing publication module", text => text.replace("<!-- spectre:runtime publication.md -->", "<!-- spectre:runtime references.md -->")],
   ["queue rules leak back into core", text => text.replace("<!-- spectre:runtime queues.md -->", "<!-- spectre:runtime core.md queues.md -->")],
   ["incorrect module inventory", text => text.replace("Require all 25 files.", "Require all 24 files.")],
-  ["misversioned schema template", text => text.replace("Status-Schema-Version: v1\nStorage-Mode", "Status-Schema-Version: v3\nStorage-Mode")],
+  ["schema version header returns", text => text.replace("Protocol-Version: <Protocol-Version of the installed protocol>\nProtocol-SHA256: <SHA-256 of the installed protocol>\nProtocol: [", "Protocol-Version: <Protocol-Version of the installed protocol>\nProtocol-SHA256: <SHA-256 of the installed protocol>\nStatus-Schema-Version: v2\nProtocol: [")],
+  ["ledger loses its protocol hash", text => text.replace("Protocol-SHA256: <SHA-256 of the installed protocol>\n", "")],
+  ["upgrade relies on the version label alone", text => text.replace("The same Protocol-Version with a different SHA-256 still\n   upgrades.", "")],
   ["missing status template", text => text.replace("### `.agents/spectre/runtime/modules/templates/TEMPLATE_STATUS.md`", "### Status template removed")],
-  ["upgrade stops migrating live records", text => text.replace("4. Migrate the live ledger and every live record", "4. Preserve the live ledger and every live record")],
-  ["upgrade rewrites frozen history", text => text.replace("archives, provider captures and guides byte for byte", "provider guides byte for byte")],
+  ["upgrade stops rewriting live files", text => text.replace("5. Rewrite every live file to the latest templates", "5. Preserve every live file")],
+  ["upgrade touches archives", text => text.replace("archive records or providers, or touch `archive/`.", "or archive records or providers.")],
+  ["upgrade stops logging as an override", text => text.replace("7. Append one override log row", "7. Optionally note")],
+  ["upgrade takes a version argument again", text => text.replace("| `/spectre upgrade` |", "| `/spectre upgrade <version>` |")],
   ["implement accepts records marked for revision", text => text.replace("including one an upgrade marked for revision; it needs `revise`", "including stale ones; it may need `revise`")],
   ["separate target registry returns", text => text.replace("## Targets\n\n| Target |", "Targets: [.agents/spectre/TARGETS.md](.agents/spectre/TARGETS.md)\n\n| Target |")],
   ["router drops decision publication order", text => text.replace(/(\| accept \/ reject \/ cancel \|[^\n]*)publication\.md, /, "$1")],
@@ -88,8 +90,10 @@ const corruptions = [
   ["transaction recovery returns", text => text.replace("| `/spectre help [operation]` |", "| `/spectre sync --recover <transaction-id>` | Recover. |\n| `/spectre help [operation]` |")],
   ["legacy aliases return", text => `${text}\n\`vacuum\` means ordinary \`sync\`.\n`],
   ["archive force returns to help", text => text.replace("| `/spectre archive [scope]` |", "| `/spectre archive [scope] --force` |")],
-  ["canonical version mismatches", text => text.replace("Canonical-URL: https://wiki.xraynetwork.io/spectre/protocol/v1.0.0", "Canonical-URL: https://wiki.xraynetwork.io/spectre/protocol/v3.0.0")],
-  ["raw pipe inside a protocol table", text => text.replace("| Patch | Wording only;", "| Patch | Wording|only;")],
+  ["protocol ID is renamed back to standard", text => text.replace("Protocol-ID: xray/spectre", "Standard-ID: xray/spectre")],
+  ["missing protocol version", text => text.replace("Protocol-Version: 1.0.0\n", "")],
+  ["versioned release URL returns", text => text.replace("https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md completely", "https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md completely")],
+  ["raw pipe inside a protocol table", text => text.replace("| `REVIEW` | Work is implemented", "| `REVIEW` | Work|is implemented")],
 ]
 for (const [name, mutate] of corruptions) {
   test(`rejects ${name}`, () => {

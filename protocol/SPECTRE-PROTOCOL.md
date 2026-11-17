@@ -1,17 +1,15 @@
 # SPECTRE Protocol
 
-Standard-ID: xray/spectre
+Protocol-ID: xray/spectre
 
-Standard-Version: 1.0.0
-
-Canonical-URL: https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md
+Protocol-Version: 1.0.0
 
 Evidence-backed implementation tracking for humans and coding agents.
 
 SPECTRE: Specification, Planning, Evidence, Change, Traceability, Review, Execution.
 
-This document is the complete bootstrap standard. It defines installation, repository discovery,
-planning, implementation, human review, evidence capture, archiving, validation, versioning, and removal. A
+This document is the complete bootstrap protocol. It defines installation, repository discovery,
+planning, implementation, human review, evidence capture, archiving, validation, upgrade, and removal. A
 repository adopting SPECTRE does not need another copy of this specification.
 
 ## 1. Purpose and boundaries
@@ -61,7 +59,7 @@ for a formal command or redundant permission. `/spectre` is the cross-agent spel
 | `/spectre target retire <target>: <reason>` | Retire an existing target with no live rows; retain its identity, last path, and history. |
 | `/spectre target reactivate <target>: <path>` | Reactivate the same logical target at an existing path; continue its original sequence. |
 | `/spectre capture <provider>` | Discover, compare, validate and publish a numbered baseline/update when needed; no change creates no tracked writes. |
-| `/spectre upgrade <version>` | Explicitly migrate this installation to a verified named release using §14: replace generated files and migrate the live ledger and live records; archives and captures keep their bytes. Archive first to keep terminal records as written. Never upgrade from a moving mirror implicitly. |
+| `/spectre upgrade` | Explicitly bring this installation to the latest protocol using §14: replace generated files and rewrite the live ledger, live records and provider files to the current formats as one human-ordered override. Archives are not touched. Standalone only. |
 | `/spectre override <scope>: <changes> because <reason>` | Apply an exceptional human-ordered SPECTRE change, update affected live references, and record an informational override log. Standalone only. |
 | `/spectre host add <host> [<host>...]` | Add only named host adapters and report their invocation/reload requirements. Standalone setup. |
 | `/spectre host remove <host> [<host>...]` | Remove only named SPECTRE host adapters. Standalone setup. |
@@ -362,33 +360,25 @@ Default installation prompt:
 Read https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md completely and install SPECTRE in this repository.
 ```
 
-The current-release mirror is an entry point for fresh installation, not the installed source of
-authority. Before writing installation files, resolve the document's `Standard-Version` and
-`Canonical-URL`. Require `Standard-ID: xray/spectre` and the matching versioned URL
-`https://wiki.xraynetwork.io/spectre/protocol/v<Standard-Version>/SPECTRE-PROTOCOL.md`. Fetch that
-canonical release and require its bytes and metadata to match the document that initiated this
-installation. If they differ or the pinned release cannot be retrieved, report the mismatch or
-failure without installing another version. Do not switch versions by rereading the moving mirror.
-Install the canonical bytes locally and derive every runtime file, template, and bootstrap record
-from that same pinned release. Report the resolved version and canonical URL on completion.
+Only the latest protocol is published, at `https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md`;
+earlier versions are not kept. Require `Protocol-ID: xray/spectre` and a `Protocol-Version` line.
+Install the exact bytes that were read, derive every runtime file, template, and bootstrap record
+from those same bytes, and report the installed Protocol-Version and SHA-256 on completion. A
+manually downloaded protocol can be used directly. Later publications do not change installed
+rules. Repeated installation follows the existing idempotency and conflict rules; the default
+prompt does not authorize an upgrade of an existing installation. Upgrades follow §14.
 
-An explicit versioned URL or version request takes precedence over the mirror; never substitute
-the latest release for a requested version. A manually downloaded versioned protocol can be used
-directly. Later mirror updates do not change installed rules. Repeated installation follows the
-existing idempotency and conflict rules; the default prompt does not authorize an upgrade or
-migration of an existing installation. Upgrades follow §14.
-
-To download this specific release manually, run from the repository root:
+To download the protocol manually, run from the repository root:
 
 ```sh
 mkdir -p .agents/spectre/runtime
 curl -fsSLo .agents/spectre/runtime/SPECTRE-PROTOCOL.md \
-  https://wiki.xraynetwork.io/spectre/protocol/v1.0.0/SPECTRE-PROTOCOL.md
+  https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md
 ```
 
 Then prompt a coding agent:
 
-> Read `.agents/spectre/runtime/SPECTRE-PROTOCOL.md` completely and install SPECTRE v1.0.0 in this repository.
+> Read `.agents/spectre/runtime/SPECTRE-PROTOCOL.md` completely and install SPECTRE in this repository.
 > Preserve all existing `AGENTS.md` instructions, select flat or monorepo storage from repository
 > evidence, register only the bootstrap target, create only the tracking structure,
 > create the accepted SPECTRE installation record, and do not modify product source.
@@ -401,7 +391,7 @@ The installer must:
    aggregate `SPECTRE.md` in the repository root, and the flat or monorepo implementation layout
    selected by §4. Never create a product target directory merely because a target name can be
    inferred.
-4. Install the canonical protocol bytes as `.agents/spectre/runtime/SPECTRE-PROTOCOL.md` and extract
+4. Install the protocol bytes as `.agents/spectre/runtime/SPECTRE-PROTOCOL.md` and extract
    the runtime modules into `.agents/spectre/runtime/modules/` using the marked-block rules below. Create
    `.agents/spectre/ROUTER.md` from the router below. Register only the bootstrap target, with Path
    `./`, in the ledger's Targets table (§11); no empty project subsections or source directories are created.
@@ -419,8 +409,8 @@ The installer must:
 
 ### Runtime extraction
 
-Read this complete standard during installation. Routine commands use only the extracted runtime
-files selected by the router; they must not reread the complete standard as a default prerequisite.
+Read this complete protocol during installation. Routine commands use only the extracted runtime
+files selected by the router; they must not reread the complete protocol as a default prerequisite.
 
 The runtime is normative text extracted verbatim, not a second specification or an agent-written
 summary. This file uses non-nested HTML comment blocks: a start comment with
@@ -439,7 +429,7 @@ Prepend these three lines and a blank line to each extracted file:
 
 ```text
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
-Runtime-Version: 1.0.0
+Protocol-Version: <Protocol-Version of the installed protocol>
 Source-SHA256: <SHA-256 of the complete installed protocol file bytes>
 ```
 
@@ -453,10 +443,10 @@ loading its full text into conversation. Read and verify version/source-hash hea
 runtime files before following them. Full installation validation also re-extracts every module and checks
 byte equality, detecting edited content even when its header was left unchanged. Missing or stale
 runtime files block ordinary operations; report the problem without guessing rules, downloading an
-update, silently regenerating files, or falling back to a full-standard read. Installation/removal/upgrade
-and full installation validation may read the complete standard when
-needed to verify extraction; prefer local byte comparison without dumping its text. This adds no record migration or
-automatic upgrade workflow; existing conflicting installations remain subject to §14.
+update, silently regenerating files, or falling back to a full-protocol read. Installation/removal/upgrade
+and full installation validation may read the complete protocol when
+needed to verify extraction; prefer local byte comparison without dumping its text. Stale runtime
+files are never refreshed implicitly; only an explicit upgrade (§14) replaces them.
 
 ### Required command router
 
@@ -478,10 +468,10 @@ workflow. Otherwise follow ordinary instructions and leave tracking untouched.
 
 Resolve the nearest installation at or above the working directory by `.agents/spectre/ROUTER.md`,
 or the installation explicitly named in the request. Ask when several installations match. Require
-the pinned `runtime/SPECTRE-PROTOCOL.md`; check its metadata and SHA-256 with local tools. Verify
-Runtime-Version and Source-SHA256 in each loaded module. Missing/stale files block ordinary work;
-never implicitly install, regenerate, repair or upgrade. Explicit upgrade reads the target release
-and follows its procedure; it does not follow a moving mirror.
+the installed `runtime/SPECTRE-PROTOCOL.md`; check its metadata and SHA-256 with local tools. Verify
+Protocol-Version and Source-SHA256 in each loaded module. Missing/stale files block ordinary work;
+never implicitly install, regenerate, repair or upgrade. Only an explicit upgrade fetches the latest
+protocol and follows its upgrade procedure.
 
 Always load `runtime/modules/core.md`. Resolve natural language to supported operations, not exact
 command wording. For several operations, deferred outputs, a human decision checkpoint or a reply to
@@ -505,14 +495,14 @@ All paths below are relative to `.agents/spectre/runtime/modules/`.
 | accept / reject / cancel | commands/decide.md | selectors.md, references.md, publication.md, validation.md |
 | archive | commands/archive.md | selectors.md, references.md, history.md, publication.md, validation.md, templates/TEMPLATE_STATUS.md; providers.md, validation-evidence.md and templates/TEMPLATE_PROVIDER.md for provider archive |
 | capture | commands/capture.md | selectors.md, references.md, publication.md, providers.md, validation.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md |
-| upgrade | commands/upgrade.md | Target release completely; publication.md, references.md, history.md, validation.md, validation-full.md |
+| upgrade | commands/upgrade.md | Latest protocol completely; commands/override.md, publication.md, references.md, providers.md, validation.md, validation-full.md, validation-evidence.md, the three latest templates |
 | override | commands/override.md | selectors.md, references.md, history.md, publication.md, validation.md |
 | host add / remove | commands/host.md | None |
 
 Read the matching canonical templates for each record/schema being checked. Provider consumption
 always loads providers.md, validation-evidence.md and the provider template. Read-only operations
 report issues without repair. Section numbers identify source locations; they do not require a
-full-standard read for routine operations.
+full-protocol read for routine operations.
 
 Before every mutation, verify canonical scope and current state and follow publication.md. Apply
 repository guidance; targets describe ownership, not blanket authorization to edit their paths.
@@ -620,7 +610,7 @@ This repository uses the SPECTRE protocol:
 
 
 If the section already exists, merge the missing bullets into it. Never duplicate the heading,
-replace the entire file, reorder unrelated instructions, or paste this complete standard into
+replace the entire file, reorder unrelated instructions, or paste this complete protocol into
 `AGENTS.md`.
 
 ### Required bootstrap installation record
@@ -656,14 +646,14 @@ SPECTRE.md
 └── spectre/
     ├── ROUTER.md                   # command router (not a skill)
     ├── runtime/                    # everything agents read and nobody edits
-    │   ├── SPECTRE-PROTOCOL.md     # the pinned standard; the only file here
+    │   ├── SPECTRE-PROTOCOL.md     # the installed protocol; the only file here
     │   └── modules/                # all generated from the protocol; never edited
     │       ├── core.md                # activation, shared checks, authority, lifecycle
     │       ├── queues.md              # several operations, checkpoints, stop and resume
     │       ├── selectors.md
     │       ├── references.md          # layout, boundary, targets, current inputs
     │       ├── history.md             # immovable evidence, archives, archived references
-    │       ├── providers.md           # provider pins and capture schemas
+    │       ├── providers.md           # provider pins and capture format
     │       ├── publication.md         # write order, interrupted writes, parallel branches
     │       ├── validation.md          # record checks used by every workflow
     │       ├── validation-full.md     # installation and archive checks
@@ -867,7 +857,7 @@ An interrupted operation leaves one of these states. `check` reports each with i
 | `ARCHIVE.md` whose rows are still live or whose originals still exist byte-identical | Archive stopped after its commit point | Safe sync removes those live rows, then those originals |
 | Numbered capture directory without `SNAPSHOT.md` that nothing references | Capture stopped before its commit point | Safe sync removes the unpublished directory |
 | Runtime files whose Source-SHA256 differs from the installed protocol | Install or upgrade stopped | Repeat the same explicit install or upgrade |
-| Ledger Protocol-Version that differs from the installed protocol's version | Upgrade stopped before its commit point | Repeat the same explicit upgrade; it skips records already migrated |
+| Ledger Protocol-SHA256 that differs from the installed protocol's SHA-256 | Upgrade stopped before its commit point | Repeat the explicit upgrade; it skips files already in the current formats |
 
 Anything else, such as a row changed by two writers, unexpected bytes or a missing record, is a
 structural blocker. The human restores it from version control or orders an explicit scoped override.
@@ -912,13 +902,14 @@ archived copy and are otherwise kept as is. Numbered evidence
 and hashes provide stable inputs without requiring a Git-only history store. New provider updates
 never overwrite those files.
 
-### Capture schema versions
+### Capture format
 
-A capture, like an archive, is governed by the protocol release that created it. Validate it under
-the rules of its own `Provider-Snapshot-Version` and never rewrite it to match newer rules. It stays
-a valid predecessor and artifact owner for later captures, and its number counts in the
-provider-local sequence. If an earlier capture's rules or inventory cannot be resolved, report a
-blocker instead of guessing.
+Every live capture follows the installed protocol's provider template. Only an explicit upgrade
+(§14) rewrites existing PROVIDER.md, SNAPSHOT.md and CAPTURE.md files to a newer format, as a
+human-ordered override that recomputes their hashes and every live pin, predecessor and reuse
+reference to them. Artifact files are captured provider data, not SPECTRE format, and are never
+rewritten. If an earlier capture's inventory cannot be resolved, report a blocker instead of
+guessing.
 
 <!-- /spectre:runtime -->
 
@@ -926,7 +917,9 @@ blocker instead of guessing.
 ### Immovable evidence
 
 Published capture directories, their files, and every record file keep their path forever. Never
-rename, move, or rewrite them, including to adopt a new naming scheme. Before deleting, merging, or
+rename, move, or rewrite them, including to adopt a new naming scheme. The only content rewrite is
+an explicit upgrade (§14), which brings live records and provider files to the current formats in
+place and never changes a path or an artifact file. Before deleting, merging, or
 moving an installation, run full §13 validation and preserve its tracking/evidence dependencies.
 Moving an owned source directory within the same installation changes its target Path through
 `target move`; that operation does not move evidence or immutable record files.
@@ -974,7 +967,7 @@ Choose targets using these rules:
 - When two plausible models would assign the same source to different targets, stop before
   creating target directories and ask a human to choose.
 
-Choose the storage mode and target layout during installation. This release does not define
+Choose the storage mode and target layout during installation. This protocol does not define
 in-place conversion between layouts or historical target-ID renaming. Terminal records retain their original paths except for
 the explicit archive relocation defined in §9; their logical identity and original path remain recorded.
 <!-- /spectre:runtime -->
@@ -982,7 +975,7 @@ the explicit archive relocation defined in §9; their logical identity and origi
 <!-- spectre:runtime core.md -->
 ### Shared runtime checks
 
-Runtime modules are rules from the pinned local protocol; loading one does not invoke its command.
+Runtime modules are rules from the installed local protocol; loading one does not invoke its command.
 Preserve the installed flat/nested layout. Logical IDs are `target/NNNN` (four digits); slugs match
 `^[a-z0-9]+(?:-[a-z0-9]+)*$`. In flat mode the target is the repository slug and record files live
 directly in `implementations/`; nested mode uses `implementations/<target>/`. Root `SPECTRE.md` is
@@ -1004,7 +997,7 @@ Within an installed repository, apply this order when instructions conflict:
 1. System, platform, and current human instructions.
 2. The closest applicable repository agent instructions.
 3. Repository governance, security policy, and active architecture decisions.
-4. This `.agents/spectre/runtime/SPECTRE-PROTOCOL.md` standard.
+4. This `.agents/spectre/runtime/SPECTRE-PROTOCOL.md` protocol.
 5. The templates under `.agents/spectre/runtime/modules/templates/`.
 6. The selected target's instruction.
 7. Provider guides, captures, accepted results, and other declared evidence.
@@ -1083,8 +1076,8 @@ record and does not weaken the human-only rule for any later implementation.
 result (when present) are immutable, with two exceptions. An explicit `/spectre archive`
 operation under §9 moves record files without changing their bytes and transfers their ledger
 rows, rebasing only the Instruction and Result link destinations. State, ID, title, evidence mode,
-and decision proof remain unchanged. An explicit upgrade (§14) migrates live terminal records to
-the target release's formats and replaces each digest their proofs cite with the migrated result's
+and decision proof remain unchanged. An explicit upgrade (§14) rewrites live terminal records to
+the current formats and replaces each digest their proofs cite with the rewritten result's
 digest; state, ID, decision source, date and wording remain unchanged. Archiving is a storage operation, not a lifecycle state;
 there is no `ARCHIVED` state. Correct terminal content with a new local sequence that references
 the prior record. Git history alone is not a substitute for this rule.
@@ -1185,7 +1178,7 @@ record the blocker, and resolve it before claiming a valid binding or REVIEW com
 Follow the instruction's declared compatibility contract. Preserve published consumers where
 required; remove obsolete paths only when the bounded objective authorizes it. Never add
 speculative compatibility layers or silently break the declared public interface. Engineering style
-and design choices come from repository guidance, not from this standard.
+and design choices come from repository guidance, not from this protocol.
 <!-- /spectre:runtime -->
 
 <!-- spectre:runtime commands/implement.md -->
@@ -1194,7 +1187,7 @@ continuation authorized under §1, complete this workflow for one record:
 
 1. Require one matching active `PLANNED` row and instruction. Refuse missing, duplicate,
    terminal, or mismatched identities, and an instruction that does not satisfy the installed
-   release's instruction format, including one an upgrade marked for revision; it needs `revise`
+   protocol's instruction format, including one an upgrade marked for revision; it needs `revise`
    first. A previously recorded blocker must be resolved before dependent source work. Recheck required accepted inputs and provider integrity.
 2. Read the complete instruction, every declared input, any existing partial result, target
    source/tests, and current repository guidance. Inspect existing changes before editing.
@@ -1270,7 +1263,7 @@ For an explicit `/spectre revise <record>: <changes>` invocation (or its host-na
      requirements, validation, completion criteria, and exclusions where affected. Preserve its
      implementation ID and `Created` value. Preserve the Change ID for a requirement revised in
      place, allocate new IDs only for added requirements, and never reuse a removed ID. Bring an
-     instruction an upgrade marked for revision to the installed release's format, and drop that
+     instruction an upgrade marked for revision to the installed protocol's format, and drop that
      mark from its Decision or status cell.
    - Do not modify product source or tests, run implementation work, or create an empty result. If a
      partial result already exists, reconcile it with the revised instruction: preserve actual work
@@ -1507,10 +1500,9 @@ batches use:
 ```markdown
 # SPECTRE archive <archive-id>
 
-Archive-Version: v1
 Archive-ID: <archive-id>
 Created: YYYYMMDDTHHMMSSZ
-Protocol-Version: 1.0.0
+Protocol-Version: <Protocol-Version of the installed protocol>
 Kind: implementations
 Storage-Mode: <flat|nested>
 Scope: <sorted qualified record IDs>
@@ -1537,10 +1529,9 @@ Provider batches use:
 ```markdown
 # SPECTRE archive <archive-id>
 
-Archive-Version: v1
 Archive-ID: <archive-id>
 Created: YYYYMMDDTHHMMSSZ
-Protocol-Version: 1.0.0
+Protocol-Version: <Protocol-Version of the installed protocol>
 Kind: providers
 Scope: <sorted provider IDs>
 
@@ -1560,22 +1551,26 @@ is historical context, never a current-directory existence requirement on an arc
 
 The table format is canonical under §11. One batch contains implementations or providers, never
 both. A manifest has no section for waiving defects; a failed selected-record check stops the
-archive. A manifest written by another release is read under its own Archive-Version and
-Protocol-Version; never rewrite a manifest into a newer schema.
+archive. Protocol-Version is provenance only. A manifest written under an earlier protocol keeps
+its original format; never rewrite it into the current one.
 <!-- /spectre:runtime -->
 
 
 <!-- spectre:runtime history.md -->
 ### Archives are kept as is
 
-Archives preserve history under the schemas that created them. Ordinary maintenance does not
-rewrite, reformat or refresh their records, manifests, source links or digests. Their identity
+Archives are frozen. Neither ordinary maintenance nor upgrade (§14) rewrites, reformats or
+refreshes their records, manifests, source links or digests, and they are never checked against
+the current formats. Earlier protocol texts are not kept: read an archive created under an earlier
+protocol by its identity headers, rows and Record paths, as written. Because upgrade rewrites live
+files in place, a digest an archived record cites for a live capture or record may no longer match;
+that is information, not damage. Their identity
 headers and row IDs, terminal states and decision proofs remain authoritative; original-path maps
 locate records without rewriting them. Missing/changed historical files or stale source navigation
 are information for status/recall, not automatic authority to repair or invalidate a decision.
 
 A live operation declaring an archived result as a normative input must still obtain that exact
-input, confirm its accepted identity/schema and verify recorded digests when available. Missing or
+input, confirm its accepted identity and verify recorded digests when available. Missing or
 altered required evidence blocks that consumer; it does not erase the historical row. Never replace
 missing evidence with Git history or a similar file silently. Explicit scoped overrides remain the
 only exception to historical immutability and must preserve affected live references.
@@ -1652,17 +1647,15 @@ requirements after the canonical content but may not weaken it.
 ````markdown
 # Ledger and target registry
 
-Status-Template-Version: v1
-
 Root SPECTRE.md is the sole live lifecycle ledger and the target registry. Archive manifests own
 archived decision rows.
 
 ```markdown
 # SPECTRE implementations
 
-Protocol-Version: 1.0.0
+Protocol-Version: <Protocol-Version of the installed protocol>
+Protocol-SHA256: <SHA-256 of the installed protocol>
 Protocol: [.agents/spectre/runtime/SPECTRE-PROTOCOL.md](.agents/spectre/runtime/SPECTRE-PROTOCOL.md)
-Status-Schema-Version: v1
 Storage-Mode: <flat|nested>
 
 This is the sole live lifecycle ledger and target registry. Archived rows live in .agents/spectre/archive/ manifests.
@@ -1736,8 +1729,6 @@ A ledger whose records are all archived therefore keeps its metadata, introducti
 ````markdown
 # Implementation instruction and result workflow
 
-Implementation-Workflow-Version: v1
-
 Sequences are four digits and begin at `0001`. Flat mode has one repository-wide sequence;
 monorepo mode has one independent sequence per target. Both modes allocate IDs above the highest
 active or archived ID in their sequence. Archiving never resets numbering.
@@ -1755,7 +1746,6 @@ mode, and the human installation request is its decision proof.
 ```markdown
 # <Target> implementation <NNNN> instruction
 
-Implementation-Version: v1
 Implementation-ID: <target>/<NNNN>
 Target-Path: ./<owned-directory>/
 Created: YYYYMMDDTHHMMSSZ
@@ -1814,7 +1804,6 @@ its ledger stays `PLANNED`. Do not create an empty result during planning.
 ```markdown
 # <Target> implementation <NNNN> result
 
-Result-Version: v1
 Implementation-ID: <target>/<NNNN>
 Instruction: ./<NNNN>-IMPL-INSTR.md
 Evidence-Mode: <DIRECT|DERIVED|HYBRID|LOCAL>
@@ -1859,13 +1848,11 @@ including for every item in a sequential batch.
 ````markdown
 # Provider information and numbered incremental captures
 
-Provider-Workflow-Version: v1
-
 A provider is not versioned. PROVIDER.md explains its purpose, authority and sources. Each numbered
 capture directory contains a frozen SNAPSHOT.md specification, an advisory CAPTURE.md summary, and
 only the artifact files newly stored by that capture. The first baseline stores all selected
 artifacts. Later captures reuse earlier immutable files through explicit inventory references.
-Provider-Snapshot-Version and Provider-Capture-Version identify document schemas, not providers.
+Only an explicit upgrade rewrites a published SNAPSHOT.md or CAPTURE.md, and never an artifact.
 
 ## Provider guide
 
@@ -1905,7 +1892,6 @@ to each SNAPSHOT.md, never to the guide or summary. Later guide edits cannot rei
 ```markdown
 # <Provider> snapshot <NNNN>
 
-Provider-Snapshot-Version: v1
 Provider: <provider>
 Snapshot: <NNNN>
 Created: YYYYMMDDTHHMMSSZ
@@ -1982,9 +1968,8 @@ The logical inventory describes the entire effective snapshot, including unchang
 not merely a delta list. Physical references are explicit regular-file paths from the provider
 root, either inside this capture's artifacts/ or inside an earlier same-provider capture's
 artifacts/. Resolve them directly, never via latest aliases, symlinks, hardlinks or patch replay.
-Every reused file must be owned by a hash-pinned earlier snapshot and match its size/hash. Earlier
-snapshots may come from an earlier protocol version. Predecessor references strictly decrease;
-artifact owners never point forward. Do not consult today's guide to interpret a past specification.
+Every reused file must be owned by a hash-pinned earlier snapshot and match its size/hash.
+Predecessor references strictly decrease; artifact owners never point forward. Do not consult today's guide to interpret a past specification.
 
 Source and artifact inventories must agree through the declared mapping, using independently
 complete source enumeration. File-download counts alone do not establish completeness. Reject
@@ -2021,7 +2006,6 @@ files; record exact zero counts and omit artifacts/ when empty. Do not copy evid
 ```markdown
 # <Provider> capture <NNNN> summary
 
-Provider-Capture-Version: v1
 Provider: <provider>
 Capture: <NNNN>
 Snapshot: SNAPSHOT.md
@@ -2105,11 +2089,11 @@ preparation is a reported no-op and capture uses it; never overwrite or silently
 
 PROVIDER.md explains source authority, tracking and maintained-consumer context. Each numbered
 SNAPSHOT.md owns the complete specification and resolved inventory; CAPTURE.md summarizes only
-that capture. All published capture files remain immutable. Load core, selectors, references,
+that capture. Published capture files are immutable outside an explicit upgrade (§14). Load core, selectors, references,
 providers, the provider template, validation and evidence checks, repository guidance, the guide and
 applicable snapshots.
-Reconcile every numbered directory and guide entry; never trust a latest link alone. Captures
-from earlier versions remain valid baselines without rewriting them (`providers.md`).
+Reconcile every numbered directory and guide entry; never trust a latest link alone. Every live
+capture follows the installed provider template (`providers.md`).
 
 ### Discovery and comparison
 
@@ -2189,8 +2173,8 @@ states. Never treat an earlier conversation report as a verified current source 
   commit, push, create plans, change implementation state or begin product work. A later explicitly
   queued item begins only after this capture has stopped successfully.
 
-Every published numbered capture is immutable. Fixes require a separately authorized new capture
-with an honest comparison, not edits to old files. Plans pin the chosen snapshot and artifact
+Every published numbered capture is immutable except for an explicit upgrade's format rewrite (§14).
+Fixes require a separately authorized new capture with an honest comparison, not edits to old files. Plans pin the chosen snapshot and artifact
 hashes. Keep earlier referenced captures available; Git history is not a replacement for these
 physical dependencies. Planning still requires its own `/spectre plan <target>: <objective>` or an
 explicitly stated, separately executed plan item in a compound queue.
@@ -2244,7 +2228,7 @@ pins, or interrupted writes outside that table.
 Corrections elsewhere proceed; report every blocker. A scoped sync never masks blockers in its
 dependency closure. Beyond those safe states, do not
 add/reconstruct/delete record rows, register/retire/reactivate targets, infer REVIEW or acceptance,
-move files, archive work, garbage-collect evidence, reset counters, upgrade schemas/runtime, or
+move files, archive work, garbage-collect evidence, reset counters, upgrade formats/runtime, or
 rewrite terminal records. Known formatting corrections cannot excuse structural errors.
 <!-- /spectre:runtime -->
 
@@ -2255,13 +2239,13 @@ Validation is mandatory within every operation; a separate check is optional rea
 never a prerequisite command. Install, upgrade and unscoped check validate the complete installation.
 Routine writes, including archive, validate the affected dependency closure and shared identity
 indexes without revalidating unrelated evidence. Full validation re-extracts every runtime module
-and template byte-for-byte. Scoped validation verifies loaded module headers and selected schemas,
+and template byte-for-byte. Scoped validation verifies loaded module headers and selected formats,
 states, inputs, containment and references. Report the exact checked scope, never imply a full pass
 from a scoped check. Always verify the final affected records before reporting success.
 
 Read the canonical status/implementation/target templates for matching checks; provider consumption
-loads its template, providers.md and validation-evidence.md. Archives and captures written by another
-release use their own documented schemas. Missing normative evidence blocks its consumer;
+loads its template, providers.md and validation-evidence.md. Live files follow the installed
+templates; archives are read as written. Missing normative evidence blocks its consumer;
 stale historical source links alone do not invalidate terminal decisions.
 
 Every applicable failed invariant blocks the selected write except the exact mechanically
@@ -2276,7 +2260,7 @@ Checks below are split between this module (records/references/operations), vali
 <!-- spectre:runtime validation-full.md -->
 **Installation**
 
-1. Runtime: all 25 modules equal marked source extraction, including installed version/source hash.
+1. Runtime: all 25 modules equal marked source extraction, including installed Protocol-Version/source hash.
    Templates match §11 byte-for-byte. Full checks verify bodies, not just headers.
 2. Layout of rules: runtime/ contains only SPECTRE-PROTOCOL.md and modules/; modules/ contains only
    extracted modules and templates/. Three canonical templates exist. ROUTER.md is the only
@@ -2291,10 +2275,10 @@ Checks below are split between this module (records/references/operations), vali
 7. Bootstrap: exactly one accepted flat target/0001 or nested repository/0001 installation row exists
    in live or archived history. Active bootstrap has its matching instruction/result and human
    installation proof; an empty live ledger never authorizes another bootstrap.
-8. Storage: one root SPECTRE.md uses Status-Schema-Version v1 and the selected flat/nested layout.
+8. Storage: one root SPECTRE.md whose Protocol-Version and Protocol-SHA256 equal the installed protocol's, in the selected flat/nested layout.
    Implementation subsections exist exactly for targets with live rows; every target identity used
    by live or archived records has a Targets row. No target-local ledger
-   or mixed flat/nested active storage. Archives retain their original layout/schema.
+   or mixed flat/nested active storage. Archives retain their original layout and format.
 9. Installation changes only tracking structure and its pointer; no product implementation.
 <!-- /spectre:runtime -->
 
@@ -2304,7 +2288,7 @@ Checks below are split between this module (records/references/operations), vali
 10. Format: the ledger and new manifest tables use §11 canonical delimiters/columns; Targets rows
     and implementation subsections are unique and sorted; subsections are populated and name ACTIVE
     targets. Historical
-    manifest table syntax is read under its original version, never normalized by sync.
+    manifest table syntax is read as written, never normalized by sync or upgrade.
 11. Identity: valid target/provider slugs and four-digit IDs; no new target is all/implementations/
     providers. Each record ID has one authoritative live or archived row. Sequence allocation scans
     live records and manifest indexes, never fills gaps or reuses published IDs. Duplicate IDs from
@@ -2318,7 +2302,7 @@ Checks below are split between this module (records/references/operations), vali
 14. Completion: implementation-complete reports have matching results, actual required validation,
     and REVIEW or a later human decision. Partial work states its real checks and blockers.
 15. Immutability: terminal record bytes and decisions remain unchanged except authorized archive
-    relocation, upgrade migration of live records (§14) or explicit override. Every live ACCEPTED or REJECTED row's recorded digests match its
+    relocation, an upgrade's rewrite of live records (§14) or explicit override. Every live ACCEPTED or REJECTED row's recorded digests match its
     current result bytes; a mismatch is a structural blocker. Source renames do not rewrite terminal
     inputs/history.
 
@@ -2345,7 +2329,7 @@ Checks below are split between this module (records/references/operations), vali
 21. Guides: unversioned purpose, authority, official sources, tracking, boundaries and consumer
     guidance; no provider-version directory or capture specification duplicated in the guide.
 22. Captures: snapshots own complete specification/inventory and hash their advisory capture summary;
-    no self-hashing cycles. Captures from another release keep their own schema requirements.
+    no self-hashing cycles. Live captures follow the installed provider template.
 23. Inventory: exact membership, regular files, sizes/hashes, unique safe paths; decreasing acyclic
     predecessor/owner references within the same provider; no forward/cross-provider ownership.
 24. Counts: effective/new/reused/artifact/corpus/case counts and independent source enumeration agree.
@@ -2357,19 +2341,19 @@ Checks below are split between this module (records/references/operations), vali
     uncertainty; advisory content never authorizes execution or claims unsupported parity.
 27. Outcomes: NO-CHANGE has no tracked writes or ID; CAPTURED commits a new immutable capture and
     optional guide index update together; BLOCKED never masquerades as upstream removal/no change.
-28. Retention: earlier captures keep their schemas/bytes. No live record pins an archived provider;
+28. Retention: earlier captures keep their paths and artifact bytes. No live record pins an archived provider;
     no live capture reuses an archived predecessor/owner. Only whole-provider archive moves evidence.
 <!-- /spectre:runtime -->
 
 <!-- spectre:runtime validation-full.md -->
 **Archive indexes**
 
-29. Manifest identity: each archive has readable version/ID/kind headers and lifecycle or provider
+29. Manifest identity: each archive has readable ID/kind headers and lifecycle or provider
     index rows. IDs match directory names and remain
     unique. Implementation rows retain terminal state and decision proof.
-30. Version: archives use the schema that created them. Do not rewrite or rejudge their record bytes,
-    paths, table syntax or hashes under a newer release. Read indexes needed for identity, decisions
-    and numbering.
+30. Frozen: archives keep the format that created them. Do not rewrite or rejudge their record bytes,
+    paths, table syntax or hashes under the current protocol. Read indexes needed for identity,
+    decisions and numbering.
 31. Historical files: missing/broken/changed archived content is informational for historical status;
     a consumer requiring that content must still validate its own normative input. Do not fabricate
     evidence to make a historical archive complete.
@@ -2392,7 +2376,7 @@ Checks below are split between this module (records/references/operations), vali
 37. Publication: writes follow publication.md; a commit point is written last. Interrupted states are
     reported with their next action; only the states marked safe sync are completed automatically.
 38. Sync: only the exhaustive safe corrections in commands/sync.md occur; no missing rows/records
-    reconstructed, no state inferred, no evidence/history deleted, no schema upgraded implicitly.
+    reconstructed, no state inferred, no evidence/history deleted, no format upgraded implicitly.
 39. Targets: the ledger's Targets table uniquely owns IDs, labels, current paths, status and reasons.
     Removing an empty implementation subsection never removes a Targets row or frees its ID.
 
@@ -2402,68 +2386,68 @@ contracts; human acceptance remains a separate explicit decision. Never report c
 
 
 
-## 14. Versioning
+## 14. Upgrade
 
-SPECTRE uses semantic versioning. Published release directories and canonical URLs are immutable;
-changes produce a new release. Installed bytes remain pinned until an explicit upgrade. Protocol
-versions and document schemas are distinct. Release 1.0.0 defines Status-Schema v1 (ledger and
-targets), Archive-Version v1, Implementation-Version v1, Result-Version v1 and the v1 provider schemas.
-A later release changes a schema version only when that format changes, and then defines the
-mechanical migration of the live ledger and live records from the previous release. Archives and
-provider captures are frozen: they remain readable under the schema that created them and are never
-migrated. Live records are migrated by an explicit upgrade; archive terminal work first to keep its
-original bytes.
+Only the latest protocol is published; earlier versions are not kept. `Protocol-Version` is a
+label for humans: a publication may update the protocol under the same version. The protocol's
+SHA-256 identifies its exact bytes, and the ledger's Protocol-SHA256 records which bytes the live
+files follow. An installation keeps its installed bytes until an explicit upgrade. Documents carry no schema versions of their own: live files always follow the installed
+protocol's templates, and an upgrade brings them to the latest. Archives are frozen and never
+upgraded.
 
-| Release | Permitted change | Adoption |
-| --- | --- | --- |
-| Patch | Wording only; no format, rule or required-check change | Explicit verified refresh |
-| Minor | Optional additions compatible with existing records | Explicit verified refresh |
-| Major | Required formats, rules or checks | Explicit upgrade that migrates the live ledger and records; open work it cannot complete is marked for revision |
-
-Never edit a published protocol, hand-edit generated runtime, infer acceptance during migration,
-or rewrite archives or captures to make them match the newest format.
+Never hand-edit generated runtime, infer acceptance during an upgrade, or rewrite archives.
 
 <!-- spectre:runtime commands/upgrade.md -->
 ### Upgrade procedure
 
-`upgrade <version>` or a clear natural-language request must name the target release and one
-installation. This is standalone setup, not a queue item or implicit sync. Read the complete target
-release and verify Standard-ID, version, canonical URL and exact canonical bytes (§2). Upgrade each
-installation separately; a source-release edit never upgrades adopting repositories. The target
-release governs: when it defines its own migration steps, follow them in place of these.
+`/spectre upgrade` or a clear natural-language request upgrades one installation to the latest
+published protocol. It is a human-ordered override (commands/override.md) whose scope is fixed: the
+generated files and every live SPECTRE file. It is standalone, never a queue item or implicit sync,
+and only the current human may order it.
 
-1. Read the current installation metadata, runtime, ledger, all manifest indexes and
-   active records. Run full current-version validation without changing files. Report conflicts,
-   interrupted writes and missing evidence, and resolve blockers explicitly before writing.
-2. Recommend that the human commit or otherwise back up the installation first. Version control is
-   the rollback path.
-3. Report the exact change before writing: generated files replaced, schema versions, ledger
-   changes, live records to migrate with the proof digests that will change, records to be marked
-   for revision, frozen archives and captures, and any human blockers. Note that archiving terminal
-   work first keeps its original bytes. A routine unambiguous upgrade is covered by the upgrade
-   request and needs no further confirmation.
-4. Migrate the live ledger and every live record (PLANNED, REVIEW and terminal) to the target
-   release's formats, applying the migration each intervening release defines in release order. A
-   release that changes no format migrates nothing. Migration is mechanical and never invents
-   content: a required field it cannot derive reads `Not recorded in the original instruction.` or
-   `Not recorded in the original result.` A PLANNED instruction left without implementation-ready
-   content stays PLANNED, and its Decision or status cell begins `Needs revise after upgrade to
-   <version>.` In ACCEPTED and REJECTED proofs, replace each cited digest of a migrated result with
-   its new digest; the decision source, date and wording stay. Preserve IDs, states, numbering,
-   archives, provider captures and guides byte for byte. A major version alone never justifies
-   closing work or forcing records into archives. Pending checkpoints are invalidated and must be
-   refreshed.
-5. Write the target protocol, then its extracted modules and three templates, then the router and the
-   SPECTRE section of AGENTS.md, then each migrated live record, and finally the migrated ledger with
-   its Protocol-Version and schema metadata in one write, the commit point. Records already in the
-   target formats are left as they are, so repeating an interrupted upgrade completes it.
-   Rewrite host adapters that already exist to the target pointer; never add absent ones. Remove
-   obsolete generated runtime files; preserve human-owned files and unrelated AGENTS.md instructions.
-6. Validate the complete installation under the target release. Compare every generated byte, every
-   row's identity, state and decision source, and every numbering maximum with step 1. An
-   interrupted upgrade is completed by running the same upgrade again. Report old and new versions,
-   changed paths, migrated records with old and new digests, records marked for revision, frozen
-   history and checks, and tell humans to reload changed host adapters.
+1. Fetch `https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md` completely, or use a protocol file
+   the human supplies, and require `Protocol-ID: xray/spectre` and a `Protocol-Version` line. If its
+   SHA-256 equals both the installed protocol's and the ledger's Protocol-SHA256, report that the
+   installation is current and stop. The same Protocol-Version with a different SHA-256 still
+   upgrades.
+2. Read the installation metadata, runtime, ledger, archive indexes, every live record and every
+   provider guide and capture. Run full validation under the installed protocol without changing
+   files; when an earlier upgrade was interrupted (publication.md), continue it under the protocol
+   it already wrote. Report conflicts, interrupted writes and missing evidence, and resolve blockers
+   explicitly before writing.
+3. Recommend that the human commit first. Version control is the rollback path.
+4. Report the exact scope before writing: generated files replaced, ledger changes, live records to
+   rewrite with the proof digests that will change, records to be marked for revision, provider
+   guides and captures to rewrite with the snapshot hashes and pins that will change, and any human
+   blockers. The upgrade request authorizes this scope; it needs no further confirmation.
+5. Rewrite every live file to the latest templates, keeping its meaning:
+   - Never invent content. A required field that cannot be derived reads `Not recorded in the
+     original instruction.`, `Not recorded in the original result.` or `Not recorded in the original
+     capture.`
+   - A PLANNED instruction left without implementation-ready content stays PLANNED, and its Decision
+     or status cell begins `Needs revise after upgrade to <Protocol-Version>.`
+   - Preserve IDs, states, numbering, paths, decision sources, dates and wording, and every artifact
+     file. In ACCEPTED and REJECTED proofs, replace each cited digest of a rewritten result with its
+     new digest.
+   - Never close work, archive records or providers, or touch `archive/`. Pending checkpoints are
+     invalidated and must be refreshed.
+6. Write in this order. First the protocol, its extracted modules and three templates, the router
+   and the SPECTRE section of AGENTS.md; rewrite host adapters that already exist and never add
+   absent ones; remove obsolete generated runtime files. Then, provider by provider in ascending
+   capture order, each CAPTURE.md and its SNAPSHOT.md with recomputed summary, predecessor and
+   reuse hashes, then the PROVIDER.md guide. Then each live instruction, with its pins updated, and
+   each live result. Finally the ledger with its rewritten rows, cited digests, new
+   Protocol-Version and new Protocol-SHA256 in one write, the commit point. Files already in the latest formats are left as
+   they are, so repeating an interrupted upgrade completes it.
+7. Append one override log row per changed, created or removed file (commands/override.md), with the
+   human's verbatim command and the reason `upgrade <old version>@<old sha12> → <new version>@<new sha12>`, where sha12 is the
+   first 12 hexadecimal characters of the protocol's SHA-256.
+8. Validate the complete installation under the latest protocol. Compare every row's identity, state
+   and decision source, and every numbering maximum, with step 2. Report the old and new versions
+   and SHA-256, changed files, rewritten records with old and new digests, rewritten captures with
+   old and new snapshot hashes, records marked for revision and the checks run. Tell humans to
+   reload changed host adapters and propose the commit message
+   `SPECTRE upgrade <old version>@<old sha12> → <new version>@<new sha12>`. Do not commit.
 <!-- /spectre:runtime -->
 
 
@@ -2475,7 +2459,7 @@ Removal requires an explicit human setup request; it is never an automatic clean
 2. Archive or export accepted/rejected records and provider licenses if they must remain
    accessible.
 3. Remove only the SPECTRE bullets from `AGENTS.md`; preserve the rest of that file and other
-   repository standards.
+   repository guidance.
 4. Remove `.agents/spectre/` and every SPECTRE adapter (§2), such as `.agents/skills/spectre/`,
    only after a human confirms every exact path.
 5. Do not remove product source, tests, documentation, or unrelated files.
@@ -2485,7 +2469,7 @@ If any consumer still links to the records, prefer a deprecation notice or archi
 ## 16. Tools
 
 A SPECTRE tool is a program a human runs, such as a command-line interface or a local web page, that
-reads and writes an installation without an agent. Tools are optional: agents follow this standard
+reads and writes an installation without an agent. Tools are optional: agents follow this protocol
 without them, and the Markdown files remain the only state.
 
 Deterministic operations need no interpretation and may be implemented by a tool: `status`, `check`,
@@ -2496,8 +2480,8 @@ and need an agent or a human.
 
 A conforming tool:
 
-1. Locates the installation by `.agents/spectre/ROUTER.md`, verifies the pinned protocol's
-   Standard-ID, Standard-Version and SHA-256, and refuses releases it does not support.
+1. Locates the installation by `.agents/spectre/ROUTER.md`, verifies the installed protocol's
+   Protocol-ID, Protocol-Version and SHA-256, and refuses versions it does not support.
 2. Follows the same runtime rules as an agent for each operation it implements and leaves the same
    files an agent would, in publication order (§3). It may use an advisory lock or atomic rename
    internally, but writes no additional SPECTRE files.
@@ -2515,7 +2499,7 @@ A conforming tool:
 ## 17. Compact operating model
 
 ```text
-install verified pinned release → register bootstrap → accepted installation record
+install latest protocol → register bootstrap → accepted installation record
 
 human asks SPECTRE in natural language or commands
         ↓
