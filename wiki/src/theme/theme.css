@@ -270,12 +270,11 @@ html:root:is(.rp-dark, .dark) .rp-sidebar-item--pending {
   color: color-mix(in srgb, var(--xr-link) 60%, var(--spectre-sidebar-item));
 }
 
-/* The current page: link color and weight, no fill, also on hover. */
+/* The current page: link color at the items' regular weight, no fill, also on hover. */
 html .rp-sidebar-item--active,
 html .rp-sidebar-item--active:hover {
   color: var(--xr-link);
   background: transparent;
-  font-weight: 700;
 }
 
 html .rp-sidebar-item[data-context="spectre-version"] {
@@ -1350,8 +1349,3 @@ html .rp-doc-layout__sidebar::after {
 
 @keyframes wiki-sidebar-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes wiki-sidebar-fade-out { from { opacity: 1; } to { opacity: 0; } }
-
-/* The current section in the top bar: bold, like the current page in the sidebar. */
-html .rp-nav-menu__item--active .rp-nav-menu__item__container {
-  font-weight: 700;
-}
