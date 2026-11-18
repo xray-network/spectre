@@ -243,39 +243,38 @@ html .rp-sidebar-item {
   border-radius: 6px;
   color: var(--spectre-sidebar-item);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 24px;
+  /* A group's chevron follows its text instead of sitting at the far right; the row stays full width. */
+  justify-content: flex-start;
+  gap: 4px;
 }
 
-html .rp-sidebar-item__left {
-  gap: 10px;
-}
-
+/* The sidebar is text only: no item icons, even if one is configured. */
 html .rp-sidebar-item__icon {
-  flex: 0 0 14px;
-  width: 14px;
-  height: 14px;
-  opacity: .85;
+  display: none;
 }
 
-html .rp-sidebar-item__icon svg {
-  stroke-width: 2;
-}
-
-html .rp-sidebar-item--active .rp-sidebar-item__icon {
-  opacity: 1;
-}
-
+/* Hover: no fill, the text turns a softer blue (the link color mixed toward the canvas, so it reads as less
+   contrast in both themes). The current page keeps the full link blue. */
 html .rp-sidebar-item:hover,
 html .rp-sidebar-item--pending {
-  color: var(--xr-fg-secondary);
-  background: var(--xr-chip);
+  color: color-mix(in srgb, var(--xr-link) 65%, var(--rp-c-bg));
+  background: transparent;
 }
 
+/* On dark the canvas is near black, so mixing toward it darkens the blue; mix toward the items' own light text
+   instead, for a soft lighter blue. */
+html:root:is(.rp-dark, .dark) .rp-sidebar-item:hover,
+html:root:is(.rp-dark, .dark) .rp-sidebar-item--pending {
+  color: color-mix(in srgb, var(--xr-link) 60%, var(--spectre-sidebar-item));
+}
+
+/* The current page: link color and weight, no fill, also on hover. */
 html .rp-sidebar-item--active,
 html .rp-sidebar-item--active:hover {
   color: var(--xr-link);
-  background: var(--xr-selection-bg);
+  background: transparent;
   font-weight: 700;
 }
 
@@ -387,14 +386,15 @@ html :where(a, button, input):focus-visible {
     top: calc(var(--rp-nav-height) + var(--rp-banner-height, 0px));
     height: calc(100dvh - var(--rp-nav-height) - var(--rp-banner-height, 0px));
     max-height: calc(100dvh - var(--rp-nav-height) - var(--rp-banner-height, 0px));
-    /* Item and section-header text starts 12px inside; pull it back in line with the nav logo. */
-    margin: 0 0 0 -12px;
+    /* Item and section-header text starts 12px inside; pull it back in line with the nav logo. The negative top
+       margin is Rspress's own: on middle widths it lifts the sidebar over the "Menu / On this page" bar, so it
+       starts right under the main top bar (the bar has no height on wide screens, so nothing moves there). */
+    margin: calc(-1 * var(--rp-sidebar-menu-height, 0px)) 0 0 -12px;
     left: auto;
-    /* 12px on the right keeps item fills off the border, where no scrollbar gutter does it;
-       12px at the bottom keeps the version tag (and the last item when the list scrolls) off the edge. */
+    /* 12px on the right keeps item fills off the content; 12px at the bottom keeps the last item off the edge
+       when the list scrolls. No border: the sidebar and the content share the canvas. */
     padding: 32px 12px 12px 0;
     border: 0;
-    border-right: 1px solid var(--xr-border);
     border-radius: 0;
     background: transparent;
   }
@@ -1207,4 +1207,151 @@ html .rp-doc .spectre-fields__row > p {
   html .rp-doc .spectre-fields__row > summary code { grid-column: 1; }
   html .rp-doc .spectre-fields__row > summary::after { grid-column: 2; grid-row: 1 / span 2; }
   html .rp-doc .spectre-fields__row > :not(summary) { padding-left: 1rem; }
+}
+
+/* Middle widths: the sidebar lies over the second bar, so it needs a solid background. */
+@media (min-width: 769px) and (max-width: 1279px) {
+  html .rp-doc-layout__sidebar {
+    background: var(--rp-c-bg);
+  }
+}
+
+/* Left sidebar rail: a 1px gray line on the logo's left edge, 16px short of the top bar and of the bottom. It is a
+   background line (shadows are off site-wide), fixed to the sidebar's box, so it stays put as the list scrolls and
+   takes no space. Item and section text starts 16px to its right; the current page marks the rail with a 3px bar.
+   --wiki-rail-x: the rail's position inside the sidebar box. --wiki-bar-x: the bar's position inside an item. */
+html .rp-doc-layout__sidebar {
+  --wiki-rail-x: 12px;
+  --wiki-bar-x: 11px;
+  background-image: linear-gradient(var(--xr-border), var(--xr-border));
+  background-size: 1px calc(100% - 32px);
+  background-position: var(--wiki-rail-x) 16px;
+  background-repeat: no-repeat;
+}
+
+html .rp-sidebar-item--active {
+  position: relative;
+}
+
+html .rp-sidebar-item--active::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: var(--wiki-bar-x);
+  width: 3px;
+  background: var(--xr-link);
+}
+
+/* Desktop: the sidebar box starts 12px left of the logo, so text moves to rail + 16px. Rspress writes each item's
+   left padding inline (by depth), hence !important. */
+@media (min-width: 769px) {
+  html .rp-doc-layout__sidebar .rp-sidebar-section-header,
+  html .rp-doc-layout__sidebar .rp-sidebar-item[data-depth="0"] {
+    padding-left: 28px !important;
+  }
+  html .rp-doc-layout__sidebar .rp-sidebar-item[data-depth="1"] { padding-left: 44px !important; }
+  html .rp-doc-layout__sidebar .rp-sidebar-item[data-depth="2"] { padding-left: 60px !important; }
+}
+
+/* Phones: the drawer box starts at the screen edge and its items 20px in; the logo is 16px in, and the text is
+   already 16px past it. */
+@media (max-width: 768px) {
+  html .rp-doc-layout__sidebar {
+    --wiki-rail-x: 16px;
+    --wiki-bar-x: -5px;
+  }
+}
+
+/* Section titles stay at the top of the sidebar while their items scroll; the next title covers the previous one.
+   A stuck title needs a solid background, and it redraws its own piece of the rail so the line stays continuous. */
+html .rp-doc-layout__sidebar {
+  --wiki-sidebar-surface: var(--rp-c-bg);
+  --wiki-sidebar-pad-top: 32px; /* the sidebar's own top padding; a stuck title sits above it, at the real top */
+  --wiki-sidebar-pad-bottom: 12px;
+}
+
+html .rp-doc-layout__sidebar .rp-sidebar-section-header {
+  position: sticky;
+  top: calc(-1 * var(--wiki-sidebar-pad-top));
+  z-index: 2;
+  /* More room around the label, taken back by the margins: same place at rest; when stuck, 12px below the top bar
+     and a little air before the items sliding under it. */
+  margin-top: -8px;
+  margin-bottom: -4px;
+  padding-top: 12px;
+  padding-bottom: 8px;
+  /* Solid from just right of the rail: the rail column stays see-through, so the one fixed rail (the sidebar's
+     background) shows with its gaps, instead of a piece that would glue it to the top. */
+  background: linear-gradient(to right, transparent calc(var(--wiki-rail-x) + 1px), var(--wiki-sidebar-surface) 0);
+}
+
+/* Room before each section title after the first, so the sections read as groups. */
+html .rp-doc-layout__sidebar .rp-sidebar-section-header:not(:first-child) {
+  margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+  html .rp-doc-layout__sidebar {
+    --wiki-sidebar-surface: var(--spectre-sidebar-bg);
+    --wiki-sidebar-pad-top: 20px;
+    --wiki-sidebar-pad-bottom: 120px;
+  }
+  /* In the drawer the rail runs left of the titles' boxes, so a title never covers it: no redrawn piece. */
+  html .rp-doc-layout__sidebar .rp-sidebar-section-header {
+    background: var(--wiki-sidebar-surface);
+  }
+}
+
+/* The "Menu / On this page" bar spans the top bar's width; 5px inside its edges on both sides. */
+html .rp-sidebar-menu {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+/* Inner fades at the sidebar's top and bottom edges, in the sidebar's surface color (white in light theme, black in
+   dark): two pinned gradient layers over the scrolling items (shadows are off site-wide). Each shows only when there
+   is more to scroll that way: hidden by default, and the scroll timeline (active only while the list overflows)
+   fades it in. So a short list that fits shows none, and browsers without scroll-driven animations show none.
+   Under pinned titles (z-index 2). */
+html .rp-doc-layout__sidebar {
+  scroll-timeline: --wiki-sidebar block;
+}
+
+html .rp-doc-layout__sidebar::before,
+html .rp-doc-layout__sidebar::after {
+  content: "";
+  position: sticky;
+  z-index: 1;
+  display: block;
+  flex: none;
+  height: 24px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+html .rp-doc-layout__sidebar::before {
+  top: calc(-1 * var(--wiki-sidebar-pad-top));
+  margin-bottom: -24px;
+  background: linear-gradient(var(--wiki-sidebar-surface), transparent);
+  animation: wiki-sidebar-fade-in linear both;
+  animation-timeline: --wiki-sidebar;
+  animation-range: 0 24px;
+}
+
+html .rp-doc-layout__sidebar::after {
+  bottom: calc(-1 * var(--wiki-sidebar-pad-bottom));
+  margin-top: -24px;
+  background: linear-gradient(transparent, var(--wiki-sidebar-surface));
+  animation: wiki-sidebar-fade-out linear both;
+  animation-timeline: --wiki-sidebar;
+  animation-range: calc(100% - 24px) 100%;
+}
+
+@keyframes wiki-sidebar-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes wiki-sidebar-fade-out { from { opacity: 1; } to { opacity: 0; } }
+
+/* The current section in the top bar: bold, like the current page in the sidebar. */
+html .rp-nav-menu__item--active .rp-nav-menu__item__container {
+  font-weight: 700;
 }
