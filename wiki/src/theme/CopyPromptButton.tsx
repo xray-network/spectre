@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react"
 
 export const installationPrompt = "Read https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md completely and install XRAY/SPECTRE in this repository."
 
-export function CopyPromptButton() {
+/** Copies the installation prompt. The hero uses the primary variant with its own label. */
+export function CopyPromptButton({ variant = "secondary", label: idleLabel = "Copy prompt" }: { variant?: "primary" | "secondary"; label?: string }) {
   const [status, setStatus] = useState<"idle" | "copying" | "copied" | "error">("idle")
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const mounted = useRef(true)
@@ -32,10 +33,10 @@ export function CopyPromptButton() {
     }
   }
 
-  const label = status === "copied" ? "Prompt copied" : status === "error" ? "Copy failed" : status === "copying" ? "Copying…" : "Copy prompt"
+  const label = status === "copied" ? "Prompt copied" : status === "error" ? "Copy failed" : status === "copying" ? "Copying…" : idleLabel
 
   return (
-    <button type="button" className="spectre-button spectre-button--secondary spectre-copy-prompt" onClick={copy} disabled={status === "copying"}>
+    <button type="button" className={`spectre-button spectre-button--${variant} spectre-copy-prompt`} onClick={copy} disabled={status === "copying"}>
       <span role="status" aria-live="polite">{label}</span>
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
         {status === "copied" ? <path d="m5 12 4 4L19 6" /> : <><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" /></>}

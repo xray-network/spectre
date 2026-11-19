@@ -587,7 +587,8 @@ html :where(a, button, input):focus-visible {
   }
 
   .spectre-hero .spectre-hero-copy h1,
-  .spectre-home .spectre-hero-copy .spectre-lead {
+  .spectre-home .spectre-hero-copy .spectre-lead,
+  .spectre-home .spectre-hero-copy .spectre-hero-note {
     margin-inline: auto;
   }
 
@@ -633,6 +634,14 @@ html :where(a, button, input):focus-visible {
   max-width: 550px;
   font-size: 18px;
   line-height: 1.65;
+}
+
+.spectre-home .spectre-hero-note {
+  max-width: 550px;
+  margin-top: 12px;
+  color: var(--rp-c-text-3);
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 .spectre-actions {
@@ -691,24 +700,14 @@ html :where(a, button, input):focus-visible {
   cursor: progress;
 }
 
-.spectre-home .spectre-hero-note {
-  color: var(--rp-c-text-3);
-  font-size: 12px;
-}
-
-.spectre-about,
 .spectre-start {
   padding-top: 48px;
   scroll-margin-top: 128px;
 }
 
-.spectre-about > p {
-  max-width: 760px;
-  color: var(--rp-c-text-2);
-  line-height: 1.65;
-}
-
-.spectre-start > p {
+.spectre-start > p,
+.spectre-workflow > p,
+.spectre-browse > p {
   padding-bottom: 28px;
   border-bottom: 1px solid var(--rp-c-divider-light);
 }
@@ -732,8 +731,7 @@ html :where(a, button, input):focus-visible {
   font-weight: 700;
 }
 
-.spectre-text-link,
-.spectre-home-footer a {
+.spectre-text-link {
   color: var(--rp-c-link);
   font-size: 13px;
   font-weight: 600;
@@ -742,8 +740,7 @@ html :where(a, button, input):focus-visible {
   gap: 6px;
 }
 
-.spectre-text-link:hover,
-.spectre-home-footer a:hover {
+.spectre-text-link:hover {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
@@ -759,16 +756,19 @@ html :where(a, button, input):focus-visible {
 
 .spectre-start .rp-codeblock {
   margin: 0 0 16px;
+}
+
+:is(.spectre-start, .spectre-workflow) .rp-codeblock {
   border-top: 6px solid var(--xr-action); /* a band: the fill blue in both themes */
 }
 
-.spectre-start .rp-codeblock__title {
+:is(.spectre-start, .spectre-workflow) .rp-codeblock__title {
   background: var(--xr-canvas);
   border-bottom: 1px solid var(--xr-border);
   font: 500 11px/1.5 var(--xr-font-mono);
 }
 
-.spectre-start .rp-codeblock__content {
+:is(.spectre-start, .spectre-workflow) .rp-codeblock__content {
   background: var(--xr-canvas);
 }
 
@@ -816,59 +816,72 @@ html :where(a, button, input):focus-visible {
   scroll-margin-top: 128px;
 }
 
+.spectre-browse {
+  padding-bottom: 48px;
+  scroll-margin-top: 128px;
+}
+
+.spectre-browse > .spectre-resources {
+  margin-top: 26px;
+}
+
+/* Steps two per row; subgrid rows keep their headers, texts and prompts level. */
 .spectre-workflow-list {
-  margin: 28px 0 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px 24px;
+  margin: 26px 0 0;
   padding: 0;
   list-style: none;
 }
 
 .spectre-workflow-list > li {
   display: grid;
-  grid-template-columns: 36px minmax(0, 1fr);
-  gap: 20px;
-  padding: 26px 0 10px;
-  border-top: 1px solid var(--rp-c-divider-light);
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  gap: 8px;
+  margin: 0;
 }
 
 .spectre-step {
   display: grid;
-  width: 34px;
-  height: 34px;
+  flex: none;
+  width: 26px;
+  height: 26px;
   place-items: center;
   background: var(--xr-surface);
   border: 1px solid var(--xr-border);
   border-radius: 4px;
   color: var(--xr-fg-muted);
-  font: 600 11px/1 var(--rp-font-family-mono);
+  font: 600 10px/1 var(--rp-font-family-mono);
 }
 
-.spectre-workflow-title {
-  margin: 3px 0 7px;
-  flex-wrap: wrap;
-  gap: 8px;
+.spectre-workflow-list .spectre-workflow-title {
+  justify-content: flex-start;
+  gap: 10px;
 }
 
 .spectre-workflow-title h3 {
   color: var(--rp-c-text-0);
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   line-height: 1.4;
-  letter-spacing: -.025em;
+  letter-spacing: -.02em;
 }
 
-.spectre-workflow-content > p {
-  font-size: 16px;
+.spectre-workflow-title .spectre-state {
+  margin-left: auto;
 }
 
-.spectre-workflow-content > .spectre-workflow-output {
-  margin-top: 12px;
-  color: var(--rp-c-text-3);
-  font: 500 12px/1.7 var(--rp-font-family-mono);
-}
-
-.spectre-workflow-output strong {
+.spectre-workflow-list > li > p {
   color: var(--rp-c-text-2);
-  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.spectre-workflow-list > li > .rp-codeblock {
+  align-self: start;
+  margin: 4px 0 0;
 }
 
 .spectre-state {
@@ -957,7 +970,7 @@ html :where(a, button, input):focus-visible {
   font-size: 17px;
 }
 
-.spectre-resource h2 {
+.spectre-resource :is(h2, h3) {
   margin: 32px 0 10px;
   color: var(--rp-c-text-0);
   font-size: 23px;
@@ -965,23 +978,12 @@ html :where(a, button, input):focus-visible {
   letter-spacing: -.025em;
 }
 
-.spectre-home .spectre-resource h2 { font-weight: 700; }
+.spectre-home .spectre-resource :is(h2, h3) { font-weight: 700; }
 
 .spectre-resource p {
   font-size: 16px;
 }
 
-.spectre-home-footer {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid var(--rp-c-divider-light);
-  color: var(--rp-c-text-3);
-  font-size: 11px;
-}
 
 .spectre-home a:focus-visible {
   outline: 2px solid var(--xr-focus);
@@ -1007,7 +1009,6 @@ html :where(a, button, input):focus-visible {
     border-top: 1px solid var(--xr-border-strong);
   }
 
-  .spectre-about,
   .spectre-start {
     padding-top: 32px;
   }
@@ -1020,40 +1021,9 @@ html :where(a, button, input):focus-visible {
     padding-top: 36px;
   }
 
-  .spectre-workflow-list > li {
-    grid-template-columns: 28px minmax(0, 1fr);
-    column-gap: 8px;
-    row-gap: 0;
-  }
-
-  .spectre-step {
-    width: 28px;
-    height: 28px;
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .spectre-workflow-content,
-  .spectre-workflow-title {
-    display: contents;
-  }
-
-  .spectre-workflow-title .spectre-state {
-    grid-column: 2;
-    grid-row: 1;
-    align-self: center;
-    justify-self: start;
-  }
-
-  .spectre-workflow-title h3,
-  .spectre-workflow-content > p,
-  .spectre-workflow-content > .rp-codeblock {
-    grid-column: 1 / -1;
-  }
-
-  .spectre-workflow-title h3 {
-    margin-top: 14px;
-    margin-bottom: 7px;
+  .spectre-workflow-list {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 24px;
   }
 }
 
