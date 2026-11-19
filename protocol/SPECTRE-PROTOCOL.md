@@ -35,35 +35,36 @@ or deploy.
 
 Natural language is a first-class interface. Describe the objective and scope; the agent resolves
 it to the operations below, reports the bounded queue when compound, and proceeds without asking
-for a formal command or redundant permission. `/spectre` is the cross-agent spelling; Codex uses
-`$spectre` with the same arguments. Natural-language activation needs no host adapter.
+for a formal command or redundant permission. Operations are written `Spectre <operation>` and
+need no host adapter. An optional installed adapter (§2) also accepts `/spectre`, or `$spectre` in
+Codex, with the same arguments.
 
 <!-- spectre:runtime commands/help.md -->
 | Syntax | Operation and stopping boundary |
 | --- | --- |
-| `/spectre plan <target>: <objective>` | Capture the plan's declared providers if any, register its target on first use, and publish one instruction and `PLANNED` row together. No product changes. |
-| `/spectre implement <record>` | Implement an existing `PLANNED` instruction, validate, and publish its result and `REVIEW` row together; interrupted work remains `PLANNED` with a partial result. |
-| `/spectre implement --batch <records>` | Resolve and report a bounded set and order; complete each item's implementation, validation, result and ledger update before the next. |
-| `/spectre revise <record>: <changes>` | Refine a `PLANNED` instruction without source changes, or revise a `REVIEW` implementation and its result within the existing objective; retain its state. |
-| `/spectre status [scope] [state] [--archived]` | Read installation/target summaries or a record's details. Default summaries show live rows; `--archived` summaries show archived rows. Record lookup searches both locations. |
-| `/spectre recall [target]: <question>` | Answer from recorded evidence and decisions with citations; no writes. |
-| `/spectre check [scope]` | Diagnose consistency without writing. Omitted scope checks the complete installation; report checked scope and failures. |
-| `/spectre sync [scope]` | Apply only deterministic bookkeeping corrections, including finishing provably interrupted writes, validate, and report; never infer lifecycle state or reconstruct missing records. |
-| `/spectre accept <records>: <proof>` | Record the current human's acceptance of existing `REVIEW` results, with applicable proof. |
-| `/spectre reject <records>: <proof>` | Record the current human's rejection of existing `REVIEW` results, with applicable proof. |
-| `/spectre cancel <records>: <reason>` | Cancel existing `PLANNED` or `REVIEW` records with the human reason; preserve results and product changes. |
-| `/spectre archive [scope]` | Archive selected terminal implementations; omitted scope means eligible live records across all targets. Record sets, targets and `all` are supported. Never close open work. |
-| `/spectre archive implementations [scope]` | Explicit spelling of implementation archiving, with the same scope rules. |
-| `/spectre archive providers <provider> [<provider>...]` | Archive whole named providers only when no live record references them; preserve evidence and warn about external consumers. |
-| `/spectre target move <target>: <path>` | Update an existing target's current source path in the ledger's Targets table; preserve IDs, records and history. Does not move product files. |
-| `/spectre target retire <target>: <reason>` | Retire an existing target with no live rows; retain its identity, last path, and history. |
-| `/spectre target reactivate <target>: <path>` | Reactivate the same logical target at an existing path; continue its original sequence. |
-| `/spectre capture <provider>` | Discover, compare, validate and publish a numbered baseline/update when needed; no change creates no tracked writes. |
-| `/spectre upgrade` | Explicitly bring this installation to the latest protocol using §14: replace generated files and rewrite the live ledger, live records and provider files to the current formats as one human-ordered override. Archives are not touched. Standalone only. |
-| `/spectre override <scope>: <changes> because <reason>` | Apply an exceptional human-ordered SPECTRE change, update affected live references, and record an informational override log. Standalone only. |
-| `/spectre host add <host> [<host>...]` | Add only named host adapters and report their invocation/reload requirements. Standalone setup. |
-| `/spectre host remove <host> [<host>...]` | Remove only named SPECTRE host adapters. Standalone setup. |
-| `/spectre help [operation]` | Explain operations, natural-language queues, checkpoints, and stopping boundaries without writes. |
+| `Spectre plan <target>: <objective>` | Capture the plan's declared providers if any, register its target on first use, and publish one instruction and `PLANNED` row together. No product changes. |
+| `Spectre implement <record>` | Implement an existing `PLANNED` instruction, validate, and publish its result and `REVIEW` row together; interrupted work remains `PLANNED` with a partial result. |
+| `Spectre implement --batch <records>` | Resolve and report a bounded set and order; complete each item's implementation, validation, result and ledger update before the next. |
+| `Spectre revise <record>: <changes>` | Refine a `PLANNED` instruction without source changes, or revise a `REVIEW` implementation and its result within the existing objective; retain its state. |
+| `Spectre status [scope] [state] [--archived]` | Read installation/target summaries or a record's details. Default summaries show live rows; `--archived` summaries show archived rows. Record lookup searches both locations. |
+| `Spectre recall [target]: <question>` | Answer from recorded evidence and decisions with citations; no writes. |
+| `Spectre check [scope]` | Diagnose consistency without writing. Omitted scope checks the complete installation; report checked scope and failures. |
+| `Spectre sync [scope]` | Apply only deterministic bookkeeping corrections, including finishing provably interrupted writes, validate, and report; never infer lifecycle state or reconstruct missing records. |
+| `Spectre accept <records>: <proof>` | Record the current human's acceptance of existing `REVIEW` results, with applicable proof. |
+| `Spectre reject <records>: <proof>` | Record the current human's rejection of existing `REVIEW` results, with applicable proof. |
+| `Spectre cancel <records>: <reason>` | Cancel existing `PLANNED` or `REVIEW` records with the human reason; preserve results and product changes. |
+| `Spectre archive [scope]` | Archive selected terminal implementations; omitted scope means eligible live records across all targets. Record sets, targets and `all` are supported. Never close open work. |
+| `Spectre archive implementations [scope]` | Explicit spelling of implementation archiving, with the same scope rules. |
+| `Spectre archive providers <provider> [<provider>...]` | Archive whole named providers only when no live record references them; preserve evidence and warn about external consumers. |
+| `Spectre target move <target>: <path>` | Update an existing target's current source path in the ledger's Targets table; preserve IDs, records and history. Does not move product files. |
+| `Spectre target retire <target>: <reason>` | Retire an existing target with no live rows; retain its identity, last path, and history. |
+| `Spectre target reactivate <target>: <path>` | Reactivate the same logical target at an existing path; continue its original sequence. |
+| `Spectre capture <provider>` | Discover, compare, validate and publish a numbered baseline/update when needed; no change creates no tracked writes. |
+| `Spectre upgrade` | Explicitly bring this installation to the latest protocol using §14: replace generated files and rewrite the live ledger, live records and provider files to the current formats as one human-ordered override. Archives are not touched. Standalone only. |
+| `Spectre override <scope>: <changes> because <reason>` | Apply an exceptional human-ordered SPECTRE change, update affected live references, and record an informational override log. Standalone only. |
+| `Spectre host add <host> [<host>...]` | Add only named host adapters and report their invocation/reload requirements. Standalone setup. |
+| `Spectre host remove <host> [<host>...]` | Remove only named SPECTRE host adapters. Standalone setup. |
+| `Spectre help [operation]` | Explain operations, natural-language queues, checkpoints, and stopping boundaries without writes. |
 
 In accept and reject, a record may carry the digest of the result the human reviewed,
 `api/0004@3f9a1c0b7d2e`; the decision applies only while the result still matches.
@@ -110,7 +111,7 @@ in the report.
 <!-- spectre:runtime commands/recall.md -->
 ### Recall
 
-`/spectre recall [target]: <question>` answers why something exists or what was decided, using the
+`Spectre recall [target]: <question>` answers why something exists or what was decided, using the
 records as the only source. Without a target it searches every target. It is read-only: it creates
 no records, captures, or lifecycle state, and changes no files. The records stay authoritative;
 recall only finds and cites them.
@@ -398,7 +399,7 @@ The installer must:
    No README is installed (§10). Create no `logs/` folder; the first
    override creates it (§9).
 5. Add the `AGENTS.md` pointer below idempotently.
-6. Create no slash command or host adapter. Report that a separate `/spectre host add <host>` (§2)
+6. Create no slash command or host adapter. Report that a separate `Spectre host add <host>` (§2)
    adds one, including when the installation request asked for a slash command.
 7. Write the bootstrap instruction, then validate the complete installation (§13) except
    validation item 7, which needs the bootstrap record being created. Write the bootstrap result
@@ -518,7 +519,7 @@ router, so that host can invoke SPECTRE by name. Installation creates none. Natu
 mentions such as `Spectre: status last implementation` reach the router through the `AGENTS.md`
 pointer without one, so `Spectre host add claude` works before any slash command exists.
 
-`/spectre host add <host> [<host>...]` adds adapters and `/spectre host remove <host> [<host>...]`
+`Spectre host add <host> [<host>...]` adds adapters and `Spectre host remove <host> [<host>...]`
 removes them. Host names are ASCII case-insensitive and come only from this table:
 
 | Host | Agent | Adapter file | Invocation | Request line |
@@ -707,7 +708,7 @@ SPECTRE.md
 ```
 
 Slash commands (host adapters, §2) live at the repository root, outside this tree. Installation
-creates none; `/spectre host add <host>` adds one, such as `.agents/skills/spectre/SKILL.md` for
+creates none; `Spectre host add <host>` adds one, such as `.agents/skills/spectre/SKILL.md` for
 Codex.
 
 <!-- spectre:runtime references.md -->
@@ -733,7 +734,7 @@ immutable history, not additional active ledgers. Target directories contain ins
 results, not status ledgers. Provider captures have no lifecycle ledger and never contain
 implementation instructions or results.
 
-Archive directories are created only by a nonempty `/spectre archive` operation. A batch holds
+Archive directories are created only by a nonempty `Spectre archive` operation. A batch holds
 either implementations or providers, never both. An implementations batch preserves the
 installation's flat or nested layout under its `implementations/` directory; a provider batch holds
 each archived provider's whole directory under `providers/<provider>/`.
@@ -867,7 +868,7 @@ structural blocker. The human restores it from version control or orders an expl
 Each branch allocates IDs from its own view, so two branches can create the same ID. Prefer planning
 on one shared line of history. After a merge, `check` reports duplicate IDs as blockers. Keep the
 record that reached the shared history first. Renumber the other, if it is not terminal, to the
-next free ID in its sequence with an explicit `/spectre override`, which updates its files, row and
+next free ID in its sequence with an explicit `Spectre override`, which updates its files, row and
 live references. Terminal records are never renumbered without an override.
 <!-- /spectre:runtime -->
 
@@ -925,9 +926,9 @@ moving an installation, run full §13 validation and preserve its tracking/evide
 Moving an owned source directory within the same installation changes its target Path through
 `target move`; that operation does not move evidence or immutable record files.
 
-Two operations move evidence or records. `/spectre archive` (§9) moves terminal records, or whole
+Two operations move evidence or records. `Spectre archive` (§9) moves terminal records, or whole
 providers that no active record references, into an archive, unchanged. Any other move or rename is
-a human-ordered `/spectre override` (§9). The override moves the file and, in the same change, updates every link, provider pin, inventory entry,
+a human-ordered `Spectre override` (§9). The override moves the file and, in the same change, updates every link, provider pin, inventory entry,
 and SHA-256 in active records, the ledger, and provider files that refers to it, so every such
 reference names the file's real path. Archives are kept as is and are not updated. It keeps
 a copy at the original path only when the human asks for one. No lookup table redirects old paths.
@@ -1074,7 +1075,7 @@ to install SPECTRE is its explicit decision and proof. This exception applies on
 record and does not weaken the human-only rule for any later implementation.
 
 `ACCEPTED`, `REJECTED`, and `CANCELLED` rows are terminal. Their decision data, instruction, and
-result (when present) are immutable, with two exceptions. An explicit `/spectre archive`
+result (when present) are immutable, with two exceptions. An explicit `Spectre archive`
 operation under §9 moves record files without changing their bytes and transfers their ledger
 rows, rebasing only the Instruction and Result link destinations. State, ID, title, evidence mode,
 and decision proof remain unchanged. An explicit upgrade (§14) rewrites live terminal records to
@@ -1147,7 +1148,7 @@ and are used unchanged by the result.
 Planning command:
 
 ```text
-/spectre plan <target>: <bounded objective>
+Spectre plan <target>: <bounded objective>
 ```
 <!-- /spectre:runtime -->
 
@@ -1183,7 +1184,7 @@ and design choices come from repository guidance, not from this protocol.
 <!-- /spectre:runtime -->
 
 <!-- spectre:runtime commands/implement.md -->
-For `/spectre implement <record>`, a selected batch or compound-queue item, or an implementation
+For `Spectre implement <record>`, a selected batch or compound-queue item, or an implementation
 continuation authorized under §1, complete this workflow for one record:
 
 1. Require one matching active `PLANNED` row and instruction. Refuse missing, duplicate,
@@ -1240,15 +1241,15 @@ continuation authorized under §1, complete this workflow for one record:
 Implementation commands:
 
 ```text
-/spectre implement <record>
-/spectre implement --batch typescript/0025..0029
-/spectre implement --batch repository/0002, repository/0003, typescript/0025
-/spectre implement the plans just listed one by one
+Spectre implement <record>
+Spectre implement --batch typescript/0025..0029
+Spectre implement --batch repository/0002, repository/0003, typescript/0025
+Spectre implement the plans just listed one by one
 ```
 <!-- /spectre:runtime -->
 
 <!-- spectre:runtime commands/revise.md -->
-For an explicit `/spectre revise <record>: <changes>` invocation (or its host-native equivalent):
+For an explicit `Spectre revise <record>: <changes>` invocation (or its host-native equivalent):
 
 1. Require exactly one matching active `PLANNED` or `REVIEW` row and instruction. A `REVIEW` record
    requires its matching result; a `PLANNED` record may have no result or one matching partial
@@ -1258,7 +1259,7 @@ For an explicit `/spectre revise <record>: <changes>` invocation (or its host-na
    its branch below.
 3. Confirm the requested changes preserve the record's bounded objective and ownership. If they
    introduce an independently reviewable capability, move the work to another target, or make the
-   original objective misleading, stop without mutation and require a new `/spectre plan`.
+   original objective misleading, stop without mutation and require a new `Spectre plan`.
 4. For `PLANNED`:
    - Refine the instruction to express the requested changes, including inputs, provider pins,
      requirements, validation, completion criteria, and exclusions where affected. Preserve its
@@ -1296,7 +1297,7 @@ For an explicit `/spectre revise <record>: <changes>` invocation (or its host-na
 Revision command:
 
 ```text
-/spectre revise <record>: <requested changes>
+Spectre revise <record>: <requested changes>
 ```
 <!-- /spectre:runtime -->
 
@@ -1304,9 +1305,9 @@ Revision command:
 Human decisions accept commands or clear natural-language intent under §1:
 
 ```text
-/spectre accept <records>: <decision proof>
-/spectre reject <records>: <decision proof>
-/spectre cancel <records>: <reason>
+Spectre accept <records>: <decision proof>
+Spectre reject <records>: <decision proof>
+Spectre cancel <records>: <reason>
 ```
 
 <!-- spectre:runtime commands/decide.md -->
@@ -1372,7 +1373,7 @@ only under queues.md. Otherwise stop after the decision; no implicit archive or 
 <!-- spectre:runtime commands/override.md -->
 ### Override workflow
 
-`/spectre override <scope>: <changes> because <reason>` lets a human order any change to SPECTRE
+`Spectre override <scope>: <changes> because <reason>` lets a human order any change to SPECTRE
 files that the other rules forbid or do not define, such as renaming historical record/target IDs,
 rewriting terminal records, moving evidence, or merging installations. It is a human decision:
 only the current human may invoke it, never an agent on its own initiative, and it is never a queue
@@ -1426,9 +1427,9 @@ the informational override log is never a recovery source.
 Accept explicit commands or natural language under §1:
 
 ```text
-/spectre archive [record-set|target|all]
-/spectre archive implementations [record-set|target|all]
-/spectre archive providers <provider> [<provider>...]
+Spectre archive [record-set|target|all]
+Spectre archive implementations [record-set|target|all]
+Spectre archive providers <provider> [<provider>...]
 ```
 
 Omitted implementation scope means all eligible live terminal rows. Resolve/freeze the selected
@@ -2047,7 +2048,7 @@ compound-queue item and input pins.
 <!-- spectre:runtime commands/capture.md -->
 ## 12. Provider preparation and security
 
-Use this workflow only for an explicit `/spectre capture <provider>` invocation, its host-native
+Use this workflow only for an explicit `Spectre capture <provider>` invocation, its host-native
 equivalent, one explicitly stated capture item in a normalized compound queue, or the capture step
 of a plan (§8). An ordinary capture selects one existing provider guide and includes discovery,
 comparison, validation and publication when needed. No preliminary check command is required; `check` diagnoses local consistency without fetching
@@ -2177,7 +2178,7 @@ states. Never treat an earlier conversation report as a verified current source 
 Every published numbered capture is immutable except for an explicit upgrade's format rewrite (§14).
 Fixes require a separately authorized new capture with an honest comparison, not edits to old files. Plans pin the chosen snapshot and artifact
 hashes. Keep earlier referenced captures available; Git history is not a replacement for these
-physical dependencies. Planning still requires its own `/spectre plan <target>: <objective>` or an
+physical dependencies. Planning still requires its own `Spectre plan <target>: <objective>` or an
 explicitly stated, separately executed plan item in a compound queue.
 <!-- /spectre:runtime -->
 
@@ -2401,7 +2402,7 @@ Never hand-edit generated runtime, infer acceptance during an upgrade, or rewrit
 <!-- spectre:runtime commands/upgrade.md -->
 ### Upgrade procedure
 
-`/spectre upgrade` or a clear natural-language request upgrades one installation to the latest
+`Spectre upgrade` or a clear natural-language request upgrades one installation to the latest
 published protocol. It is a human-ordered override (commands/override.md) whose scope is fixed: the
 generated files and every live SPECTRE file. It is standalone, never a queue item or implicit sync,
 and only the current human may order it.

@@ -39,28 +39,28 @@ hosts use `/spectre`. Reload the host after adapter changes.
 Natural language and explicit commands select the same workflows:
 
 ```text
-/spectre plan <target>: <objective>
-/spectre implement <record>
-/spectre implement --batch <records>
-/spectre revise <record>: <changes>
-/spectre accept <records>: <proof>
-/spectre reject <records>: <proof>
-/spectre cancel <records>: <reason>
-/spectre status [scope] [state] [--archived]
-/spectre recall [target]: <question>
-/spectre check [scope]
-/spectre sync [scope]
-/spectre archive [scope]
-/spectre archive providers <provider> [<provider>...]
-/spectre target move <target>: <path>
-/spectre target retire <target>: <reason>
-/spectre target reactivate <target>: <path>
-/spectre capture <provider>
-/spectre upgrade
-/spectre override <scope>: <changes> because <reason>
-/spectre host add <host> [<host>...]
-/spectre host remove <host> [<host>...]
-/spectre help [operation]
+Spectre plan <target>: <objective>
+Spectre implement <record>
+Spectre implement --batch <records>
+Spectre revise <record>: <changes>
+Spectre accept <records>: <proof>
+Spectre reject <records>: <proof>
+Spectre cancel <records>: <reason>
+Spectre status [scope] [state] [--archived]
+Spectre recall [target]: <question>
+Spectre check [scope]
+Spectre sync [scope]
+Spectre archive [scope]
+Spectre archive providers <provider> [<provider>...]
+Spectre target move <target>: <path>
+Spectre target retire <target>: <reason>
+Spectre target reactivate <target>: <path>
+Spectre capture <provider>
+Spectre upgrade
+Spectre override <scope>: <changes> because <reason>
+Spectre host add <host> [<host>...]
+Spectre host remove <host> [<host>...]
+Spectre help [operation]
 ```
 
 Open work is closed by explicit cancellation, never by an archive flag. Decisions about existing

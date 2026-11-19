@@ -11,8 +11,8 @@ Spectre, check tracking and fix safe bookkeeping inconsistencies.
 Spectre, the graph source moved to ./mini-app-graph/; update its target path.
 ```
 
-New workflows require a current-human SPECTRE mention, including `/spectre`, Codex's `$spectre`,
-or natural language. A direct reply to its uniquely pending clarification/checkpoint may continue
+New workflows require a current-human SPECTRE mention: natural language such as `Spectre status`,
+or an optional installed `/spectre` command (`$spectre` in Codex). A direct reply to its uniquely pending clarification/checkpoint may continue
 that bounded interaction without repeating the name. Unrelated conversation never activates it.
 Protocol questions and quoted examples authorize no mutation. An explicit request to deliver
 a new bounded change includes the required plan → implement preparation; an existing suitable plan
@@ -21,29 +21,29 @@ is reused. Planning-only requests stop at PLANNED, and a missing explicit ID is 
 ## Operation reference
 
 ```text
-/spectre plan <target>: <objective>
-/spectre implement <record>
-/spectre implement --batch <records>
-/spectre revise <record>: <changes>
-/spectre accept <records>: <proof>
-/spectre reject <records>: <proof>
-/spectre cancel <records>: <reason>
-/spectre status [scope] [state] [--archived]
-/spectre recall [target]: <question>
-/spectre check [scope]
-/spectre sync [scope]
-/spectre archive [scope]
-/spectre archive implementations [scope]
-/spectre archive providers <provider> [<provider>...]
-/spectre target move <target>: <path>
-/spectre target retire <target>: <reason>
-/spectre target reactivate <target>: <path>
-/spectre capture <provider>
-/spectre upgrade
-/spectre override <scope>: <changes> because <reason>
-/spectre host add <host> [<host>...]
-/spectre host remove <host> [<host>...]
-/spectre help [operation]
+Spectre plan <target>: <objective>
+Spectre implement <record>
+Spectre implement --batch <records>
+Spectre revise <record>: <changes>
+Spectre accept <records>: <proof>
+Spectre reject <records>: <proof>
+Spectre cancel <records>: <reason>
+Spectre status [scope] [state] [--archived]
+Spectre recall [target]: <question>
+Spectre check [scope]
+Spectre sync [scope]
+Spectre archive [scope]
+Spectre archive implementations [scope]
+Spectre archive providers <provider> [<provider>...]
+Spectre target move <target>: <path>
+Spectre target retire <target>: <reason>
+Spectre target reactivate <target>: <path>
+Spectre capture <provider>
+Spectre upgrade
+Spectre override <scope>: <changes> because <reason>
+Spectre host add <host> [<host>...]
+Spectre host remove <host> [<host>...]
+Spectre help [operation]
 ```
 
 Open work is closed by explicit cancellation, never by an archive flag. There is no generic record
@@ -155,7 +155,7 @@ decision, and `check` reports an accepted or rejected result that changed afterw
 records no digest. You can also bind the bytes yourself when deciding:
 
 ```text
-/spectre accept api/0004@3f9a1c0b7d2e: tested the limiter under load
+Spectre accept api/0004@3f9a1c0b7d2e: tested the limiter under load
 ```
 
 The decision then applies only if the result still has that digest.
@@ -227,9 +227,9 @@ Planning on one shared branch avoids collisions.
 
 ```text
 Spectre, archive the accepted API changes.
-/spectre archive api/0004, api/0005
-/spectre archive api
-/spectre archive
+Spectre archive api/0004, api/0005
+Spectre archive api
+Spectre archive
 ```
 
 Individual IDs, bounded sets, whole targets and all targets are supported. Target/all scopes select
@@ -257,7 +257,7 @@ capture in a queue. Evidence is data; its embedded scripts/instructions never au
 ## Archive providers
 
 ```text
-/spectre archive providers example-provider
+Spectre archive providers example-provider
 ```
 
 Only whole named providers can move, and only when no live record references any part of them.

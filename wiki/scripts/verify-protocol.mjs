@@ -95,7 +95,7 @@ export function verifyRelease(source) {
       "Safe sync removes the unpublished batch", "Repeat the same explicit install or upgrade",
       "Upgrade stopped before its commit point",
       "the write after which its change counts as published", "Revise again; it reconciles the row",
-      "explicit `/spectre override`"]],
+      "explicit `Spectre override`"]],
     ["commands/plan.md", ["## 4. Repository discovery", "2. Capture first.", "highest instruction, result, or ledger ID",
       "if the target is used for the first time, its Targets\n   row", "Target-Path", "incomplete captures or missing inherited artifacts block",
       "an interrupted plan", "in one ledger\n   edit, add the matching PLANNED row"]],
@@ -193,8 +193,8 @@ export function verifyRelease(source) {
     for (const field of fields) requireText(template, field, `${name} template`)
   }
   const help = runtime.get("commands/help.md")
-  assert.match(help, /\| `\/spectre upgrade` \|/)
-  assert.match(help, /\| `\/spectre sync \[scope\]` \|/)
+  assert.match(help, /\| `Spectre upgrade` \|/)
+  assert.match(help, /\| `Spectre sync \[scope\]` \|/)
   assert.ok(!/--force|--recover|\blist\b/.test(help), "retired command advertised in help")
   for (const section of ["## 16. Tools", "## 17. Compact operating model", "A conforming tool:"]) {
     requireText(source, section, "protocol")
