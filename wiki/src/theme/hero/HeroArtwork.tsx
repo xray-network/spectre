@@ -8,7 +8,7 @@ export function HeroArtwork() {
   useEffect(() => {
     const canvas = canvasRef.current
     const background = backgroundRef.current
-    const hero = canvas?.closest(".spectre-hero-grid")
+    const hero = canvas?.closest(".spectre-hero")
     if (!canvas || !background || !hero) return
     return createHeroRenderer(canvas, background, hero)
   }, [])

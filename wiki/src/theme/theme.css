@@ -6,10 +6,10 @@ html:root {
   --rp-font-family-mono: var(--xr-font-mono);
   --rp-c-brand: var(--xr-link);
   --rp-c-brand-light: var(--xr-action-hover);
-  --rp-c-brand-lighter: var(--xr-blue-50);
+  --rp-c-brand-lighter: var(--xr-orange-200);
   --rp-c-brand-dark: var(--xr-link-hover); /* Rspress draws hover and active text with it */
-  --rp-c-brand-darker: var(--xr-blue-700);
-  --rp-c-brand-tint: var(--xr-selection-bg);
+  --rp-c-brand-darker: var(--xr-orange-800);
+  --rp-c-brand-tint: var(--xr-wash);
   --rp-c-bg: var(--xr-canvas);
   --rp-c-bg-soft: var(--xr-surface);
   --rp-c-bg-mute: var(--xr-chip);
@@ -33,9 +33,9 @@ html:root {
   /* Native sidebar, outline, and anchor offsets include both fixed rows. */
   --rp-nav-height: calc(var(--spectre-header-height) + var(--spectre-tabs-height));
   --spectre-sidebar-bg: var(--xr-surface);
-  --spectre-sidebar-item: var(--xr-gray-700);
-  --spectre-sidebar-header: var(--xr-gray-400);
-  --spectre-symbol-color: var(--xr-blue-500);
+  --spectre-sidebar-item: var(--xr-fg-secondary);
+  --spectre-sidebar-header: var(--xr-fg-muted);
+  --spectre-symbol-color: var(--xr-brand);
   --spectre-external-link-icon: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20fill='none'%20viewBox='0%200%2024%2024'%20stroke='%23000'%20stroke-width='1.6'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m12%205-7%207%207%207M5%2012h14'/%3E%3C/svg%3E");
   --rp-content-padding-x: 48px;
   --rp-content-padding-y: 64px;
@@ -55,9 +55,6 @@ html:root {
 }
 
 html:root:is(.rp-dark, .dark) {
-  --spectre-sidebar-bg: color-mix(in srgb, var(--xr-gray-900) 30%, var(--xr-black));
-  --spectre-sidebar-item: var(--xr-gray-200);
-  --spectre-sidebar-header: var(--xr-gray-500);
   --spectre-symbol-color: var(--xr-link);
   --rp-c-brand-light: var(--xr-link-hover);
 }
@@ -177,24 +174,47 @@ html .rp-doc-layout__doc-container .rp-doc {
   }
 }
 
-html .rp-nav__title__link {
-  gap: 10px;
-  color: var(--xr-fg);
-  font: 700 14px/1 var(--xr-font-mono);
-  letter-spacing: .08em;
-}
-
+/* The logo: the XRAY wordmark with its orange ray (an image, 146 units tall: the ray rises from the baseline after the
+   Y to a tip 52 above the letters; the letters fill the bottom 94), then the product name as text inside the same logo
+   box (NavTitle.tsx), so they are one unit. The box is a flex row aligned on baselines (the image offers its bottom
+   edge, the wordmark's baseline), then the name rises so its capitals are centered on the XRAY letters: by half the
+   letters' height (94 of the image's 146 units) less half its cap height (.705em). Line height 1. */
 html .rp-nav__title__link {
   min-height: 44px;
+  gap: 0;
+  color: var(--xr-fg);
+  line-height: 1;
 }
 
 html .rp-nav__title__logo {
+  --wiki-logo-h: 23px;
+  position: relative;
+  top: -3px; /* the bar centers the whole image, ray tip included; this centers the letters on the bar's text (Back to Wiki) */
+  display: flex;
+  align-items: baseline; /* the image (tallest, unmoved) offers its bottom edge as the baseline; the name sits on it */
   margin-right: 0;
+  line-height: 1;
 }
 
 html .rp-nav__title__logo-image {
-  width: 32px;
-  height: 32px;
+  width: auto;
+  height: var(--wiki-logo-h);
+}
+
+html .rp-nav__title__suffix {
+  position: relative;
+  top: calc(.3525em - var(--wiki-logo-h) * 47 / 146); /* capitals centered on the XRAY letters */
+  margin-left: 3px; /* clear of the ray's edge */
+  color: var(--xr-fg);
+  font: 800 16px/1 var(--xr-font-sans);
+  letter-spacing: normal;
+  white-space: nowrap;
+}
+
+@media (max-width: 360px) {
+  html .rp-nav__title__suffix {
+    font-size: 13px;
+  }
 }
 
 /* Reuse the Back to Wiki arrow, rotated to mark external destinations. */
@@ -277,16 +297,16 @@ html .rp-sidebar-item--active:hover {
   background: transparent;
 }
 
-html .rp-sidebar-item[data-context="spectre-version"] {
-  margin-top: 24px;
-  color: var(--xr-fg-muted);
-  background: transparent;
-  font: 400 11px/24px var(--xr-font-mono);
-}
-
-html .rp-sidebar-item[data-context="spectre-version"]:hover {
-  color: var(--xr-link);
-  background: var(--xr-chip);
+/* The project version, just before the search box. */
+html .wiki-version {
+  flex: none;
+  padding: 5px 7px;
+  border: 1px solid var(--xr-border-strong);
+  border-radius: 4px;
+  color: var(--xr-fg-secondary);
+  font: 500 11px/1 var(--xr-font-mono);
+  letter-spacing: .04em;
+  white-space: nowrap;
 }
 
 html .rp-sidebar-menu,
@@ -307,13 +327,14 @@ html .rp-outline .rp-toc-item__text {
 
 html .rp-doc :where(h1, h2, h3):not(:where(.rp-not-doc *)) {
   color: var(--xr-fg);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -.025em;
 }
 
 html .rp-doc :where(h1):not(:where(.rp-not-doc *)) {
-  font-size: 32px;
+  font-size: 36px;
   line-height: 1.15;
+  letter-spacing: -.035em;
 }
 
 html .rp-doc :where(h2):not(:where(.rp-not-doc *)) {
@@ -334,6 +355,48 @@ html .rp-doc :where(p, li):not(:where(.rp-not-doc *)) {
 
 html .rp-doc :where(strong):not(:where(.rp-not-doc *)) {
   color: var(--xr-fg);
+  font-weight: 600;
+}
+
+/* Links in page content: underlined by default, the line in a softer tone of the link color; on hover the text
+   brightens and the line takes its full color. Navigation, sidebars and the home's cards are not doc content. */
+html .rp-doc a.rp-link:not(.rp-header-anchor):not(:where(.rp-not-doc *)) {
+  color: var(--xr-link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 120ms var(--xr-ease), color 120ms var(--xr-ease);
+}
+
+html .rp-doc a.rp-link:not(.rp-header-anchor):not(:where(.rp-not-doc *)):hover {
+  color: var(--xr-link-hover);
+  text-decoration-color: currentColor;
+}
+
+/* Underlines for the home page’s text links and the footer’s edit link. */
+html :is(.spectre-text-link, .rp-doc-footer .rp-edit-link) {
+  text-decoration: underline !important;
+  text-decoration-thickness: 1px !important;
+  text-decoration-color: color-mix(in srgb, currentColor 55%, transparent) !important;
+  text-underline-offset: 4px;
+}
+
+html :is(.spectre-text-link, .rp-doc-footer .rp-edit-link):hover {
+  text-decoration-color: currentColor !important;
+}
+
+/* Inline code: a quiet outlined chip. */
+html .rp-doc :not(pre) > code:not(:where(.rp-not-doc *)) {
+  padding: 1px 5px;
+  border: 1px solid var(--xr-border);
+  border-radius: 5px;
+  background: var(--xr-surface);
+  color: var(--xr-fg);
+}
+
+html .rp-doc a.rp-link > code {
+  color: inherit;
 }
 
 html .rp-doc :where(table):not(:where(.rp-not-doc *)) {
@@ -378,6 +441,12 @@ html :where(a, button, input):focus-visible {
   outline-offset: 3px;
 }
 
+/* The search field shows focus on its own rounded box (Rspress colors that border), so the input inside it takes
+   no second ring. */
+html .rp-search-panel__input:focus-visible {
+  outline: none;
+}
+
 @media (min-width: 769px) {
   html .rp-doc-layout__sidebar {
     display: flex;
@@ -401,10 +470,6 @@ html :where(a, button, input):focus-visible {
   html .rp-doc-layout__sidebar > * {
     flex-shrink: 0;
   }
-
-  html .rp-doc-layout__sidebar > [data-context="spectre-version"] {
-    margin-top: auto;
-  }
 }
 
 @media (max-width: 768px) {
@@ -414,15 +479,38 @@ html :where(a, button, input):focus-visible {
   }
 }
 
-/* The homepage uses the native docs sidebar and mobile menu. */
-.spectre-home {
-  --spectre-home-radius: 6px;
-  max-width: var(--spectre-content-width);
+/* ---- Home ----------------------------------------------------------------------------------------------------
+   The home page has no outline, so its doc container drops the reading measure: the hero is a full-width band from
+   the sidebar to the window edge, and the sections below share one wide column (--home-width) between dashed guides.
+   Ruled panels carry a small plus at each corner. */
+html .rp-doc-layout__doc-container:has(.spectre-home) {
+  --home-width: 1120px;
+  max-width: none;
+}
+
+/* Rspress lets the doc column scroll sideways; the band bleeds past it to the window edge, so on the home page the
+   column lets it overflow instead of scrolling. */
+html .rp-doc-layout__doc:has(.spectre-home) {
+  overflow: visible;
+}
+
+/* The previous / next footer lines up with the home column instead of spanning the full width. */
+html .rp-doc-layout__doc-container:has(.spectre-home) .rp-doc-footer {
+  max-width: var(--home-width);
   margin-inline: auto;
+}
+
+/* With the outline off, Rspress still reserves its column; the home page gives that room to the band. */
+html .rp-doc-layout__container:has(.spectre-home) > .rp-doc-layout__outline-placeholder {
+  display: none;
+}
+
+.spectre-home {
+  --home-guide: 32px; /* how far the dashed guides sit outside the column */
   color: var(--rp-c-text-2);
   font-size: 16px;
   line-height: 1.65;
-  padding-bottom: 12px;
+  padding-bottom: 24px;
 }
 
 .spectre-home *,
@@ -449,40 +537,88 @@ html :where(a, button, input):focus-visible {
 .spectre-home :not(pre) > code {
   color: var(--rp-c-text-1);
   padding: 2px 5px;
-  background: var(--rp-c-bg-mute);
+  border: 1px solid var(--xr-border);
+  background: var(--xr-surface);
   border-radius: 4px;
   overflow-wrap: anywhere;
 }
 
+.spectre-home > section:not(.spectre-hero) {
+  position: relative;
+  max-width: var(--home-width);
+  margin-inline: auto;
+}
+
+/* Dashed guides down both sides of the column, through every section, on screens with room for them. */
+@media (min-width: 1100px) {
+  :is(.spectre-home > section:not(.spectre-hero), .wiki-placeholder .spectre-hero-grid)::before {
+    content: "";
+    position: absolute;
+    inset: 0 calc(-1 * var(--home-guide));
+    /* 12px dashes, 12px gaps (a dashed border cannot set either). */
+    --dash: repeating-linear-gradient(var(--xr-grid-line) 0 12px, transparent 12px 24px);
+    background: var(--dash) left / 1px 100% no-repeat, var(--dash) right / 1px 100% no-repeat;
+    pointer-events: none;
+  }
+}
+
+/* Home frames: rounded panels with a small plus on each corner, drawn as one layer of 1px bars (no glyphs), so the
+   frame keeps its own ::before. Hover changes color only, so nothing needs clipping to the rounded corners. */
+:is(.spectre-hero-steps, .spectre-workflow-list, .spectre-resources, .wiki-placeholder .spectre-hero-copy) {
+  position: relative;
+  border: 1px solid var(--xr-border-strong);
+  border-radius: 16px;
+  background: var(--xr-panel);
+}
+
+:is(.spectre-hero-steps, .spectre-workflow-list, .spectre-resources, .wiki-placeholder .spectre-hero-copy)::after {
+  --mark: var(--xr-fg-disabled);
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: -10px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--mark) 0 0) left 0 top 4px / 9px 1px no-repeat,
+    linear-gradient(var(--mark) 0 0) left 4px top 0 / 1px 9px no-repeat,
+    linear-gradient(var(--mark) 0 0) right 0 top 4px / 9px 1px no-repeat,
+    linear-gradient(var(--mark) 0 0) right 4px top 0 / 1px 9px no-repeat,
+    linear-gradient(var(--mark) 0 0) left 0 bottom 4px / 9px 1px no-repeat,
+    linear-gradient(var(--mark) 0 0) left 4px bottom 0 / 1px 9px no-repeat,
+    linear-gradient(var(--mark) 0 0) right 0 bottom 4px / 9px 1px no-repeat,
+    linear-gradient(var(--mark) 0 0) right 4px bottom 0 / 1px 9px no-repeat;
+}
+
+/* ---- Hero: the band bleeds out of the content padding to the sidebar on the left and the window edge on the
+   right. Its content lines up with the column below. */
 .spectre-hero {
   position: relative;
   isolation: isolate;
-  padding: 0;
-  border-bottom: 1px solid var(--xr-border-strong);
+  margin: calc(-1 * var(--rp-content-padding-y)) calc(-1 * (var(--rp-content-padding-x) + var(--spectre-layout-gutter))) 0 calc(-1 * var(--rp-content-padding-x));
+  padding: 0 calc(var(--rp-content-padding-x) + var(--spectre-layout-gutter)) 0 var(--rp-content-padding-x);
+  border-bottom: 1px solid var(--xr-border);
   container-type: inline-size;
 }
 
 .spectre-hero-grid {
-  position: relative;
-  z-index: 1;
+  display: grid;
+  gap: 40px;
+  max-width: var(--home-width);
+  margin-inline: auto;
+  padding-block: 96px 88px;
 }
 
-.spectre-hero-grid {
-  padding: 40px 0 44px;
+/* Without a sidebar, the hero also reaches the left edge of the viewport. */
+.rp-doc-layout__container--no-menu .spectre-hero {
+  margin-left: calc(-1 * (var(--rp-content-padding-x) + var(--spectre-layout-gutter)));
+  padding-left: calc(var(--rp-content-padding-x) + var(--spectre-layout-gutter));
 }
 
-.spectre-hero-copy {
-  position: relative;
-  z-index: 1;
-  min-width: 0;
-}
-
+/* The symbol field covers the whole band; the renderer listens to the band, so hover works edge to edge. */
 .spectre-hero-art {
   position: absolute;
   z-index: 0;
   inset: 0;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
   pointer-events: none;
 }
@@ -495,135 +631,32 @@ html :where(a, button, input):focus-visible {
   height: 100%;
 }
 
-.spectre-hero-diagram {
+.spectre-hero-copy,
+.spectre-hero-steps {
   position: relative;
   z-index: 1;
-  display: block;
-  width: min(100%, 320px);
-  height: auto;
-  margin: 0 auto 32px;
-  overflow: visible;
-  pointer-events: none;
-  fill: none;
+  min-width: 0;
 }
 
-.spectre-hero-diagram text {
-  text-anchor: middle;
-  font-family: var(--xr-font-mono);
-}
-
-.spectre-diagram-arrows {
-  stroke: var(--xr-link);
-  stroke-width: 1;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.spectre-diagram-dashed {
-  stroke-dasharray: 3 4;
-}
-
-.spectre-diagram-icon {
-  stroke: var(--xr-fg-muted);
-  stroke-width: 1.3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.spectre-diagram-frame {
-  fill: color-mix(in srgb, var(--xr-link) 8%, var(--xr-canvas));
-  fill-opacity: .65;
-  stroke: var(--xr-link);
-  stroke-width: 1.2;
-  stroke-dasharray: 4 4;
-}
-
-.spectre-diagram-records > rect {
-  fill: color-mix(in srgb, var(--xr-link) 6%, transparent);
-  stroke: var(--xr-link);
-  stroke-width: 1;
-  stroke-dasharray: 3 3;
-}
-
-.spectre-diagram-records .spectre-diagram-icon {
-  stroke: var(--xr-link);
-}
-
-.spectre-diagram-records text {
-  fill: var(--xr-link);
-  font-size: 10px;
-}
-
-@container (min-width: 780px) {
-  .spectre-hero-grid {
-    min-height: 484px;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
-    align-items: center;
-  }
-
-  .spectre-hero-copy {
-    max-width: none;
-  }
-
-  .spectre-hero-diagram {
-    margin: 0;
-    justify-self: center;
-  }
-
-  .spectre-hero .spectre-hero-copy h1 {
-    font-size: 56px;
-  }
-
-  .spectre-home .spectre-hero-copy .spectre-lead {
-    font-size: 17px;
-  }
-}
-
-@container (max-width: 779px) {
-  .spectre-hero-copy {
-    text-align: center;
-  }
-
-  .spectre-hero .spectre-hero-copy h1,
-  .spectre-home .spectre-hero-copy .spectre-lead,
-  .spectre-home .spectre-hero-copy .spectre-hero-note {
-    margin-inline: auto;
-  }
-
-  .spectre-hero-copy .spectre-actions {
-    justify-content: center;
-  }
-}
-
-.spectre-section-heading,
-.spectre-workflow-title,
-.spectre-resource-label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.spectre-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--rp-c-text-3);
-  font: 500 10px/1.5 var(--rp-font-family-mono);
-  letter-spacing: .07em;
-  text-transform: uppercase;
+/* The eyebrow over the headline is a small tag: a brand square, then mono caps. */
+.spectre-hero-copy > .spectre-eyebrow {
+  margin-bottom: 28px;
+  padding: 5px 10px 5px 8px;
+  border: 1px solid var(--xr-border-strong);
+  border-radius: 6px;
+  background: var(--xr-panel);
+  color: var(--xr-fg-secondary);
 }
 
 .spectre-hero h1 {
-  max-width: 760px;
+  max-width: 700px;
   margin: 0 0 24px;
   color: var(--rp-c-text-0);
-  font-size: clamp(42px, 5.2vw, 68px);
-  font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -.05em;
+  font-size: clamp(40px, 5.6cqi, 64px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -.04em;
+  text-wrap: balance;
 }
 
 .spectre-hero .rp-header-anchor {
@@ -631,24 +664,25 @@ html :where(a, button, input):focus-visible {
 }
 
 .spectre-home .spectre-lead {
-  max-width: 550px;
+  max-width: 560px;
+  color: var(--xr-fg-secondary);
   font-size: 18px;
-  line-height: 1.65;
+  line-height: 1.6;
+  text-wrap: pretty;
 }
 
 .spectre-home .spectre-hero-note {
-  max-width: 550px;
-  margin-top: 12px;
-  color: var(--rp-c-text-3);
+  max-width: 560px;
+  margin-top: 16px;
+  color: var(--xr-fg-muted);
   font-size: 13px;
-  line-height: 1.6;
 }
 
 .spectre-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 32px 0 18px;
+  margin-top: 36px;
 }
 
 .spectre-button {
@@ -681,11 +715,12 @@ html :where(a, button, input):focus-visible {
 
 .spectre-button--secondary {
   color: var(--xr-fg);
-  background: var(--xr-canvas);
+  background: var(--xr-panel);
   border-color: var(--xr-border-strong);
 }
 
 .spectre-button--secondary:hover {
+  color: var(--xr-fg);
   background: var(--xr-hover);
 }
 
@@ -700,20 +735,111 @@ html :where(a, button, input):focus-visible {
   cursor: progress;
 }
 
-.spectre-start {
-  padding-top: 48px;
+/* The four workflow steps share a ruled panel beside the hero copy. */
+.spectre-hero-steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-self: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.spectre-hero-steps > li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px clamp(12px, 2.5cqi, 20px);
+}
+
+.spectre-hero-steps > li:nth-child(odd) {
+  border-right: 1px solid var(--xr-border);
+}
+
+.spectre-hero-steps > li:nth-child(-n + 2) {
+  border-bottom: 1px solid var(--xr-border);
+}
+
+.spectre-hero-step__number {
+  color: var(--xr-link);
+  font: 500 12px/1.5 var(--xr-font-mono);
+}
+
+.spectre-hero-steps h2 {
+  color: var(--xr-fg);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -.02em;
+}
+
+.spectre-hero-steps p {
+  color: var(--xr-fg-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@container (min-width: 900px) {
+  .spectre-hero-grid:has(> .spectre-hero-steps) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
+    gap: 64px;
+    align-items: center;
+  }
+}
+
+@container (min-width: 640px) and (max-width: 899px) {
+  .spectre-hero-steps {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .spectre-hero-steps > li:nth-child(-n + 2) {
+    border-bottom: 0;
+  }
+
+  .spectre-hero-steps > li:not(:last-child) {
+    border-right: 1px solid var(--xr-border);
+  }
+}
+
+/* ---- Sections ---- */
+.spectre-section-heading,
+.spectre-workflow-title,
+.spectre-resource-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Section labels: mono caps after a small brand square. */
+.spectre-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--rp-c-text-3);
+  font: 500 11px/1.5 var(--rp-font-family-mono);
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.spectre-eyebrow::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 1.5px;
+  background: var(--xr-brand);
+}
+
+.spectre-start,
+.spectre-workflow,
+.spectre-browse {
+  padding-top: 88px;
   scroll-margin-top: 128px;
 }
 
-.spectre-start > p,
-.spectre-workflow > p,
-.spectre-browse > p {
-  padding-bottom: 28px;
-  border-bottom: 1px solid var(--rp-c-divider-light);
-}
-
-.spectre-install-panel {
-  margin-top: 26px;
+.spectre-browse {
+  padding-bottom: 72px;
 }
 
 .spectre-section-heading {
@@ -723,28 +849,42 @@ html :where(a, button, input):focus-visible {
 }
 
 .spectre-section-heading h2 {
-  margin-top: 10px;
+  margin-top: 12px;
   color: var(--rp-c-text-0);
-  font-size: clamp(25px, 2.6vw, 32px);
-  line-height: 1.25;
-  letter-spacing: -.025em;
-  font-weight: 700;
+  font-size: clamp(26px, 2.6vw, 34px);
+  line-height: 1.2;
+  letter-spacing: -.03em;
+  font-weight: 600;
+}
+
+/* Section descriptions: one line over a hairline. */
+:is(.spectre-start, .spectre-workflow, .spectre-browse) > p {
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--xr-border);
+  color: var(--xr-fg-secondary);
+  font-size: 17px;
 }
 
 .spectre-text-link {
-  color: var(--rp-c-link);
-  font-size: 13px;
-  font-weight: 600;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  color: var(--rp-c-link);
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .spectre-text-link:hover {
+  color: var(--xr-link-hover);
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 
+.spectre-install-panel {
+  margin-top: 28px;
+}
+
+/* Prompt code blocks on the home page. */
 .spectre-home .rp-codeblock {
   min-width: 0;
   margin: 16px 0;
@@ -754,12 +894,9 @@ html :where(a, button, input):focus-visible {
   text-align: left;
 }
 
-.spectre-start .rp-codeblock {
-  margin: 0 0 16px;
-}
-
 :is(.spectre-start, .spectre-workflow) .rp-codeblock {
-  border-top: 6px solid var(--xr-action); /* a band: the fill blue in both themes */
+  margin: 0 0 16px;
+  border-top: 6px solid var(--xr-action);
 }
 
 :is(.spectre-start, .spectre-workflow) .rp-codeblock__title {
@@ -807,30 +944,15 @@ html :where(a, button, input):focus-visible {
 }
 
 .spectre-check {
-  color: var(--rp-c-brand);
+  color: var(--xr-link);
   font-weight: 700;
 }
 
-.spectre-workflow {
-  padding: 64px 0 48px;
-  scroll-margin-top: 128px;
-}
-
-.spectre-browse {
-  padding-bottom: 48px;
-  scroll-margin-top: 128px;
-}
-
-.spectre-browse > .spectre-resources {
-  margin-top: 26px;
-}
-
-/* Steps two per row; subgrid rows keep their headers, texts and prompts level. */
+/* Subgrid rows align the workflow titles, descriptions, and prompts across each pair of steps. */
 .spectre-workflow-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 32px 24px;
-  margin: 26px 0 0;
+  margin: 28px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -839,8 +961,17 @@ html :where(a, button, input):focus-visible {
   display: grid;
   grid-row: span 3;
   grid-template-rows: subgrid;
-  gap: 8px;
+  gap: 10px;
   margin: 0;
+  padding: 24px;
+}
+
+.spectre-workflow-list > li:nth-child(even) {
+  border-left: 1px solid var(--xr-border);
+}
+
+.spectre-workflow-list > li:nth-child(n + 3) {
+  border-top: 1px solid var(--xr-border);
 }
 
 .spectre-step {
@@ -851,7 +982,7 @@ html :where(a, button, input):focus-visible {
   place-items: center;
   background: var(--xr-surface);
   border: 1px solid var(--xr-border);
-  border-radius: 4px;
+  border-radius: 6px;
   color: var(--xr-fg-muted);
   font: 600 10px/1 var(--rp-font-family-mono);
 }
@@ -864,9 +995,9 @@ html :where(a, button, input):focus-visible {
 .spectre-workflow-title h3 {
   color: var(--rp-c-text-0);
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.4;
-  letter-spacing: -.02em;
+  letter-spacing: -.015em;
 }
 
 .spectre-workflow-title .spectre-state {
@@ -880,28 +1011,29 @@ html :where(a, button, input):focus-visible {
 }
 
 .spectre-workflow-list > li > .rp-codeblock {
-  align-self: start;
-  margin: 4px 0 0;
+  margin: 6px 0 0;
 }
 
 .spectre-state {
-  padding: 4px 10px;
+  padding: 3px 8px;
   border: 1px solid transparent;
+  border-radius: 6px;
   background: var(--xr-chip);
-  border-radius: var(--xr-radius-pill);
   color: var(--rp-c-text-3);
   font: 500 10px/1.5 var(--rp-font-family-mono);
-  letter-spacing: .035em;
+  letter-spacing: .06em;
 }
 
 .spectre-state--planned {
   color: var(--xr-planned-fg);
   background: var(--xr-planned-bg);
+  border-color: var(--xr-border);
 }
 
 .spectre-state--review {
   color: var(--xr-review-fg);
   background: var(--xr-review-bg);
+  border-color: color-mix(in srgb, var(--xr-review-fg) 22%, transparent);
 }
 
 .spectre-state--accepted {
@@ -909,81 +1041,71 @@ html :where(a, button, input):focus-visible {
   background: var(--xr-success-bg);
 }
 
-.spectre-callout {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 20px;
-  border-radius: var(--spectre-home-radius);
-  background: var(--xr-surface);
-  font-size: 16px;
-}
-
-.spectre-callout-mark {
-  color: var(--xr-link);
-  font: 400 24px/1.2 var(--xr-font-mono);
-}
-
-.spectre-callout strong {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--rp-c-text-1);
+/* Browse: a ruled 2×2 frame of links; each cell's label is an orange mono tag with an arrow. */
+.spectre-browse > .spectre-resources {
+  margin-top: 28px;
 }
 
 .spectre-resources {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0;
-  border: 1px solid var(--xr-border-strong);
-  border-radius: var(--spectre-home-radius);
 }
 
 .spectre-resource {
-  display: block;
-  padding: 28px;
-  border-radius: var(--spectre-home-radius);
-  background: var(--xr-panel);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 28px 28px;
   color: var(--rp-c-text-2);
-  transition: background-color 120ms var(--xr-ease), border-color 120ms var(--xr-ease);
 }
 
-.spectre-resource + .spectre-resource {
-  border-left: 1px solid var(--xr-border-strong);
+.spectre-resources > .spectre-resource:nth-child(even) {
+  border-left: 1px solid var(--xr-border);
 }
 
-.spectre-resource:hover {
-  background: var(--xr-surface);
-  border-color: var(--xr-border-strong);
+.spectre-resources > .spectre-resource:nth-child(n + 3) {
+  border-top: 1px solid var(--xr-border);
+}
+
+.spectre-resource:hover :is(h2, h3) {
+  color: var(--xr-link);
 }
 
 .spectre-home .spectre-resource:focus-visible {
-  outline-offset: -4px;
+  outline: 2px solid var(--xr-focus);
+  outline-offset: -2px;
 }
 
 .spectre-resource-label {
-  color: var(--rp-c-text-3);
+  color: var(--xr-link);
   font: 500 11px/1.5 var(--rp-font-family-mono);
+  letter-spacing: .06em;
 }
 
 .spectre-resource-label > span {
-  color: var(--rp-c-link);
-  font-size: 17px;
+  font-size: 15px;
+  line-height: 1;
+  transition: translate 120ms var(--xr-ease);
+}
+
+.spectre-resource:hover .spectre-resource-label > span {
+  translate: 2px -2px;
 }
 
 .spectre-resource :is(h2, h3) {
-  margin: 32px 0 10px;
+  margin: 40px 0 8px;
   color: var(--rp-c-text-0);
-  font-size: 23px;
-  font-weight: 500;
-  letter-spacing: -.025em;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -.02em;
 }
-
-.spectre-home .spectre-resource :is(h2, h3) { font-weight: 700; }
 
 .spectre-resource p {
-  font-size: 16px;
+  max-width: 420px;
+  color: var(--xr-fg-secondary);
+  font-size: 15px;
+  line-height: 1.6;
 }
-
 
 .spectre-home a:focus-visible {
   outline: 2px solid var(--xr-focus);
@@ -995,188 +1117,158 @@ html :where(a, button, input):focus-visible {
   outline-offset: -3px;
 }
 
-@media (max-width: 520px) {
-  .spectre-hero {
-    padding-top: 8px;
+@media (max-width: 768px) {
+  .spectre-hero,
+  .rp-doc-layout__container--no-menu .spectre-hero {
+    margin-inline: calc(-1 * var(--spectre-layout-gutter));
+    padding-inline: var(--spectre-layout-gutter);
   }
 
-  .spectre-resources {
-    grid-template-columns: 1fr;
+  .spectre-hero-grid {
+    padding-block: 56px 48px;
   }
 
-  .spectre-resource + .spectre-resource {
-    border-left: 0;
-    border-top: 1px solid var(--xr-border-strong);
-  }
-
-  .spectre-start {
-    padding-top: 32px;
+  .spectre-start,
+  .spectre-workflow,
+  .spectre-browse {
+    padding-top: 56px;
   }
 
   .spectre-home .spectre-lead {
     font-size: 16px;
   }
 
-  .spectre-workflow {
-    padding-top: 36px;
+  .spectre-resources {
+    grid-template-columns: minmax(0, 1fr);
   }
 
+  .spectre-resources > .spectre-resource:nth-child(even) {
+    border-left: 0;
+  }
+
+  .spectre-resources > .spectre-resource + .spectre-resource {
+    border-top: 1px solid var(--xr-border);
+  }
+
+  .spectre-resource :is(h2, h3) {
+    margin-top: 24px;
+  }
+}
+
+.spectre-workflow {
+  container-type: inline-size;
+}
+
+@container (max-width: 540px) {
   .spectre-workflow-list {
     grid-template-columns: minmax(0, 1fr);
-    row-gap: 24px;
+  }
+
+  .spectre-workflow-list > li:nth-child(even) {
+    border-left: 0;
+  }
+
+  .spectre-workflow-list > li + li {
+    border-top: 1px solid var(--xr-border);
+  }
+
+  .spectre-workflow-list > li {
+    grid-row: auto;
+    grid-template-rows: none;
+    padding: 20px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .spectre-button,
-  .spectre-resource {
-    animation: none;
+  .spectre-resource,
+  .spectre-resource-label > span {
     transition: none;
   }
 }
 
-/* Accent: fills (buttons, bands, the current search result behind white text) use the brand blue
-   in both themes; thin marks (links, focus, borders, icons) use the link blue, lighter on dark. */
-html .rp-suggest-item--current .rp-suggest-item__link { background-color: var(--xr-action); }
-
-/* The project version: plain text just before the search box, on every screen size. */
-html .wiki-version {
-  flex: none;
-  color: var(--xr-fg-secondary);
-  font: 500 12px/1 var(--xr-font-mono);
-  letter-spacing: .02em;
-  white-space: nowrap;
+/* Title-only wiki homes */
+.wiki-placeholder .spectre-hero-grid {
+  position: relative;
+  justify-items: center;
 }
 
-/* Home hero: a small label above the headline and room around the copy, as on the project wikis. */
-.spectre-hero-copy > .spectre-eyebrow {
-  margin-bottom: 24px;
+.wiki-placeholder .spectre-hero-copy {
+  width: min(100%, 680px);
+  padding: clamp(28px, 5cqi, 56px);
+  text-align: center;
 }
 
-.spectre-home:not(.wiki-placeholder):not(.wiki-directory) .spectre-hero-grid {
-  padding-block: 88px 80px;
+.wiki-placeholder h1 {
+  font-size: clamp(32px, 5.6cqi, 64px);
 }
 
-@media (max-width: 768px) {
-  .spectre-home:not(.wiki-placeholder):not(.wiki-directory) .spectre-hero-grid {
-    padding-block: 56px 48px;
-  }
+.wiki-placeholder .spectre-lead {
+  margin-inline: auto;
 }
 
-/* Versioning: file types as expandable rows, drawn like the docs tables. */
-html .rp-doc .spectre-fields {
-  margin: 20px 0;
-  border: var(--rp-code-block-border);
-  border-radius: var(--rp-radius);
-  overflow: hidden;
-  font-size: 14px;
+.spectre-home .wiki-status {
+  margin-top: 24px;
+  color: var(--xr-fg-muted);
+  font: 400 12px/1.5 var(--xr-font-mono);
 }
 
-html .rp-doc .spectre-fields__head,
-html .rp-doc .spectre-fields__row > summary {
-  display: grid;
-  grid-template-columns: minmax(8rem, 11rem) 1fr auto;
-  gap: 1rem;
-  align-items: center;
-  padding: 0.75rem 1rem;
+/* Project directory */
+.wiki-projects {
+  padding-block: 64px 72px;
 }
 
-html .rp-doc .spectre-fields__head {
-  grid-template-columns: minmax(8rem, 11rem) 1fr;
-  background: var(--xr-surface);
-  color: var(--xr-fg);
-  font-weight: 600;
-  border-bottom: 1px solid var(--rp-c-divider-light);
+.wiki-projects .spectre-resource {
+  min-width: 0;
 }
 
-html .rp-doc .spectre-fields__row {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: none;
+.wiki-projects .spectre-resource p {
+  flex: 1;
 }
 
-html .rp-doc .spectre-fields__row + .spectre-fields__row {
-  border-top: 1px solid var(--rp-c-divider-light);
-}
-
-html .rp-doc .spectre-fields__row > summary {
-  cursor: pointer;
-  list-style: none;
-  color: var(--rp-c-text-1);
-}
-
-html .rp-doc .spectre-fields__row > summary::-webkit-details-marker {
-  display: none;
-}
-
-html .rp-doc .spectre-fields__row > summary::after {
-  content: "";
-  width: 8px;
-  height: 8px;
-  margin-right: 4px;
-  border-right: 1.5px solid var(--xr-fg-muted);
-  border-bottom: 1.5px solid var(--xr-fg-muted);
-  transform: translateY(-2px) rotate(45deg);
-  transition: transform 0.15s ease;
-}
-
-html .rp-doc .spectre-fields__row[open] > summary::after {
-  transform: translateY(2px) rotate(-135deg);
-}
-
-html .rp-doc .spectre-fields__row > summary:hover {
-  background: var(--xr-surface);
-}
-
-html .rp-doc .spectre-fields__row > summary:focus-visible {
-  outline: 2px solid var(--xr-link);
-  outline-offset: -2px;
-}
-
-html .rp-doc .spectre-fields__name {
-  color: var(--xr-fg);
-  font-weight: 600;
-}
-
-html .rp-doc .spectre-fields__row > summary code {
-  justify-self: start;
+.wiki-card-path {
+  margin-top: 24px;
+  color: var(--xr-fg-muted);
+  font: 400 11px/1.5 var(--xr-font-mono);
   overflow-wrap: anywhere;
 }
 
-html .rp-doc .spectre-fields__row > :not(summary) {
-  margin: 0;
-  padding: 0 1rem 0.75rem calc(min(11rem, 30%) + 2rem);
-  font-size: 14px;
-  line-height: 1.7;
-}
-
-html .rp-doc .spectre-fields__row > ul {
-  padding-top: 0.25rem;
-  list-style: none;
-}
-
-html .rp-doc .spectre-fields__row li {
-  margin: 0.25rem 0;
-  font-size: 14px;
-  line-height: 1.7;
-}
-
-html .rp-doc .spectre-fields__row > p {
-  color: var(--xr-fg-muted);
-}
-
-@media (max-width: 640px) {
-  html .rp-doc .spectre-fields__head { display: none; }
-  html .rp-doc .spectre-fields__row > summary {
-    grid-template-columns: 1fr auto;
-    row-gap: 0.25rem;
+@media (min-width: 1001px) {
+  .wiki-projects .spectre-resources {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  html .rp-doc .spectre-fields__row > summary code { grid-column: 1; }
-  html .rp-doc .spectre-fields__row > summary::after { grid-column: 2; grid-row: 1 / span 2; }
-  html .rp-doc .spectre-fields__row > :not(summary) { padding-left: 1rem; }
+
+  .wiki-projects .spectre-resource:nth-child(even) {
+    border-left: 0;
+  }
+
+  .wiki-projects .spectre-resource:not(:nth-child(3n + 1)) {
+    border-left: 1px solid var(--xr-border);
+  }
+
+  .wiki-projects .spectre-resource:nth-child(3) {
+    border-top: 0;
+  }
 }
+
+@media (max-width: 768px) {
+  .wiki-projects {
+    padding-block: 48px;
+  }
+}
+
+/* Native controls follow the docs appearance switch. */
+html:root { color-scheme: light; }
+html:root:is(.rp-dark, .dark) { color-scheme: dark; }
+
+/* Wrapped prompts on doc pages break at spaces, like the home page. */
+html .rp-doc .rp-codeblock__content--wrap-code code {
+  word-break: normal !important;
+  overflow-wrap: anywhere;
+}
+
+/* The active search result uses the same fill as the primary button. */
+html .rp-suggest-item--current .rp-suggest-item__link { background-color: var(--xr-action); }
 
 /* Middle widths: the sidebar lies over the second bar, so it needs a solid background. */
 @media (min-width: 769px) and (max-width: 1279px) {
@@ -1394,4 +1486,167 @@ html .rp-doc details:not(:where(.rp-not-doc *)) > :last-child:not(summary) {
   html .rp-doc details:not(:where(.rp-not-doc *)) > summary::before {
     transition: none;
   }
+}
+
+/* Versioning: file types as expandable rows, drawn like the docs tables. */
+html .rp-doc .spectre-fields {
+  margin: 20px 0;
+  border: var(--rp-code-block-border);
+  border-radius: var(--rp-radius);
+  overflow: hidden;
+  font-size: 14px;
+}
+
+html .rp-doc .spectre-fields__head,
+html .rp-doc details.spectre-fields__row > summary {
+  display: grid;
+  grid-template-columns: minmax(8rem, 11rem) 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+}
+
+html .rp-doc .spectre-fields__head {
+  grid-template-columns: minmax(8rem, 11rem) 1fr;
+  background: var(--xr-surface);
+  color: var(--xr-fg);
+  font-weight: 600;
+  border-bottom: 1px solid var(--rp-c-divider-light);
+}
+
+html .rp-doc details.spectre-fields__row {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+html .rp-doc .spectre-fields__row + .spectre-fields__row {
+  border-top: 1px solid var(--rp-c-divider-light);
+}
+
+html .rp-doc details.spectre-fields__row > summary {
+  cursor: pointer;
+  list-style: none;
+  color: var(--rp-c-text-1);
+}
+
+html .rp-doc .spectre-fields__row > summary::-webkit-details-marker {
+  display: none;
+}
+
+html .rp-doc .spectre-fields__row > summary::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  margin-right: 4px;
+  border-right: 1.5px solid var(--xr-fg-muted);
+  border-bottom: 1.5px solid var(--xr-fg-muted);
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.15s ease;
+}
+
+html .rp-doc .spectre-fields__row[open] > summary::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+
+html .rp-doc details.spectre-fields__row > summary:hover {
+  background: var(--xr-surface);
+}
+
+html .rp-doc details.spectre-fields__row > summary:focus-visible {
+  outline: 2px solid var(--xr-link);
+  outline-offset: -2px;
+}
+
+html .rp-doc .spectre-fields__name {
+  color: var(--xr-fg);
+  font-weight: 600;
+}
+
+html .rp-doc .spectre-fields__row > summary code {
+  justify-self: start;
+  overflow-wrap: anywhere;
+}
+
+html .rp-doc details.spectre-fields__row > :not(summary) {
+  margin: 0;
+  padding: 0 1rem 0.75rem calc(min(11rem, 30%) + 2rem);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+html .rp-doc .spectre-fields__row > ul {
+  padding-top: 0.25rem;
+  list-style: none;
+}
+
+html .rp-doc .spectre-fields__row li {
+  margin: 0.25rem 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+html .rp-doc .spectre-fields__row > p {
+  color: var(--xr-fg-muted);
+}
+
+@media (max-width: 640px) {
+  html .rp-doc .spectre-fields__head { display: none; }
+  html .rp-doc details.spectre-fields__row > summary {
+    grid-template-columns: 1fr auto;
+    row-gap: 0.25rem;
+  }
+  html .rp-doc .spectre-fields__row > summary code { grid-column: 1; }
+  html .rp-doc .spectre-fields__row > summary::after { grid-column: 2; grid-row: 1 / span 2; }
+  html .rp-doc details.spectre-fields__row > :not(summary) { padding-left: 1rem; }
+}
+
+html .rp-doc details.spectre-fields__row > summary::before {
+  content: none;
+}
+
+/* Middle widths: the top bar's section links and the version badge do not fit beside the search box (the bar would
+   scroll sideways); the sidebar and the menu button carry the same links. */
+@media (max-width: 1000px) {
+  html .rp-nav-menu--right,
+  html .wiki-version {
+    display: none;
+  }
+}
+
+/* Scrollbars: one thin style everywhere (the page, the sidebar and outline, code blocks, the search panel, demos),
+   a thumb in the wiki's border tone on a clear track, in both themes (darker on hover where the browser draws
+   ::-webkit-scrollbar). Elements that hide their
+   scrollbar (scrolling tab rows) keep doing so: their own rules are more specific. */
+html,
+html *,
+html .rp-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--xr-scrollbar) transparent;
+}
+
+/* Browsers without scrollbar-color (Safari) draw the same: an 8px gutter, a 4px rounded thumb. */
+html ::-webkit-scrollbar,
+html .rp-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+html ::-webkit-scrollbar-track,
+html ::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+html ::-webkit-scrollbar-thumb,
+html .rp-scrollbar::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: var(--xr-scrollbar) padding-box;
+}
+
+html ::-webkit-scrollbar-thumb:hover,
+html .rp-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--xr-scrollbar-hover) padding-box;
 }

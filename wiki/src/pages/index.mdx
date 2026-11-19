@@ -1,9 +1,13 @@
+---
+outline: false
+---
+
 import { CodeBlock, HeroArtwork, CopyPromptButton, installationPrompt, Link } from '@rspress/core/theme';
 
 <div className="spectre-home rp-not-doc">
   <section className="spectre-hero" aria-labelledby="every-change-leaves-a-trace">
+    <HeroArtwork />
     <div className="spectre-hero-grid">
-      <HeroArtwork />
       <div className="spectre-hero-copy">
         <span className="spectre-eyebrow">Implementation protocol</span>
         <h1 id="every-change-leaves-a-trace">Plan, track, and review code changes with AI.</h1>
@@ -14,6 +18,28 @@ import { CodeBlock, HeroArtwork, CopyPromptButton, installationPrompt, Link } fr
           <Link className="spectre-button spectre-button--secondary" href="/commands">Browse commands <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false"><path d="m12 5 7 7-7 7M19 12H5" /></svg></Link>
         </div>
       </div>
+      <ol className="spectre-hero-steps" aria-label="Workflow steps" role="list">
+        <li>
+          <span className="spectre-hero-step__number" aria-hidden="true">01</span>
+          <h2>Plan</h2>
+          <p>Write the plan and add it to the ledger.</p>
+        </li>
+        <li>
+          <span className="spectre-hero-step__number" aria-hidden="true">02</span>
+          <h2>Implement</h2>
+          <p>Apply the change, run checks, and record the results.</p>
+        </li>
+        <li>
+          <span className="spectre-hero-step__number" aria-hidden="true">03</span>
+          <h2>Decide</h2>
+          <p>Review the evidence and accept or reject the change.</p>
+        </li>
+        <li>
+          <span className="spectre-hero-step__number" aria-hidden="true">04</span>
+          <h2>List</h2>
+          <p>See every record and its current state.</p>
+        </li>
+      </ol>
     </div>
   </section>
 
@@ -65,18 +91,18 @@ import { CodeBlock, HeroArtwork, CopyPromptButton, installationPrompt, Link } fr
 
   <section className="spectre-browse" id="reference" aria-labelledby="reference-title">
     <div className="spectre-section-heading">
-      <div><span className="spectre-eyebrow">03 / Go further</span><h2 id="reference-title" data-outline>Every command and rule, in one place</h2></div>
+      <div><span className="spectre-eyebrow">03 / Go further</span><h2 id="reference-title" data-outline>Commands and a worked example</h2></div>
     </div>
-    <p>Look up any operation your agent can run, or read the complete protocol it follows.</p>
+    <p>Look up supported commands or see how a sample repository tracks a change.</p>
     <nav className="spectre-resources" aria-label="Explore XRAY/SPECTRE documentation">
       <Link className="spectre-resource" href="/commands">
         <span className="spectre-resource-label">REFERENCE <span aria-hidden="true">↗</span></span>
         <h3>Command reference</h3><p>Revise a change, check status, capture evidence, or archive completed work.</p>
       </Link>
-      <a className="spectre-resource" href="/spectre/SPECTRE-PROTOCOL.md">
-        <span className="spectre-resource-label">SPECIFICATION <span aria-hidden="true">↗</span></span>
-        <h3>Read the protocol</h3><p>Explore the workflows, evidence rules, and record formats behind XRAY/SPECTRE.</p>
-      </a>
+      <Link className="spectre-resource" href="/example">
+        <span className="spectre-resource-label">WALKTHROUGH <span aria-hidden="true">↗</span></span>
+        <h3>Example repository</h3><p>See how a sample project records plans, results, and decisions.</p>
+      </Link>
     </nav>
   </section>
 </div>
