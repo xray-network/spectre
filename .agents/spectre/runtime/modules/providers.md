@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8aa83ba3ac50feb3cc7a4e25c1a945fc25695fa146bbf4d246abb407ba3c9aad
+Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
 
 ### Pinned provider evidence
 
@@ -26,9 +26,8 @@ to recapture it or silently read Git history. CAPTURE.md is advisory; it cannot 
 Plans select an explicit completed immutable capture and record its pin. Capture publication and
 integrity validation are required; a separate Git commit is not a protocol prerequisite. Version
 control remains recommended repository practice and commands never auto commit. Keep every
-numbered directory and artifact that an active record references in place. A provider that no
-active record references may be archived whole (§9); archived records that pinned it resolve to its
-archived copy and are otherwise kept as is. Numbered evidence
+numbered directory and artifact in place: providers are never archived, and archived records may
+still pin them. Numbered evidence
 and hashes provide stable inputs without requiring a Git-only history store. New provider updates
 never overwrite those files.
 

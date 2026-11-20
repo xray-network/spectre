@@ -18,27 +18,25 @@ Always load `runtime/modules/core.md`. Resolve natural language to supported ope
 command wording. For several operations, deferred outputs, a human decision checkpoint or a reply to
 one, also load `queues.md` and `selectors.md`, report scope, order and checkpoints, and read each
 item's dependencies before executing it. Never load all runtime files by default. Override,
-upgrade, and host setup remain standalone.
+upgrade, absorb, detach and sync remain standalone.
 
 All paths below are relative to `.agents/spectre/runtime/modules/`.
 
 | Operation | Command file | Additional required reads |
 | --- | --- | --- |
 | help | commands/help.md | None |
-| status | commands/status.md | selectors.md, references.md; history.md for archived records; commands/target.md for target summaries |
-| recall | commands/recall.md | selectors.md, references.md, history.md; providers.md for pinned evidence |
-| check | commands/check.md | selectors.md, references.md, history.md, publication.md, validation.md; validation-full.md for installation scope; validation-evidence.md and templates/TEMPLATE_PROVIDER.md for provider checks |
-| sync | commands/sync.md | selectors.md, references.md, history.md, publication.md, validation.md, commands/target.md, templates/TEMPLATE_STATUS.md; validation-full.md for installation scope |
-| target | commands/target.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_STATUS.md |
-| plan | commands/plan.md | selectors.md, references.md, publication.md, commands/target.md, validation.md, templates/TEMPLATE_IMPL.md, templates/TEMPLATE_STATUS.md; history.md for archived inputs; commands/capture.md, providers.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md when relying on providers |
-| implement | commands/implement.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; commands/target.md and templates/TEMPLATE_STATUS.md for declared source relocation; history.md for archived inputs; providers.md and validation-evidence.md for provider inputs |
-| revise | commands/revise.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; commands/target.md and templates/TEMPLATE_STATUS.md for declared source relocation; history.md for archived inputs; providers.md and validation-evidence.md for provider inputs |
+| status | commands/status.md | selectors.md, references.md |
+| recall | commands/recall.md | selectors.md, references.md; providers.md for pinned evidence |
+| sync | commands/sync.md | selectors.md, references.md, publication.md, queues.md, validation.md, templates/TEMPLATE_STATUS.md; validation-full.md for installation scope; validation-evidence.md and templates/TEMPLATE_PROVIDER.md for provider checks |
+| plan | commands/plan.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md, templates/TEMPLATE_STATUS.md; commands/capture.md, providers.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md when relying on providers |
+| implement | commands/implement.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; templates/TEMPLATE_STATUS.md for declared source relocation; providers.md and validation-evidence.md for provider inputs |
+| revise | commands/revise.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; templates/TEMPLATE_STATUS.md for declared source relocation; providers.md and validation-evidence.md for provider inputs |
 | accept / reject / cancel | commands/decide.md | selectors.md, references.md, publication.md, validation.md |
-| archive | commands/archive.md | selectors.md, references.md, history.md, publication.md, validation.md, templates/TEMPLATE_STATUS.md; providers.md, validation-evidence.md and templates/TEMPLATE_PROVIDER.md for provider archive |
+| archive | commands/archive.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_STATUS.md |
 | capture | commands/capture.md | selectors.md, references.md, publication.md, providers.md, validation.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md |
 | upgrade | commands/upgrade.md | Latest protocol completely; commands/override.md, publication.md, references.md, providers.md, validation.md, validation-full.md, validation-evidence.md, the three latest templates |
 | override | commands/override.md | selectors.md, references.md, history.md, publication.md, validation.md |
-| host add / remove | commands/host.md | None |
+| absorb / detach | commands/relocate.md | Both installations; commands/override.md, selectors.md, references.md, history.md, providers.md, publication.md, validation.md, validation-full.md, templates/TEMPLATE_STATUS.md |
 
 Read the matching canonical templates for each record/schema being checked. Provider consumption
 always loads providers.md, validation-evidence.md and the provider template. Read-only operations

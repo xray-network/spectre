@@ -1,7 +1,8 @@
 # Ledger and target registry
 
-Root SPECTRE.md is the sole live lifecycle ledger and the target registry. Archive manifests own
-archived decision rows.
+SPECTRE.md in the installation root is the live lifecycle ledger and the target registry.
+.agents/spectre/archive/SPECTRE-ARCHIVE.md holds archived rows. Both use the canonical table format
+below.
 
 ```markdown
 # SPECTRE implementations
@@ -9,9 +10,8 @@ archived decision rows.
 Protocol-Version: <Protocol-Version of the installed protocol>
 Protocol-SHA256: <SHA-256 of the installed protocol>
 Protocol: [.agents/spectre/runtime/SPECTRE-PROTOCOL.md](.agents/spectre/runtime/SPECTRE-PROTOCOL.md)
-Storage-Mode: <flat|nested>
 
-This is the sole live lifecycle ledger and target registry. Archived rows live in .agents/spectre/archive/ manifests.
+This is the live lifecycle ledger and target registry. Archived rows live in .agents/spectre/archive/SPECTRE-ARCHIVE.md.
 
 ## Targets
 
@@ -28,9 +28,9 @@ This is the sole live lifecycle ledger and target registry. Archived rows live i
 | `repository/0001` | Install SPECTRE | [Instruction](.agents/spectre/implementations/repository/0001-IMPL-INSTR.md) | `ACCEPTED` | [Result](.agents/spectre/implementations/repository/0001-IMPL-RESULT.md) | `LOCAL` | Human requested installation of SPECTRE. |
 ```
 
-Targets: flat installations register their repository slug and label at ./ as the only target, and
-their bootstrap links point directly into implementations/. Nested installations register repository
-for governance; other targets are added by their first plan. Rows are unique and sorted by target
+Targets: a single project registers its one target at ./, named after its folder, which holds the
+bootstrap. A monorepo registers repository at ./ for governance; other targets are added by their
+first plan. The example above is a monorepo's. Rows are unique and sorted by target
 ID. Active paths exist, use ./ or ./path/, and are contained in the installation. A new project's
 path may be absent until any of its records reaches REVIEW when its open plan creates it; retired
 paths retain the last location and may be absent. Status is ACTIVE or RETIRED. Reason gives
@@ -43,7 +43,26 @@ Implementations: one subsection per target with live rows, headed by the target 
 archived. The Implementations heading stays when no subsection remains. No empty table,
 per-target empty marker or discovered-folder subsection is canonical. Never delete the ledger.
 
-Canonical table format, for this ledger and every new archive table:
+The archive ledger, created by the first archive:
+
+```markdown
+# SPECTRE archived implementations
+
+Archived terminal rows, moved from SPECTRE.md. Their record files are in the archive folders next to this file.
+
+## Implementations
+
+### `<target>`
+
+| ID | Title | Instruction | State | Result | Evidence mode | Decision or status |
+| --- | --- | --- | --- | --- | --- | --- |
+```
+
+It has no metadata and no Targets table; targets stay registered in SPECTRE.md. One subsection per
+target with archived rows, ordered by target, rows by numeric ID. Rows are only ever added by
+archive, `absorb`, `detach` or upgrade, and never edited by ordinary maintenance.
+
+Canonical table format, for both ledgers:
 
 - Each header/separator/row is one line starting | followed by a space, ending with a space and |,
   and separating cells with ` | ` (ordinary ASCII spaces and pipe). Separator cells are ---;
@@ -56,7 +75,8 @@ Canonical table format, for this ledger and every new archive table:
 - Metadata lines are `Name: value`, one space after the colon, in the template's order, before the
   first section heading. Unknown metadata fields are errors, not extensions.
 - ID cells use qualified target/NNNN in backticks, with four digits. State and evidence-mode values
-  use backticks. Instruction/result links match that identity and preserve their labels on archive.
+  use backticks. Instruction/result links match that identity; archiving points them at the
+  archived files.
 - Title is a concise two-to-eight-word objective label without ending punctuation; evidence mode
   matches the instruction. One row links exactly one instruction and at most one matching result.
 - States are PLANNED, REVIEW, ACCEPTED, REJECTED or CANCELLED. REVIEW/ACCEPTED/REJECTED require a
@@ -65,9 +85,9 @@ Canonical table format, for this ledger and every new archive table:
 - Decision or status gives the actual reason for state. Accept, reject and cancel use the proof
   shape in commands/decide.md; the bootstrap keeps its fixed proof; PLANNED and REVIEW rows
   describe the current work or blocker.
-- Exactly one accepted bootstrap exists in live or archived history, never recreated after archive.
-- IDs remain unique across live and archived records and are allocated above the sequence maximum.
-  Flat mode has one sequence; nested mode has one per stable target. No stored next-ID counter.
+- Exactly one accepted bootstrap exists across both ledgers, never recreated after archive.
+- IDs remain unique across both ledgers and are allocated above the sequence maximum.
+  Each target has its own sequence. No stored next-ID counter.
 - Every implementation subsection names a target with an ACTIVE Targets row, and every row ID in it
   belongs to that target. Retired targets have no live rows. Removing an empty subsection never
   removes a Targets row or historical records.

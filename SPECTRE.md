@@ -1,11 +1,10 @@
 # SPECTRE implementations
 
 Protocol-Version: 1.0.0
-Protocol-SHA256: 8aa83ba3ac50feb3cc7a4e25c1a945fc25695fa146bbf4d246abb407ba3c9aad
+Protocol-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
 Protocol: [.agents/spectre/runtime/SPECTRE-PROTOCOL.md](.agents/spectre/runtime/SPECTRE-PROTOCOL.md)
-Storage-Mode: nested
 
-This is the sole live lifecycle ledger and target registry. Archived rows live in .agents/spectre/archive/ manifests.
+This is the live lifecycle ledger and target registry. Archived rows live in .agents/spectre/archive/SPECTRE-ARCHIVE.md.
 
 ## Targets
 

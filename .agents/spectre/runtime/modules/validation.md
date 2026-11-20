@@ -1,11 +1,12 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8aa83ba3ac50feb3cc7a4e25c1a945fc25695fa146bbf4d246abb407ba3c9aad
+Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
 
 ## 13. Validation invariants
 
-Validation is mandatory within every operation; a separate check is optional read-only diagnosis,
-never a prerequisite command. Install, upgrade and unscoped check validate the complete installation.
+Validation is mandatory within every operation; a report-only `sync` is optional read-only
+diagnosis, never a prerequisite command. Install, upgrade and unscoped sync validate the complete
+installation.
 Routine writes, including archive, validate the affected dependency closure and shared identity
 indexes without revalidating unrelated evidence. Full validation re-extracts every runtime module
 and template byte-for-byte. Scoped validation verifies loaded module headers and selected formats,
@@ -14,7 +15,7 @@ from a scoped check. Always verify the final affected records before reporting s
 
 Read the canonical status/implementation/target templates for matching checks; provider consumption
 loads its template, providers.md and validation-evidence.md. Live files follow the installed
-templates; archives are read as written. Missing normative evidence blocks its consumer;
+templates. Missing normative evidence blocks its consumer;
 stale historical source links alone do not invalidate terminal decisions.
 
 Every applicable failed invariant blocks the selected write except the exact mechanically
@@ -23,17 +24,15 @@ are reported, not silently waived or expanded into repairs. Override exceptions 
 reported under §9. Read-only diagnosis can report multiple failures instead of stopping at the first.
 
 Checks below are split between this module (records/references/operations), validation-full.md
-(installation and archive indexes), and validation-evidence.md (captured/provider inputs).
+(installation and archive ledger), and validation-evidence.md (captured/provider inputs).
 
 **Ledger and records**
 
-10. Format: the ledger and new manifest tables use §11 canonical delimiters/columns; Targets rows
-    and implementation subsections are unique and sorted; subsections are populated and name ACTIVE
-    targets. Historical
-    manifest table syntax is read as written, never normalized by sync or upgrade.
+10. Format: both ledgers use §11 canonical delimiters/columns; Targets rows and implementation
+    subsections are unique and sorted; live subsections are populated and name ACTIVE targets.
 11. Identity: valid target/provider slugs and four-digit IDs; no new target is all/implementations/
-    providers. Each record ID has one authoritative live or archived row. Sequence allocation scans
-    live records and manifest indexes, never fills gaps or reuses published IDs. Duplicate IDs from
+    providers. Each record ID has exactly one row across both ledgers. Sequence allocation scans
+    both ledgers and the record files, never fills gaps or reuses published IDs. Duplicate IDs from
     parallel branches are blockers resolved under publication.md.
 12. Rows: each live row has one matching instruction, matching title/evidence mode and at most one
     result. REVIEW/ACCEPTED/REJECTED require results; a started PLANNED instruction has a partial result.
@@ -43,8 +42,8 @@ Checks below are split between this module (records/references/operations), vali
     before implementation; historical location never authorizes silent input rebinding.
 14. Completion: implementation-complete reports have matching results, actual required validation,
     and REVIEW or a later human decision. Partial work states its real checks and blockers.
-15. Immutability: terminal record bytes and decisions remain unchanged except authorized archive
-    relocation, an upgrade's rewrite of live records (§14) or explicit override. Every live ACCEPTED or REJECTED row's recorded digests match its
+15. Immutability: terminal record bytes and decisions remain unchanged except an upgrade's rewrite
+    (§14), `absorb`/`detach` or an explicit override. Every live ACCEPTED or REJECTED row's recorded digests match its
     current result bytes; a mismatch is a structural blocker. Source renames do not rewrite terminal
     inputs/history.
 
@@ -52,15 +51,16 @@ Checks below are split between this module (records/references/operations), vali
 
 16. Boundary: local references and active target paths remain inside the installation, including
     realpath/symlink containment. External official provenance URLs are not local input pointers.
-17. Resolution: required inputs and record links resolve uniquely through original-path archive
-    resolution. Historical source locations may be stale; missing normative evidence blocks its
+17. Resolution: links in both ledgers resolve to existing files; record-to-record references resolve
+    by qualified ID through the ledgers. Historical source locations may be stale; missing normative evidence blocks its
     consumer. Never guess replacement evidence or use log text as an input redirect.
 18. Dependencies: DERIVED/HYBRID consume accepted results of this installation, preserving identity
-    and decision through archive. Other projects enter through provider captures of their interfaces.
+    and decision through archiving. Other projects enter through provider captures of their interfaces.
 19. Target ownership/moves: ACTIVE paths exist (a new project's path once any of its records reaches
     REVIEW), target IDs are stable, ownership does not overlap
     except repository governance, RETIRED targets have no live rows and retain identity/last path.
-    Evidence/record moves use archive/override; target move changes current source binding only.
+    Evidence/record moves use archive/absorb/detach/override; a Path update changes current source
+    binding only.
 
 **Operations**
 
@@ -73,8 +73,9 @@ Checks below are split between this module (records/references/operations), vali
     for validation authority, authorization, numbering or recovery. No tracked secrets or credentials.
 37. Publication: writes follow publication.md; a commit point is written last. Interrupted states are
     reported with their next action; only the states marked safe sync are completed automatically.
-38. Sync: only the exhaustive safe corrections in commands/sync.md occur; no missing rows/records
-    reconstructed, no state inferred, no evidence/history deleted, no format upgraded implicitly.
+38. Sync: only the exhaustive safe fixes in commands/sync.md occur without an answer, and target
+    fixes only after the human answers; no rows/records reconstructed, no state inferred, no
+    evidence/history deleted, no format upgraded implicitly.
 39. Targets: the ledger's Targets table uniquely owns IDs, labels, current paths, status and reasons.
     Removing an empty implementation subsection never removes a Targets row or frees its ID.
 

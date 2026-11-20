@@ -28,11 +28,12 @@ Ask a coding agent:
 Read https://wiki.xraynetwork.io/spectre/SPECTRE-PROTOCOL.md completely and install SPECTRE in this repository.
 ```
 
-The installer verifies the versioned canonical bytes, pins that release locally, extracts its
-runtime/templates, and creates the accepted installation record. Later publication never changes
-an existing installation. Installation adds no host adapter; natural-language requests work through
-the `AGENTS.md` pointer. `Spectre host add codex` optionally adds `$spectre` for Codex; other supported
-hosts use `/spectre`. Reload the host after adapter changes.
+The installer installs the exact protocol bytes it read, extracts its runtime/templates, and
+creates the accepted installation record. Later publication never changes an existing installation.
+It installs into the repository root unless you name another folder; a repository can hold several
+independent installations, combined or split later with `absorb` and `detach`. No slash command is
+installed: natural-language requests work through the `AGENTS.md` pointer, and you can create your
+own `/spectre` command that points to `.agents/spectre/ROUTER.md`.
 
 ## Work and maintenance
 
@@ -48,18 +49,13 @@ Spectre reject <records>: <proof>
 Spectre cancel <records>: <reason>
 Spectre status [scope] [state] [--archived]
 Spectre recall [target]: <question>
-Spectre check [scope]
 Spectre sync [scope]
 Spectre archive [scope]
-Spectre archive providers <provider> [<provider>...]
-Spectre target move <target>: <path>
-Spectre target retire <target>: <reason>
-Spectre target reactivate <target>: <path>
 Spectre capture <provider>
 Spectre upgrade
 Spectre override <scope>: <changes> because <reason>
-Spectre host add <host> [<host>...]
-Spectre host remove <host> [<host>...]
+Spectre absorb <path>
+Spectre detach <target> to <path>
 Spectre help [operation]
 ```
 
@@ -75,19 +71,26 @@ checks and record your decisions in the same files. See the
 | --- | --- |
 | Root `SPECTRE.md`, Targets table | Stable target identities, current source paths, active/retired status |
 | Root `SPECTRE.md`, Implementations | Unarchived implementation rows, grouped only under populated targets |
-| `.agents/spectre/archive/<id>/ARCHIVE.md` | Archived rows and preserved human decisions |
+| Root `SPECTRE.md`, Providers | Live providers: source, tracking, latest capture and the records that pin them |
+| `.agents/spectre/*/__archive/<timestamp>/ARCHIVE.md` | Archived rows and preserved human decisions |
 
-Targets register on first planning; a folder rename changes `Path`, not historical IDs. Archiving
-preserves terminal record bytes and removes their live rows and newly empty subsections. Target
-retirement keeps identity/history. IDs continue above all live and archived IDs, never restart.
+Targets register on first planning, with an ID derived from the folder path or package name; a
+folder rename changes `Path`, not historical IDs: run `sync` and it proposes the new path. Records
+live in `implementations/<target>/` in every installation. Archiving moves terminal rows to the
+`ARCHIVE.md` of a new `implementations/__archive/<timestamp>/` folder and their files there,
+unchanged; whole providers archive the same way under `providers/__archive/`. Target retirement
+keeps identity/history. IDs continue above all live and
+archived IDs, never restart.
 `upgrade` is a human-ordered override that brings the installation to the latest protocol: it
 rewrites the live ledger, live records and provider guides and captures to the current formats in
-place, updates every digest and pin that depends on them, and logs each file. Archives stay frozen.
+place, updates every digest and pin that depends on them, and logs each file. Archived records are
+never rewritten; record files from earlier layouts move into the current one.
 
-`check` diagnoses without writes; `sync` makes only deterministic bookkeeping corrections. Neither
-infers record state or deletes evidence. Tracking is plain Markdown with no locks or transaction
+`sync` checks tracking, fixes safe bookkeeping at once, proposes target fixes for your answer and
+reports blockers; asked for a report only, it writes nothing. It never infers record state or
+deletes evidence. Tracking is plain Markdown with no locks or transaction
 logs: every operation writes in one order and its last write is its commit point, so an interrupted
-write leaves a named state that `check` reports and `sync` finishes when provably safe. Version
+write leaves a named state that `sync` reports and finishes when provably safe. Version
 control is the backup. Provider guides remain unversioned, captures remain
 numbered snapshots with full logical inventories and reused earlier artifact bytes; only an upgrade
 rewrites their format, never their artifacts.

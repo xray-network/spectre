@@ -1,44 +1,47 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8aa83ba3ac50feb3cc7a4e25c1a945fc25695fa146bbf4d246abb407ba3c9aad
+Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
 
 ## 4. Repository discovery and target selection
 
 Before installing or preparing an instruction, inspect rather than guess:
 
-- Read root `AGENTS.md` and other repository guidance.
+- Read the repository's and the installation root's `AGENTS.md` and other repository guidance.
 - Inspect manifests, workspace definitions, lockfiles, source roots, test roots, build files, and
   documented completion commands.
 - Identify package or service boundaries and their owners.
 - Prefer terminology already used by the repository.
-- Ignore generated output, vendored dependencies, caches, fixtures, SPECTRE archives, and documentation mirrors as
-  target candidates unless repository instructions explicitly make one independently owned.
+- Ignore generated output, vendored dependencies, caches, fixtures, SPECTRE folders, other
+  installations, and documentation mirrors as target candidates unless repository instructions
+  explicitly make one independently owned.
 
 Choose targets using these rules:
 
-- Use flat mode unless repository discovery establishes that the repository is a monorepo or the
-  current human explicitly requires separate implementation targets.
-- A single application, package, or service uses flat mode. Do not create
-  `implementations/<target>/` for it, even when its name or a plausible target slug is known.
-- A monorepo uses nested mode. Each independently versioned, owned, or validated package/service
-  usually becomes a target when first planned; discovery alone creates no Targets row or directory.
-- In monorepo mode, `repository` is the reserved repository-governance target. Its `0001` record is the
-  SPECTRE installation; it is not a parent product target.
-- A current human may explicitly require nested target directories when repository metadata alone
-  does not establish a monorepo. Absent that direction, use flat mode.
+- Treat the installation as a single project unless repository discovery establishes a monorepo or
+  the current human asks for separate targets.
+- A single application, package, or service has one target, named after the installation root's
+  folder by the default-ID rule below, at Path `./`. It also holds the bootstrap record.
+- A monorepo has one target per independently versioned, owned, or validated package or service,
+  registered when first planned; discovery alone creates no Targets row or directory. `repository`
+  is its reserved governance target at `./`; its `0001` record is the SPECTRE installation, and it
+  is not a parent product target.
 - Do not create both a parent target and child targets for the same implementation ownership.
-- Never mix flat implementation records and target directories in one active installation.
 - Do not use transient branch names, ticket numbers, contributor names, or vague buckets such as
   `misc`.
 - Use lowercase ASCII slugs containing letters, digits, and single hyphens. A target ID matches
   `^[a-z0-9]+(?:-[a-z0-9]+)*$`. `all`, `implementations` and `providers` are reserved
   and are never new target slugs.
+- Default target ID: the target folder's path from the installation root, slugified, with `/`
+  becoming `-` (`js/packages/runtime/` → `js-packages-runtime`). Use the package's own name
+  instead, slugified, when its manifest declares one that is unique in the installation
+  (`@acme/runtime` → `acme-runtime`). Report the chosen ID at the first plan; the human may name a
+  different one then. Once registered, an ID never changes.
 - When two plausible models would assign the same source to different targets, stop before
   creating target directories and ask a human to choose.
 
-Choose the storage mode and target layout during installation. This protocol does not define
-in-place conversion between layouts or historical target-ID renaming. Terminal records retain their original paths except for
-the explicit archive relocation defined in §9; their logical identity and original path remain recorded.
+Decide single project or monorepo during installation. A single project that grows into a
+monorepo keeps its first target and adds more; nothing moves. Record files keep their
+paths; only `absorb`, `detach` and an explicit override move them (§9).
 
 ## 6. Evidence modes and inputs
 
@@ -54,9 +57,9 @@ Every instruction declares exactly one evidence mode:
 Every normative input must be an explicit row in the instruction's input table. Input kinds are
 `PROVIDER`, `IMPLEMENTATION_RESULT`, and `LOCAL`.
 
-- A derived input is valid only while its active or archived decision row is `ACCEPTED` and the
-  linked result matches the implementation ID. Resolve relocated inputs through the §9 archive
-  path map; archiving does not revoke acceptance or require rewriting the consuming instruction.
+- A derived input is valid only while its decision row, live or archived, is `ACCEPTED` and the
+  linked result matches the implementation ID. Archiving never revokes acceptance or requires
+  rewriting the consuming instruction: the input resolves by its qualified ID (history.md).
 - A provider input names an immutable numbered snapshot using the pin format and resolution rules
   in `providers.md`. A provider root, latest alias, branch, tag or `HEAD` alone is not an input pin.
 - A local input names an exact tracked path, requirement, decision, or human-approved statement.
@@ -86,10 +89,10 @@ target selector using §1 and §4 before allocating an ID or creating records.
    plan operation and need no separate command. Planning never prepares a missing provider guide or
    changes a provider's selection rules; report either need as a blocker. A plan that relies on no
    provider evidence (`LOCAL` or `DERIVED`) captures nothing.
-3. Reconcile the applicable sequence: repository-wide in flat mode or target-local in nested mode.
-   Read active records and every archive manifest in that sequence. The next ID is one greater
-   than the highest instruction, result, or ledger ID across both locations. Never fill gaps,
-   reuse IDs, or restart after archiving, even when the active ledger is empty. Refuse incomplete
+3. Reconcile the target's sequence. Read both ledgers and the target's record files, live and
+   archived. The next ID is one greater than the
+   highest instruction, result, or row ID found. Never fill gaps, reuse IDs, or restart after
+   archiving, even when `SPECTRE.md` has no rows. Refuse incomplete
    or conflicting history; if the highest ID is `9999`, stop and report sequence exhaustion. If the
    highest ID is an instruction with no row and no result (an interrupted plan, publication.md),
    stop unless the current request has the same objective; then validate that instruction and
@@ -111,8 +114,8 @@ target selector using §1 and §4 before allocating an ID or creating records.
    edit, add the matching PLANNED row with a short matching objective title, creating its
    implementation subsection only now, and, if the target is used for the first time, its Targets
    row with ACTIVE status and its verified existing Path or the new-project Path its changes create
-   (commands/target.md). Never reactivate a retired target implicitly. Do not create a result or
-   modify source.
+   (references.md). New work for a RETIRED target reactivates it in the same edit and reports
+   that it did. Do not create a result or modify source.
 
 Every change row receives a stable Change ID such as `C01`. IDs are unique within the instruction
 and are used unchanged by the result.
@@ -120,5 +123,5 @@ and are used unchanged by the result.
 Planning command:
 
 ```text
-/spectre plan <target>: <bounded objective>
+Spectre plan <target>: <bounded objective>
 ```

@@ -5,7 +5,7 @@ export const moduleNames = [
   "core.md", "queues.md", "selectors.md", "references.md", "history.md", "providers.md", "publication.md",
   "validation.md", "validation-full.md", "validation-evidence.md",
   ...["help", "status", "recall", "plan", "implement", "revise", "decide", "override", "capture",
-    "archive", "host", "check", "sync", "target", "upgrade"]
+    "archive", "sync", "upgrade", "relocate"]
     .map(name => `commands/${name}.md`)
 ]
 const templateNames = ["STATUS", "IMPL", "PROVIDER"]
@@ -73,7 +73,9 @@ export function extractRelease(source) {
 export function verifyRelease(source) {
   const result = extractRelease(source)
   const { version, runtime, templates, router, pointer } = result
-  const requireText = (body, text, label) => assert.ok(body.includes(text), `${label} lacks ${text}`)
+  // Required phrases match regardless of line wrapping and indentation.
+  const flat = text => text.replace(/\s+/g, " ")
+  const requireText = (body, text, label) => assert.ok(flat(body).includes(flat(text)), `${label} lacks ${text}`)
   assert.ok(source.includes(`Require all ${moduleNames.length} files.`), "wrong extraction file count")
   assert.ok(runtime.get("validation-full.md").includes(`all ${moduleNames.length} modules`), "wrong validation module count")
 
@@ -87,16 +89,17 @@ export function verifyRelease(source) {
       "### Archive record-set selectors", "never gets", "never expand or silently", "commands/decide.md",
       "`api/0004@3f9a1c0b7d2e`, alone or in a comma-separated list"]],
     ["references.md", ["### Installation boundary", "### Target identity and current paths",
-      "### Current inputs and historical source locations"]],
-    ["history.md", ["### Immovable evidence", "### Archives are kept as is", "### Resolving archived records and references",
-      "missing/corrupt/changed evidence", "original repository location"]],
+      "### Current inputs and historical source locations", "A nested\ninstallation's folder belongs to it alone",
+      "Each archive run has one folder, `__archive/<archive-id>/`", "its Providers table every live provider"]],
+    ["history.md", ["### Immovable evidence", "### Archives", "resolves by its qualified ID or provider name",
+      "never rewrite an archived file to repair them", "is blocked until it is revised", "never repair them or substitute another file"]],
     ["publication.md", ["### Publication order", "### Interrupted writes", "### Parallel branches",
       "commit point", "reread it", "Create new files only at paths that do not exist",
-      "Safe sync removes the unpublished batch", "Repeat the same explicit install or upgrade",
+      "Safe sync removes the unpublished copies", "Safe sync removes those live rows, then those originals", "Repeat the same operation; it skips what is already in place", "Repeat the same explicit install or upgrade",
       "Upgrade stopped before its commit point",
       "the write after which its change counts as published", "Revise again; it reconciles the row",
       "explicit `Spectre override`"]],
-    ["commands/plan.md", ["## 4. Repository discovery", "2. Capture first.", "highest instruction, result, or ledger ID",
+    ["commands/plan.md", ["## 4. Repository discovery", "2. Capture first.", "highest instruction, result, or row ID",
       "if the target is used for the first time, its Targets\n   row", "Target-Path", "incomplete captures or missing inherited artifacts block",
       "an interrupted plan", "in one ledger\n   edit, add the matching PLANNED row"]],
     ["commands/implement.md", ["### Declared source relocation", "current Targets Path", "### Sequential batch execution", "partial result", "leave the row `PLANNED`",
@@ -108,31 +111,28 @@ export function verifyRelease(source) {
       "| `Human reply \"<verbatim reply>\"` |", "| `Human decision \"<verbatim input>\" in <tool>` |",
       "proof is always dated", "fixed proof and has no digest", "one root SPECTRE.md edit",
       "only their State and Decision\nor status cells", "future-result acceptance", "never parse them for authority"]],
-    ["commands/archive.md", ["#### Implementations archive", "#### Provider archive", "Protocol-Version: <Protocol-Version of the installed protocol>",
-      "selected terminal", "prune\n   newly empty", "if any live record references", "Record paths",
-      "Already archived selected IDs are no-ops", "the commit point of the copy", "Then write ARCHIVE.md"]],
-    ["commands/target.md", ["target move", "target retire", "target reactivate", "no live ledger rows",
-      "same logical project", "never reuse", "Target operations never move/delete", "change its row in one ledger edit",
-      "The one exception is a new project"]],
-    ["commands/check.md", ["reads and diagnoses, never mutates", "exactly what was", "publication.md", "duplicate IDs"]],
-    ["commands/sync.md", ["Allowed corrections are exhaustive", "Refuse", "orphan instructions/results",
-      "reconstruct/delete record rows", "marks safe sync", "Corrections elsewhere proceed"]],
+    ["commands/archive.md", ["### Archive workflow", "Spectre archive provider <provider>", "`implementations/__archive/<archive-id>/<target>/`",
+      "`providers/__archive/<archive-id>/<provider>/`", "This is the commit point", "Report what the move affects, then proceed",
+      "delete the verified originals", "Already archived IDs are no-ops", "Pinned by"]],
+    ["commands/relocate.md", ["### Absorb and detach", "Build the ID map before writing", "Keep every record number",
+      "`absorb <path>`:", "`detach <target> to <path>`:", "blocks the run", "free number instead of `0001`",
+      "A repeated run skips what is already in place"]],
+    ["commands/sync.md", ["### Sync", "This list is exhaustive", "Proposed fixes, applied only after the human answers", "Moved target", "Removed target", "never pick one", "stop here: write nothing", "never a queue item"]],
     ["commands/upgrade.md", ["### Upgrade procedure", "human-ordered override", "Rewrite every live file to the latest templates",
       "Never invent content", "Needs revise after upgrade to",
-      "replace each cited digest", "touch `archive/`", "every artifact\n     file", "ascending\n   capture order",
+      "replace each cited digest", "Bring files into the current layout", "every artifact\n     file", "in ascending capture order",
       "the commit point", "Protocol-SHA256", "same Protocol-Version with a different SHA-256 still\n   upgrades", "Version control is the rollback path", "repeating an interrupted upgrade completes it",
-      "never add\n   absent ones", "Append one override log row", "Update only references that bind bytes",
+      "never touch a custom slash command", "Append one override log row", "Update only references that bind bytes",
       "keep the hashes they\n     recorded"]],
-    ["commands/host.md", ["### Optional host adapters", "`host add`:", "`host remove`:", "is itself\nthe current-human SPECTRE mention"]],
     ["providers.md", ["### Pinned provider evidence", "### Capture format", "keep the hashes they recorded",
       "complete resolved inventory", "a separate Git commit is not a protocol prerequisite"]],
     ["commands/capture.md", ["### Compound-queue provider preparation", "### Publish a numbered incremental capture",
-      "stop without tracked writes for NO-CHANGE", "archived captures are never predecessors or artifact owners",
+      "stop without tracked writes for NO-CHANGE",
       "SNAPSHOT.md last, the commit point"]],
     ["commands/recall.md", ["### Recall", "It is read-only", "Cite every statement"]],
     ["commands/status.md", ["### Status and listing", "Parse `status [scope] [state] [--archived]`", "read-only"]],
     ["validation.md", ["## 13. Validation invariants", "recorded digests match its\n    current result bytes", "37. Publication:", "38. Sync:", "39. Targets:"]],
-    ["validation-full.md", ["1. Runtime: all 25 modules", "Three canonical templates exist"]]
+    ["validation-full.md", ["1. Runtime: all 23 modules", "Three canonical templates exist", "29. Archives:", "32. Relocation:"]]
   ])
   // These phrases identify normative rules in the selectively loaded module, not just elsewhere
   // in the full document. Wording changes must update the release validator deliberately.
@@ -144,7 +144,7 @@ export function verifyRelease(source) {
   }
   assert.ok(!runtime.get("core.md").includes("### Natural-language operation queues"), "queue rules must load only from queues.md")
   assert.ok(!runtime.get("selectors.md").includes("Human command"), "decision proof rules belong only in decide.md")
-  assert.ok(!runtime.get("references.md").includes("### Archives are kept as is"), "archive history loads only from history.md")
+  assert.ok(!runtime.get("references.md").includes("### Archives\n"), "archive rules load only from history.md")
   assert.ok(!/\| accept \/ reject \/ cancel \|[^\n]*history\.md/.test(router), "decisions do not load archive history")
   requireText(source, "except\n   validation item 7, which needs the bootstrap record being created", "install step")
 
@@ -156,26 +156,24 @@ export function verifyRelease(source) {
   for (const [operation, file, dependencies] of [
     ["help", "commands/help.md", []],
     ["status", "commands/status.md", ["selectors.md", "references.md"]],
-    ["recall", "commands/recall.md", ["references.md", "history.md"]],
-    ["check", "commands/check.md", ["validation-full.md", "validation.md", "publication.md"]],
-    ["sync", "commands/sync.md", ["publication.md", "commands/target.md", "validation.md", "TEMPLATE_STATUS.md"]],
-    ["target", "commands/target.md", ["publication.md", "validation.md", "TEMPLATE_STATUS.md"]],
-    ["plan", "commands/plan.md", ["publication.md", "commands/target.md", "validation-evidence.md", "TEMPLATE_STATUS.md"]],
-    ["implement", "commands/implement.md", ["publication.md", "commands/target.md", "TEMPLATE_STATUS.md", "validation.md", "validation-evidence.md"]],
-    ["revise", "commands/revise.md", ["publication.md", "commands/target.md", "TEMPLATE_STATUS.md", "validation.md", "validation-evidence.md"]],
+    ["recall", "commands/recall.md", ["references.md", "selectors.md"]],
+    ["sync", "commands/sync.md", ["publication.md", "queues.md", "validation.md", "validation-full.md", "TEMPLATE_STATUS.md"]],
+    ["plan", "commands/plan.md", ["publication.md", "validation-evidence.md", "TEMPLATE_STATUS.md"]],
+    ["implement", "commands/implement.md", ["publication.md", "TEMPLATE_STATUS.md", "validation.md", "validation-evidence.md"]],
+    ["revise", "commands/revise.md", ["publication.md", "TEMPLATE_STATUS.md", "validation.md", "validation-evidence.md"]],
     ["accept / reject / cancel", "commands/decide.md", ["publication.md", "validation.md"]],
-    ["archive", "commands/archive.md", ["history.md", "publication.md", "validation.md", "TEMPLATE_STATUS.md", "validation-evidence.md"]],
+    ["archive", "commands/archive.md", ["publication.md", "validation.md", "TEMPLATE_STATUS.md"]],
     ["capture", "commands/capture.md", ["publication.md", "providers.md", "validation-evidence.md"]],
     ["upgrade", "commands/upgrade.md", ["commands/override.md", "publication.md", "providers.md", "validation-full.md", "validation-evidence.md"]],
     ["override", "commands/override.md", ["history.md", "publication.md", "validation.md"]],
-    ["host add / remove", "commands/host.md", []]
+    ["absorb / detach", "commands/relocate.md", ["commands/override.md", "providers.md", "validation-full.md", "TEMPLATE_STATUS.md"]],
   ]) {
     const route = routes.get(operation)
     assert.ok(route, `missing router operation: ${operation}`)
     assert.equal(route.file, file, `wrong module for ${operation}`)
     for (const dep of dependencies) requireText(route.deps, dep, `${operation} route`)
   }
-  assert.equal(routes.size, 15, "unexpected/missing router operation")
+  assert.equal(routes.size, 13, "unexpected/missing router operation")
   assert.ok(!routes.get("archive").deps.includes("validation-full.md"), "routine archive must check affected closure")
   for (const text of ["queues.md", "is not a mention", "publication.md"]) requireText(router, text, "router")
   for (const file of router.matchAll(/(?:commands\/[a-z]+|templates\/TEMPLATE_[A-Z]+|[a-z][a-z-]*)\.md/g)) {
@@ -209,7 +207,8 @@ export function verifyRelease(source) {
     "Targets: [", "live section", "Preserve all PLANNED, REVIEW and terminal records", "rewrite historical evidence",
     "Standard-ID", "Standard-Version", "Canonical-URL", "Runtime-Version", "-Schema-Version", "Archive-Version",
     "-Workflow-Version", "Implementation-Version", "Result-Version", "Provider-Capture-Version",
-    "Status-Template-Version", "/spectre/protocol/v", "upgrade <version>", "intervening release"]) {
+    "Status-Template-Version", "/spectre/protocol/v", "upgrade <version>", "intervening release",
+    "#### Provider archive", "archive providers", "host add", "host remove", "Optional host adapters", "flat mode", "nested mode", "Storage-Mode", "Spectre target move", "Spectre target retire", "Spectre target reactivate", "`target move", "`target retire", "commands/check.md", "commands/target.md", "Archive manifest", "### Resolving archived records", "archive indexes"]) {
     assert.ok(!source.includes(oldRule), `contradictory legacy rule: ${oldRule}`)
   }
   let tableColumns

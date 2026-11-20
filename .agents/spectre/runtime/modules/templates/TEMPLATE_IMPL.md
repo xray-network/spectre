@@ -1,16 +1,13 @@
 # Implementation instruction and result workflow
 
-Sequences are four digits and begin at `0001`. Flat mode has one repository-wide sequence;
-monorepo mode has one independent sequence per target. Both modes allocate IDs above the highest
-active or archived ID in their sequence. Archiving never resets numbering.
-
-In flat mode, `<target>` in headings and `Implementation-ID` is the repository slug, but instruction
-and result files remain directly under `implementations/`. In monorepo mode, `<target>` is the
-target-directory slug.
+Sequences are four digits and begin at `0001`, one independent sequence per target. IDs are
+allocated above the highest live or archived ID in the sequence. Archiving never resets numbering.
+`<target>` in headings, `Implementation-ID` and the record folder `implementations/<target>/` is the
+target ID.
 
 Installation is the only workflow that may create an instruction and result in one operation and
-enter `ACCEPTED` immediately. It uses implementation `0001` in flat mode or `repository/0001` in monorepo
-mode, and the human installation request is its decision proof.
+enter `ACCEPTED` immediately. It uses `<target>/0001` of a single project's one target, or
+`repository/0001` in a monorepo, and the human installation request is its decision proof.
 
 ## Instruction
 

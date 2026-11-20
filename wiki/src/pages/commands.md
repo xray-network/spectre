@@ -1,61 +1,228 @@
-# Commands and natural language
+# Commands
 
-Describe the work in your own words. XRAY/SPECTRE resolves that request to the same operations and rules
-as explicit commands; it does not require you to memorize syntax. It reports bounded scopes and
-queues before changing files, asking only when intent, ownership or a required decision is unclear.
+Describe the work in your own words, or use a command. Both reach the same operations and rules:
+start a request with `Spectre`, and your agent resolves it, reports what it will do, and asks only
+when intent, ownership or a decision is unclear. Open any command to see what it does, how to ask for
+it, and what you get.
 
-```text
-Spectre, plan the wallet change and implement it.
-Spectre, implement these plans and archive them after my decision.
-Spectre, check tracking and fix safe bookkeeping inconsistencies.
-Spectre, the graph source moved to ./mini-app-graph/; update its target path.
-```
+## Changes
 
-New workflows require a current-human SPECTRE mention: natural language such as `Spectre status`,
-or an optional installed `/spectre` command (`$spectre` in Codex). A direct reply to its uniquely pending clarification/checkpoint may continue
-that bounded interaction without repeating the name. Unrelated conversation never activates it.
-Protocol questions and quoted examples authorize no mutation. An explicit request to deliver
-a new bounded change includes the required plan → implement preparation; an existing suitable plan
-is reused. Planning-only requests stop at PLANNED, and a missing explicit ID is never replaced.
+Create the work and carry it out: the everyday loop.
 
-## Operation reference
+<div class="spectre-fields spectre-fields--commands">
+<div class="spectre-fields__head"><span>Command</span><span>Syntax</span></div>
+<details class="spectre-fields__row" id="plan">
+<summary><span class="spectre-fields__name">Plan</span><code>Spectre plan &lt;target&gt;: &lt;objective&gt;</code></summary>
+<div class="spectre-command">
+<p>Writes one bounded plan for a change: its inputs, required changes, checks and completion criteria. The first plan for a target registers it, and a plan that relies on outside evidence captures it first. No product code changes.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre plan api: add a health endpoint
+Spectre, plan rate limiting for the API service</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>An instruction file, <code>NNNN-IMPL-INSTR.md</code>, and a <code>PLANNED</code> row in <code>SPECTRE.md</code>.</p>
+</div>
+</details>
+<details class="spectre-fields__row" id="implement">
+<summary><span class="spectre-fields__name">Implement</span><code>Spectre implement &lt;record&gt;</code></summary>
+<div class="spectre-command">
+<p>Carries out a <code>PLANNED</code> plan: changes source and tests, runs the required checks and records the outcome. A batch finishes each record before starting the next. Blocked work stays <code>PLANNED</code> with an honest partial result.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre implement api/0004
+Spectre implement --batch api/0004..0006
+Spectre, implement the plans just listed</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>The product changes, a result file, <code>NNNN-IMPL-RESULT.md</code>, with the checks that actually ran, and the row moved to <code>REVIEW</code>.</p>
+</div>
+</details>
+<details class="spectre-fields__row" id="revise">
+<summary><span class="spectre-fields__name">Revise</span><code>Spectre revise &lt;record&gt;: &lt;changes&gt;</code></summary>
+<div class="spectre-command">
+<p>Refines a <code>PLANNED</code> plan without touching code, or changes a <code>REVIEW</code> implementation within its objective and reruns the affected checks. A change that grows the scope or moves ownership needs a new plan.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre revise api/0004: also cover the 429 response</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>The updated instruction, and for <code>REVIEW</code> work the updated code and result. The state does not change.</p>
+</div>
+</details>
+</div>
 
-```text
-Spectre plan <target>: <objective>
-Spectre implement <record>
-Spectre implement --batch <records>
-Spectre revise <record>: <changes>
-Spectre accept <records>: <proof>
-Spectre reject <records>: <proof>
-Spectre cancel <records>: <reason>
-Spectre status [scope] [state] [--archived]
-Spectre recall [target]: <question>
-Spectre check [scope]
-Spectre sync [scope]
-Spectre archive [scope]
-Spectre archive implementations [scope]
-Spectre archive providers <provider> [<provider>...]
-Spectre target move <target>: <path>
-Spectre target retire <target>: <reason>
-Spectre target reactivate <target>: <path>
-Spectre capture <provider>
-Spectre upgrade
-Spectre override <scope>: <changes> because <reason>
-Spectre host add <host> [<host>...]
-Spectre host remove <host> [<host>...]
-Spectre help [operation]
-```
+## Decisions
 
-Open work is closed by explicit cancellation, never by an archive flag. There is no generic record
-deletion or unrestricted repair operation.
+Only you run these. Each one closes a record or records your verdict on it.
 
-## Queue operations in natural language
+<div class="spectre-fields spectre-fields--commands">
+<div class="spectre-fields__head"><span>Command</span><span>Syntax</span></div>
+<details class="spectre-fields__row" id="accept">
+<summary><span class="spectre-fields__name">Accept, reject</span><code>Spectre accept &lt;records&gt;: &lt;proof&gt;</code></summary>
+<div class="spectre-command">
+<p>Records your decision on <code>REVIEW</code> work. Only you can decide: passing tests, merges and "looks good" never do. Add the digest of the result you reviewed to make the decision apply only to those exact bytes.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre accept api/0004: tested the limiter under load
+Spectre accept api/0004@3f9a1c0b7d2e: reviewed the result and checks
+Spectre reject api/0005: the retry policy is wrong</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>The row becomes <code>ACCEPTED</code> or <code>REJECTED</code>, with your words, the date and the reviewed result's digest (<a href="#decision-proof">decision proof</a>).</p>
+</div>
+</details>
+<details class="spectre-fields__row" id="cancel">
+<summary><span class="spectre-fields__name">Cancel</span><code>Spectre cancel &lt;records&gt;: &lt;reason&gt;</code></summary>
+<div class="spectre-command">
+<p>Abandons <code>PLANNED</code> or <code>REVIEW</code> work with your reason. Code changes and partial results stay: cancelling is not a rollback.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre cancel api/0006: the gateway was dropped</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>A <code>CANCELLED</code> row with your reason and the date.</p>
+</div>
+</details>
+</div>
+
+## Look up
+
+Read-only: no file ever changes.
+
+<div class="spectre-fields spectre-fields--commands">
+<div class="spectre-fields__head"><span>Command</span><span>Syntax</span></div>
+<details class="spectre-fields__row" id="status">
+<summary><span class="spectre-fields__name">Status</span><code>Spectre status [scope] [state] [--archived]</code></summary>
+<div class="spectre-command">
+<p>Shows targets with their paths and counts, a target's records, a provider with its captures and the records that pin it, or one record with its plan, result and decision. <code>--archived</code> lists archived rows instead. Read-only.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre status
+Spectre status api REVIEW
+Spectre status api/0004
+Spectre status uplc
+Spectre status the rate limiting change</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>A summary in the conversation. No file changes.</p>
+</div>
+</details>
+<details class="spectre-fields__row" id="recall">
+<summary><span class="spectre-fields__name">Recall</span><code>Spectre recall [target]: &lt;question&gt;</code></summary>
+<div class="spectre-command">
+<p>Answers why something exists or what was decided, using the records as the only source: accepted decisions first, then pending, planned, superseded and rejected work.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre recall api: why do we rate-limit by API key?</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>An answer that cites each record's ID, decision and checks. No file changes.</p>
+</div>
+</details>
+<details class="spectre-fields__row" id="help">
+<summary><span class="spectre-fields__name">Help</span><code>Spectre help [operation]</code></summary>
+<div class="spectre-command">
+<p>Explains operations, queues, checkpoints and where each one stops.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre help
+Spectre help archive</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>An explanation in the conversation. No file changes.</p>
+</div>
+</details>
+</div>
+
+## Records and evidence
+
+Keep tracking healthy, the live ledger short and captured sources current.
+
+<div class="spectre-fields spectre-fields--commands">
+<div class="spectre-fields__head"><span>Command</span><span>Syntax</span></div>
+<details class="spectre-fields__row" id="sync">
+<summary><span class="spectre-fields__name">Sync</span><code>Spectre sync [scope]</code></summary>
+<div class="spectre-command">
+<p>Checks tracking and repairs what it can. Safe bookkeeping (sorting, empty subsections, finishing an interrupted archive or capture) is fixed at once. Target fixes, such as a renamed project folder or a deleted one, are proposed for your answer. Anything that needs a decision is reported and left alone. Run it after you rename, move or delete a folder, or when something looks off. Ask for a report only to change nothing.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre sync
+Spectre sync api
+Spectre sync, report only</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>A report of what was checked and fixed, and a list of proposals such as "<code>js</code> moved to <code>./javascript/</code>: update its path?". Reply "apply them" or name the ones you want.</p>
+</div>
+</details>
+<details class="spectre-fields__row" id="archive">
+<summary><span class="spectre-fields__name">Archive</span><code>Spectre archive [scope]</code></summary>
+<div class="spectre-command">
+<p>Moves finished work out of <code>SPECTRE.md</code>. Finished records (<code>ACCEPTED</code>, <code>REJECTED</code>, <code>CANCELLED</code>) go to <code>implementations/__archive/&lt;timestamp&gt;/&lt;target&gt;/</code>; open work stays. <code>archive provider</code> moves a whole provider to <code>providers/__archive/&lt;timestamp&gt;/</code>, even while plans still use it. Before moving, it lists the plans and product files that use what is moving; afterwards <code>sync</code> keeps reporting them until you fix them, by hand or with a new plan.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre archive api/0004, api/0005
+Spectre archive api
+Spectre archive
+Spectre archive provider cardano-ledger</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>A shorter <code>SPECTRE.md</code>, the moved files in a new timestamped <code>__archive</code> folder, and an <code>ARCHIVE.md</code> there holding the rows and decisions that left the ledger.</p>
+</div>
+</details>
+<details class="spectre-fields__row" id="capture">
+<summary><span class="spectre-fields__name">Capture</span><code>Spectre capture &lt;provider&gt;</code></summary>
+<div class="spectre-command">
+<p>Snapshots evidence from an outside source, such as an upstream repository, a specification or another project's interface, when it has changed. Plans pin these snapshots instead of a moving branch.</p>
+<p>To capture a GitHub repository for the first time, name the provider and give its official URL in one request. Your agent writes the provider's guide (its source, what to track and what to leave out), then runs the first capture. Say what to follow, such as a tag or branch, and which parts matter; the agent asks when that is unclear. Upstream code is only read as evidence, never run.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre, create the plutus provider from https://github.com/IntersectMBO/plutus, follow its release tags, and capture the UPLC spec and conformance tests
+Spectre capture plutus
+Spectre capture cardano-ledger</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>For a new provider, its guide, <code>providers/&lt;provider&gt;/PROVIDER.md</code>. Then a numbered capture, <code>providers/&lt;provider&gt;/NNNN/</code>, with the pinned commit, its specification, a summary of what changed and the selected files. Nothing when the source has not changed.</p>
+</div>
+</details>
+</div>
+
+## Installation
+
+Change the setup itself. Each runs on its own, never inside a queue; commit first.
+
+<div class="spectre-fields spectre-fields--commands">
+<div class="spectre-fields__head"><span>Command</span><span>Syntax</span></div>
+<details class="spectre-fields__row" id="upgrade">
+<summary><span class="spectre-fields__name">Upgrade</span><code>Spectre upgrade</code></summary>
+<div class="spectre-command">
+<p>Brings the installation to the latest protocol and rewrites live records and provider files to its formats. Commit first: version control is the rollback. See <a href="./versioning#upgrading">versioning</a>.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre upgrade</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>New rule files, rewritten live records, a log row for every changed file and a proposed commit message.</p>
+</div>
+</details>
+<details class="spectre-fields__row" id="absorb">
+<summary><span class="spectre-fields__name">Absorb</span><code>Spectre absorb &lt;path&gt;</code></summary>
+<div class="spectre-command">
+<p>Merges the installation inside <code>&lt;path&gt;</code> into this one: its targets, records, providers and rows. Record numbers stay; a colliding target ID gets the folder as prefix. See <a href="./concepts#combine-and-split-installations">combine and split installations</a>.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre absorb ./mobile/</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>One installation, with the ID map (<code>app/0003</code> → <code>mobile-app/0003</code>) recorded in both ledgers and logs.</p>
+</div>
+</details>
+<details class="spectre-fields__row" id="detach">
+<summary><span class="spectre-fields__name">Detach</span><code>Spectre detach &lt;target&gt; to &lt;path&gt;</code></summary>
+<div class="spectre-command">
+<p>Moves one target, its records and the providers it pins into the installation at <code>&lt;path&gt;</code>, creating it when needed. It refuses while live work in another target depends on this one.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre detach payments to ./services/payments/</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>The target in its own installation, and a <code>RETIRED</code> row here naming where it went.</p>
+</div>
+</details>
+<details class="spectre-fields__row" id="override">
+<summary><span class="spectre-fields__name">Override</span><code>Spectre override &lt;scope&gt;: &lt;changes&gt; because &lt;reason&gt;</code></summary>
+<div class="spectre-command">
+<p>Makes an exceptional change that the normal rules forbid, such as renumbering a record or moving evidence, and updates everything that refers to it. It needs an exact scope and your reason.</p>
+<p class="spectre-command__label">Examples</p>
+<pre><code>Spectre override api/0007: renumber it to the next free ID because two branches allocated api/0007</code></pre>
+<p class="spectre-command__label">You get</p>
+<p>The change, every dependent reference updated, a log row per file and a proposed commit message.</p>
+</div>
+</details>
+</div>
+
+There is no command to delete records or force a state: open work ends with `cancel`, and anything
+exceptional goes through `override`.
+
+## Several operations in one request
+
+One request can name several operations. Your agent reports the resolved queue before writing:
 
 ```text
 Spectre, plan the API change, implement it, then archive it after my decision.
 ```
-
-The agent reports:
 
 ```text
 plan API objective
@@ -64,229 +231,57 @@ plan API objective
 → archive that exact record after a terminal decision
 ```
 
-Later operations bind exact earlier output IDs before writing. "Them" means those selected outputs,
-never every record or its whole parent target. Independently reviewable plans may be created only
-within a requested bounded objective. Each item completes its own checks and tracking publication
-before the next. A blocker stops the queue, preserves completed/partial work, and identifies the
-exact remaining items. `Spectre continue the queue` resumes that fixed remainder without rerunning
-completed items or reevaluating "all".
+- Later steps bind the exact IDs that earlier steps produced; "them" never grows to a whole target.
+- Each step finishes its own checks and records before the next starts.
+- A blocker stops the queue and keeps finished work. `Spectre continue the queue` resumes the rest
+  without rerunning what finished.
+- `sync`, `upgrade`, `override`, `absorb` and `detach` always run on their own, never inside a queue.
 
-### Human checkpoints
+## Checkpoints
 
-Implementation produces `REVIEW`, which is not eligible for archive. XRAY/SPECTRE displays the exact
-IDs, results, checks and reviewed-result hashes, then asks for a decision. Reply, for example:
+When a queued step needs your decision, the agent stops and shows the exact IDs, results, checks and
+result digests. Reply directly; you do not need to repeat "Spectre":
 
 ```text
 Accept both and continue.
 ```
 
-That explicit reply can supply checkpoint acceptance without another SPECTRE mention. For a batch
-checkpoint, proof records your verbatim reply, date and the digest of each displayed result. If review
-material changes, the checkpoint must refresh before a new decision. Praise, "yes", passing tests,
-merges and silence do not decide state. A cancellation batch still needs an applicable reason.
+A reply needs a decision verb. "Yes", praise, passing tests and silence decide nothing. If the
+results change before you reply, the agent shows them again. An unrelated task in between ends the
+checkpoint; start again with a SPECTRE mention.
 
-After your decision, the original requested continuation can proceed without another archive
-confirmation. If continuation was not authorized, XRAY/SPECTRE records the decision and stays paused.
-A requested revision returns to human review before pending archive. Unrelated intervening tasks
-or lost context invalidate name-free continuation; renew activation and scope explicitly.
+## Selecting records
 
-Existing-record decisions can appear in queues when explicitly authorized with applicable proof:
+- **One record:** a qualified ID (`api/0004`), a unique bare ID, or a description ("the rate limiting
+  change").
+- **Several:** comma-separated IDs, a range within one target (`api/0004..0006`), or a bounded
+  description ("all PLANNED plans in api").
+- **Latest:** the highest ID within one target.
 
-```text
-Spectre, accept api/0004 because I reviewed its result and checks, then archive it.
-Spectre, cancel these plans because they are superseded, then archive them.
-```
+The whole set is fixed before anything is written. A wrong or missing ID is reported, never
+replaced with a similar one, and an ineligible record stops the command instead of being skipped.
 
-Approval cannot apply in advance to future or changed results. `override`, `upgrade`, and host setup
-remain standalone. Planning alone never implements, and implementing alone never accepts/archives.
+## Decision proof
 
-## Select records and targets
-
-Use a qualified ID (`api/0004`), a unique bare ID, a title/objective description, or established
-context (`the plans just listed`). A batch accepts comma-separated qualified IDs, a target-local
-inclusive range (`api/0004..0006`), or a bounded plural description. The complete set is fixed before
-mutation; duplicate/missing IDs or ineligible selections are not silently skipped.
-
-Target descriptions resolve through the ledger's Targets table and repository ownership. An invalid explicit ID
-never gets a fuzzy substitute. Ambiguous matches require clarification. "Latest" means creation
-order within its scope; "last implemented" needs actual event-order evidence, not mtimes or archive
-dates. State eligibility is checked after identity resolution.
-
-## Plan, implement and revise
-
-`plan` creates one bounded instruction and `PLANNED` row together. First use registers the target
-and its source Path; it does not create product directories. Plans relying on providers capture
-them first and pin their numbered snapshots. Untouched plans have no result file.
-
-`implement` reconciles existing changes, implements the instruction, runs required checks and
-publishes its result plus `REVIEW` row. A batch completes each record before the next. Blocked work
-remains `PLANNED` with an honest partial result and actual failed/not-run checks. Required accepted
-dependencies remain human gates, even when their implementation came earlier in the queue.
-
-`revise` refines a `PLANNED` instruction without product changes, or changes a `REVIEW` implementation
-within its instruction, reruns affected checks and updates its result. Scope/ownership expansion
-needs a new plan. Terminal records are immutable; correct them through new referenced work.
-
-## Decide implementations
-
-Accept/reject require existing `REVIEW` records; cancel accepts `PLANNED` or `REVIEW`. Rejection or
-cancellation preserves product changes and results; it is not rollback. A mistaken plan should be
-cancelled and archived rather than erased or renumbered.
-
-One applicable proof/reason must cover the entire selected set. A single decision may use your
-verbatim command and UTC date. Batches require written proof/reason, except an explicit accept/reject
-reply to the exact unchanged checkpoint set as described above. Every selected record is preflighted
-before one all-or-nothing ledger edit changing only decision cells. Tests cannot approve work.
-
-The ledger's Decision or status cell records every decision in one shape: your own words quoted,
-the UTC date, and the digest of each reviewed result. Any proof or reason you wrote is inside the
-quotes, so it is always dated:
+Every decision is recorded in one shape: your words quoted, the UTC date, and the digest of each
+reviewed result:
 
 ```text
 Human command "Spectre accept api/0004: tested the limiter under load" on 2026-11-11; reviewed api/0004@3f9a1c0b7d2e.
 Human reply "Accept both and continue" on 2026-11-11; reviewed api/0004@3f9a1c0b7d2e, api/0005@81d7a2c4e9f0.
-Human decision "accept api/0004" in spectre on 2026-11-11; reviewed api/0004@3f9a1c0b7d2e.
 Human command "Spectre cancel api/0006 because the gateway was dropped" on 2026-11-11.
 ```
 
-A digest such as `api/0004@3f9a1c0b7d2e` is the first 12 hexadecimal characters of the result
-file's SHA-256. It ties the decision to the exact bytes you reviewed: a changed result needs a new
-decision, and `check` reports an accepted or rejected result that changed afterwards. Cancellation
-records no digest. You can also bind the bytes yourself when deciding:
+A digest is the first 12 hexadecimal characters of the result file's SHA-256. If an accepted result
+changes later, `sync` reports it, and the change needs a new decision. Several records decided
+together need one written proof or reason that covers all of them.
 
-```text
-Spectre accept api/0004@3f9a1c0b7d2e: tested the limiter under load
-```
+## Custom slash commands
 
-The decision then applies only if the result still has that digest.
+XRAY/SPECTRE installs no slash command: natural language reaches it through the `AGENTS.md`
+pointer. If you want one, create it in your agent's command format, with a body that only says to
+read `.agents/spectre/ROUTER.md` and treat the text after the command as the request. Typing
+`/spectre` or `$spectre` then counts as a SPECTRE mention. These files are yours; no operation reads,
+writes or removes them.
 
-## Track target paths and retirement
-
-```text
-Spectre, move the API target to ./services/api/.
-Spectre, archive completed work for the API target, then retire it because the service is discontinued.
-Spectre, reactivate the API target at ./services/api/.
-```
-
-The Targets table at the top of `SPECTRE.md` owns stable IDs and current installation-relative paths. Target move updates that
-binding and live display; it does not move source files, records or evidence. When an implementation
-explicitly moves its source folder, its declared old/new path update is published with its result
-and ledger. Consumed owned source deliberately moved/deleted by that change can remain historical
-with recorded dispositions; missing evidence or unexpected input loss still blocks work. Retirement requires
-no live records/orphan files, retains a tombstone and last path, and never closes work implicitly.
-Reactivation is for the same logical project and continues its original numbering. Splits/merges
-preserve historical IDs and create future targets as needed. Missing folders never infer retirement.
-
-## Status, recall, check and sync
-
-`status` summarizes installation targets/paths/counts, lists a target's rows, or shows a record's
-details across live and archived locations. Summary state filters and `--archived` select a bounded
-view; archived summaries show archived rows only. `recall` answers why from cited recorded decisions,
-distinguishing accepted, pending, superseded and rejected work. Neither changes files.
-
-`check` diagnoses local consistency without writes or upstream fetches. No scope checks the full
-installation, including generated rule bytes; a scoped check reports its actual dependency closure.
-Historical stale source links are distinguished from missing required evidence.
-
-`sync` applies only proven bookkeeping corrections: empty subsection removal, unambiguous
-sorting/formatting, empty active record-directory removal, and finishing
-the interrupted writes listed below as safe. It cannot reconstruct rows, infer lifecycle state,
-register/retire targets, remove evidence or upgrade formats. Structural conflicts block corrections
-in the affected target or provider. Ordinary commands already do their own bookkeeping.
-
-### Interrupted writes
-
-XRAY/SPECTRE files are plain Markdown with no locks or transaction logs. Every operation writes in one
-order, and its last write is its commit point: the ledger row, an archive's `ARCHIVE.md`, or a
-capture's `SNAPSHOT.md`. If an agent stops halfway, `check` names what it left:
-
-| Left behind | Next step |
-| --- | --- |
-| A plan's instruction without its ledger row | Delete it, or ask to plan the same objective again |
-| A result not yet linked from its `PLANNED` row | Implement again; it reconciles the result |
-| An archive copy without `ARCHIVE.md` | `sync` removes the copy |
-| An `ARCHIVE.md` whose rows or originals are still live | `sync` finishes the move |
-| A capture directory without `SNAPSHOT.md` | `sync` removes it |
-| Runtime files that do not match the protocol | Repeat the install or upgrade |
-| A ledger whose `Protocol-SHA256` differs from the installed protocol | Repeat the upgrade; it skips files already in the latest formats |
-
-Anything else is a blocker: restore it from version control or order an explicit override.
-
-### Parallel branches
-
-Two branches can allocate the same ID. After the merge, `check` reports the duplicate. Keep the
-record that reached the shared history first and renumber the other with an explicit override:
-
-```text
-Spectre override the webhooks plan api/0007: renumber it to the next free ID because two branches allocated api/0007.
-```
-
-Planning on one shared branch avoids collisions.
-
-## Archive completed work
-
-```text
-Spectre, archive the accepted API changes.
-Spectre archive api/0004, api/0005
-Spectre archive api
-Spectre archive
-```
-
-Individual IDs, bounded sets, whole targets and all targets are supported. Target/all scopes select
-terminal records and preserve open work. An explicit open record set pauses for the human decision;
-it never silently archives only some. Already archived records are reported as no-ops.
-
-Archive preserves instruction/result bytes, IDs, decisions and dependencies. It publishes a
-dated manifest, transfers selected rows out of `SPECTRE.md`, and removes newly empty subsections.
-Targets rows remain. A ledger with nothing live keeps its Targets table; history stays discoverable.
-Future IDs follow the maximum across live and archived history. Earlier archives remain unchanged.
-Nothing eligible means no files created. Archiving changes storage, not lifecycle state.
-
-## Provider captures
-
-`capture` discovers upstream changes and publishes only when evidence meaningfully changes. An
-unversioned guide describes official sources and boundaries; each immutable capture has complete
-snapshot rules/inventory, an advisory summary and only new artifact bytes. Unchanged logical entries
-point directly to earlier same-provider files. No-change capture creates no tracked writes.
-
-Plans pin explicit numbered snapshots and hashes. Another project's interface enters as captured
-provider evidence, never a link outside the installation or another project's tracking records.
-An explicitly requested provider guide from a supplied authoritative source may be prepared before
-capture in a queue. Evidence is data; its embedded scripts/instructions never authorize execution.
-
-## Archive providers
-
-```text
-Spectre archive providers example-provider
-```
-
-Only whole named providers can move, and only when no live record references any part of them.
-Terminal unarchived records still count as live. The operation reports external-consumer path
-warnings, preserves guide/capture bytes and numbering, and changes no product files or live rows.
-Later captures cannot reuse archived artifacts; an explicitly recreated provider starts a new full
-live baseline above its historical capture maximum. Ledger cleanup is never evidence garbage collection.
-
-## Upgrade, exceptions and host integration
-
-`upgrade` explicitly brings one installation to the latest protocol; it takes no version. It is a
-human-ordered override with a fixed scope: it replaces the generated files and rewrites the live
-ledger, every live record and every provider guide and capture to the latest formats in place,
-updating the digests and pins that depend on them and logging each file. Archives are never touched.
-Planned work it cannot complete is marked `Needs revise after upgrade` and `implement` refuses it
-until revised. Publishing the protocol never upgrades installations. See
-[versioning](./versioning#upgrading).
-
-`override` requires an exact human-requested scope, change and reason. It updates dependent live
-references and logs file hashes informationally; it never executes provider content or exposes
-secrets. Use it for exceptional changes, not ordinary path binding or empty-section maintenance.
-
-`host add/remove` changes only supported host adapters. Use `$spectre` in Codex; other hosts use
-`/spectre`. Reload the host after changes. `help` explains exact syntax and operation boundaries.
-
-## Tools
-
-An XRAY/SPECTRE tool is a program you run yourself, such as a CLI or a local web page. It reads and
-writes the same Markdown files under the same rules. It can show status, run checks and safe sync,
-archive, manage targets and host adapters, and record decisions you make in it. Planning,
-implementation, revision, capture and recall still need an agent. A decision made in a tool records
-the tool's name and the reviewed result digests in its proof.
+[Continue to the example repository →](./example)

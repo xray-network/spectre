@@ -1,10 +1,10 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8aa83ba3ac50feb3cc7a4e25c1a945fc25695fa146bbf4d246abb407ba3c9aad
+Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
 
 **Installation**
 
-1. Runtime: all 25 modules equal marked source extraction, including installed Protocol-Version/source hash.
+1. Runtime: all 23 modules equal marked source extraction, including installed Protocol-Version/source hash.
    Templates match §11 byte-for-byte. Full checks verify bodies, not just headers.
 2. Layout of rules: runtime/ contains only SPECTRE-PROTOCOL.md and modules/; modules/ contains only
    extracted modules and templates/. Three canonical templates exist. ROUTER.md is the only
@@ -15,28 +15,26 @@ Source-SHA256: 8aa83ba3ac50feb3cc7a4e25c1a945fc25695fa146bbf4d246abb407ba3c9aad
    command syntax is optional; ambiguous identity or missing decision intent/proof stops mutation.
 5. Activation: pointer and router agree with core.md: a new workflow needs a current-human mention;
    uniquely pending bounded replies are the sole name-free exception. No global tracking mode.
-6. Adapters: none required; existing SPECTRE adapters carry only the §2 pointer in their host format.
-7. Bootstrap: exactly one accepted flat target/0001 or nested repository/0001 installation row exists
-   in live or archived history. Active bootstrap has its matching instruction/result and human
-   installation proof; an empty live ledger never authorizes another bootstrap.
-8. Storage: one root SPECTRE.md whose Protocol-Version and Protocol-SHA256 equal the installed protocol's, in the selected flat/nested layout.
-   Implementation subsections exist exactly for targets with live rows; every target identity used
-   by live or archived records has a Targets row. No target-local ledger
-   or mixed flat/nested active storage. Archives retain their original layout and format.
+6. Slash commands: SPECTRE creates and checks none (§2).
+7. Bootstrap: exactly one accepted `Install SPECTRE` row exists across both ledgers, normally
+   `<target>/0001` of a single project or `repository/0001` of a monorepo. It has its matching
+   instruction/result and human installation proof; an empty live ledger never authorizes another
+   bootstrap.
+8. Storage: one SPECTRE.md in the installation root whose Protocol-Version and Protocol-SHA256
+   equal the installed protocol's. Live record files are in `implementations/<target>/` and
+   archived ones in `archive/<archive-id>-<target>/`, never elsewhere. Implementation subsections
+   exist exactly for targets with live rows; every target identity used in either ledger has a
+   Targets row. No target-local ledger. No target's Path contains another installation.
 9. Installation changes only tracking structure and its pointer; no product implementation.
 
-**Archive indexes**
+**Archive ledger and relocation**
 
-29. Manifest identity: each archive has readable ID/kind headers and lifecycle or provider
-    index rows. IDs match directory names and remain
-    unique. Implementation rows retain terminal state and decision proof.
-30. Frozen: archives keep the format that created them. Do not rewrite or rejudge their record bytes,
-    paths, table syntax or hashes under the current protocol. Read indexes needed for identity,
-    decisions and numbering.
-31. Historical files: missing/broken/changed archived content is informational for historical status;
-    a consumer requiring that content must still validate its own normative input. Do not fabricate
-    evidence to make a historical archive complete.
-32. Separation: no authoritative row exists both live and archived; no PLANNED/REVIEW archive rows.
-    New batches have one kind and preserve selected bytes/proof; affected dependencies resolve after
-    relocation. No empty implementation subsections remain. Archive never edits product source or unrelated data.
-    No archive waives a failed selected-record check.
+29. Archive ledger: `.agents/spectre/archive/SPECTRE-ARCHIVE.md`, when present, follows §11: one subsection per target with
+    archived rows, sorted, holding only ACCEPTED, REJECTED and CANCELLED rows of registered targets.
+30. Archived rows: no row is in both ledgers; each archived row keeps its terminal state and proof,
+    and its links name its files under `archive/<archive-id>-<target>/`.
+31. Historical files: a missing or changed file behind an archived row is information for status;
+    a consumer requiring it still validates its own normative input. Never fabricate evidence.
+32. Relocation: after `absorb` or `detach`, both installations validate on their own files; the ID
+    map is recorded in the moved targets' Reasons; no record of a moved target is left behind, and
+    providers stay only where a remaining record pins them.

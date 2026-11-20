@@ -1,12 +1,11 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8aa83ba3ac50feb3cc7a4e25c1a945fc25695fa146bbf4d246abb407ba3c9aad
+Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
 
 ### Natural-language operation queues
 
 Translate an action request into supported operations, including multiple operations in one
-natural-language request. "Plan this and implement it" selects plan then implement. "Check tracking
-and fix safe bookkeeping" selects check then sync then verification. "Implement these, then archive
+natural-language request. "Plan this and implement it" selects plan then implement. "Implement these, then archive
 them" selects implement, a human-decision checkpoint, then archive of those exact outputs. Commands
 define execution semantics, not mandatory user vocabulary. Never turn a question into a queue.
 
@@ -40,8 +39,8 @@ Human decisions about existing records may be queued when the current human expl
 the decision, bound set, and applicable proof/reason. Freeze the reviewed result digests
 (commands/decide.md) when binding accept/reject; recheck them before their write. Never apply initial approval to unseen future results or
 to results changed by an earlier item. A request to accept work not yet implemented becomes a human
-checkpoint, not advance acceptance. `override`, `upgrade`, and `host add/remove`
-remain standalone setup/exception operations and cannot be hidden in a queue.
+checkpoint, not advance acceptance. `override`, `upgrade`, `absorb`, `detach` and `sync` remain
+standalone operations and cannot be hidden in a queue.
 
 ### Human checkpoints and bounded replies
 
@@ -75,9 +74,8 @@ decision after the explicitly requested revision completes.
 ### Stop and resume
 
 Stop at the first blocker, failed required implementation/publication check, ambiguous scope or
-human checkpoint. A diagnostic check can complete with findings: an explicitly queued sync may
-follow only when remaining failures are the safe corrections it is authorized to make. Structural
-blockers still stop writes, and a failed implementation check never becomes a cleanup finding. Preserve
+human checkpoint. `sync` is never a queue item; a failed implementation check never becomes a
+cleanup finding. Preserve
 completed items and honest partial results; report exact completed, blocked, pending and unstarted
 items and their canonical IDs. A later "Spectre continue the queue" resumes that fixed remainder:
 reconcile actual records, recheck pending authorization and never rerun successful items or evaluate
@@ -93,5 +91,4 @@ Examples of required normalization:
 | Spectre, implement these plans, then archive them | Implement fixed IDs → human decision checkpoint → archive those IDs |
 | Accept both and continue, replying to that checkpoint | Decide the unchanged displayed set → resume its authorized archive |
 | Spectre, cancel these plans because they are superseded, then archive them | Cancel the existing bound set with that reason → archive it |
-| Spectre, check everything and clean safe bookkeeping | Full check → safe sync if its preconditions hold → verification |
 | Spectre, explain how archiving works | Read-only explanation; no queue or lifecycle writes |

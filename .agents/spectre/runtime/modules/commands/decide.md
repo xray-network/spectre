@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8aa83ba3ac50feb3cc7a4e25c1a945fc25695fa146bbf4d246abb407ba3c9aad
+Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
 
 ### Decision workflow
 
@@ -44,7 +44,7 @@ Human command "Spectre accept api/0004: tested the limiter under load" on 2026-1
 ```
 
 The quoted words are a human record: tools and agents never parse them for authority. They read
-only the trailing digests, which `check` compares with each live accepted or rejected result
+only the trailing digests, which `sync` compares with each accepted or rejected result
 (§13). The
 bootstrap installation record (§2) keeps its fixed proof and has no digest.
 

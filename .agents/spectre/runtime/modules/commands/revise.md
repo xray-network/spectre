@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8aa83ba3ac50feb3cc7a4e25c1a945fc25695fa146bbf4d246abb407ba3c9aad
+Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
 
 ## 6. Evidence modes and inputs
 
@@ -16,9 +16,9 @@ Every instruction declares exactly one evidence mode:
 Every normative input must be an explicit row in the instruction's input table. Input kinds are
 `PROVIDER`, `IMPLEMENTATION_RESULT`, and `LOCAL`.
 
-- A derived input is valid only while its active or archived decision row is `ACCEPTED` and the
-  linked result matches the implementation ID. Resolve relocated inputs through the §9 archive
-  path map; archiving does not revoke acceptance or require rewriting the consuming instruction.
+- A derived input is valid only while its decision row, live or archived, is `ACCEPTED` and the
+  linked result matches the implementation ID. Archiving never revokes acceptance or requires
+  rewriting the consuming instruction: the input resolves by its qualified ID (history.md).
 - A provider input names an immutable numbered snapshot using the pin format and resolution rules
   in `providers.md`. A provider root, latest alias, branch, tag or `HEAD` alone is not an input pin.
 - A local input names an exact tracked path, requirement, decision, or human-approved statement.
@@ -34,7 +34,7 @@ Every normative input must be an explicit row in the instruction's input table. 
 
 An instruction that moves its owned source directory must declare old/new target paths and affected
 LOCAL source-input moves/removals in its change table. Before source work, resolve ownership under
-commands/target.md. After the actual move, publish the verified current Targets Path with the
+references.md. After the actual move, publish the verified current Targets Path with the
 result and ledger update (publication.md), including honest partial results
 when tests fail after a completed move. This bookkeeping is included in the authorized relocation;
 do not require a second path-update permission or leave the Targets row pointing at an absent folder.
@@ -52,7 +52,7 @@ required; remove obsolete paths only when the bounded objective authorizes it. N
 speculative compatibility layers or silently break the declared public interface. Engineering style
 and design choices come from repository guidance, not from this protocol.
 
-For an explicit `/spectre revise <record>: <changes>` invocation (or its host-native equivalent):
+For an explicit `Spectre revise <record>: <changes>` invocation (or its host-native equivalent):
 
 1. Require exactly one matching active `PLANNED` or `REVIEW` row and instruction. A `REVIEW` record
    requires its matching result; a `PLANNED` record may have no result or one matching partial
@@ -62,7 +62,7 @@ For an explicit `/spectre revise <record>: <changes>` invocation (or its host-na
    its branch below.
 3. Confirm the requested changes preserve the record's bounded objective and ownership. If they
    introduce an independently reviewable capability, move the work to another target, or make the
-   original objective misleading, stop without mutation and require a new `/spectre plan`.
+   original objective misleading, stop without mutation and require a new `Spectre plan`.
 4. For `PLANNED`:
    - Refine the instruction to express the requested changes, including inputs, provider pins,
      requirements, validation, completion criteria, and exclusions where affected. Preserve its
@@ -100,5 +100,5 @@ For an explicit `/spectre revise <record>: <changes>` invocation (or its host-na
 Revision command:
 
 ```text
-/spectre revise <record>: <requested changes>
+Spectre revise <record>: <requested changes>
 ```

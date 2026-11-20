@@ -1,25 +1,26 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8aa83ba3ac50feb3cc7a4e25c1a945fc25695fa146bbf4d246abb407ba3c9aad
+Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
 
 ### Override workflow
 
-`/spectre override <scope>: <changes> because <reason>` lets a human order any change to SPECTRE
+`Spectre override <scope>: <changes> because <reason>` lets a human order any change to SPECTRE
 files that the other rules forbid or do not define, such as renaming historical record/target IDs,
-rewriting terminal records, moving evidence, or merging installations. It is a human decision:
+rewriting terminal records, or moving evidence. Combining or splitting installations uses `absorb`
+and `detach` instead. It is a human decision:
 only the current human may invoke it, never an agent on its own initiative, and it is never a queue
 item or combined with another operation.
 
 1. Require the scope, the requested changes, and a reason. Ask before writing if any is missing or
    ambiguous.
-2. Resolve the scope to the exact files and records it changes, including links, manifest entries,
-   and ledger rows that must follow. Report that complete list and the intended result before
+2. Resolve the scope to the exact files and records it changes, including links, inventory entries,
+   and rows in both ledgers that must follow. Report that complete list and the intended result before
    writing, then proceed without further confirmation.
 3. Apply exactly the requested changes, even where they break immutability, layout, naming, format,
    lifecycle, or boundary rules. The human's decision is the authority for them.
 4. In the same scope, bring every dependent active record in line with the new bytes and paths:
-   provider pins and inventories, ledger rows, and links that point at moved or renamed files.
-   Archives are kept as is and need no update. The installation must validate on its own files afterwards;
+   provider pins and inventories, rows in both ledgers, and links that point at moved or renamed
+   files. The installation must validate on its own files afterwards;
    no log excuses a check. Change nothing outside the reported scope.
 5. Append one row per changed, moved, created, or removed file to `.agents/spectre/logs/OVERRIDES.md`.
    When `logs/` is absent, create it with a `.gitignore` whose single line is `*`, so nothing in it

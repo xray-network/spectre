@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8aa83ba3ac50feb3cc7a4e25c1a945fc25695fa146bbf4d246abb407ba3c9aad
+Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
 
 ### Natural-language selectors
 
@@ -8,7 +8,7 @@ Record selectors accept qualified `target/NNNN`, a unique bare ID, title/objecti
 or verified conversational references such as "this plan". Target selectors accept stable IDs,
 current paths, labels and repository/package descriptions. Provider selectors accept existing slugs
 or guide descriptions. Explicit IDs take precedence; an invalid or missing explicit ID never gets
-a fuzzy replacement. Search the Targets table and live/archive indexes first; read only candidate bodies
+a fuzzy replacement. Search the Targets table and both ledgers first; read only candidate bodies
 needed to resolve meaning. A source folder is not automatically a registered target (§4).
 
 1. Parse operation and objective/changes/proof/reason, preserving the human payload. Colons are
@@ -26,19 +26,17 @@ needed to resolve meaning. A source folder is not automatically a registered tar
 6. Report canonical scope and states before mutation, recheck before writing, and store canonical
    IDs/paths rather than phrases. If waiting changes a relative selector's meaning, clarify.
 
-Omitted status/check/sync scope means the installation. Omitted archive scope means eligible terminal
+Omitted status/sync scope means the installation. Omitted archive scope means eligible terminal
 implementations across all targets; omitted recall target means all targets. An unresolved supplied
-selector never becomes omitted scope. `all` and `implementations` are reserved scope/kind words, as
-are `providers`; quote an otherwise ambiguous descriptive target label. Exact registered IDs remain
-canonical. Source slugs named `all`, `implementations`, or `providers` require a distinct target ID.
+selector never becomes omitted scope. `all` is a reserved scope word; quote an otherwise ambiguous
+descriptive target label. Exact registered IDs remain canonical. Source slugs named `all`,
+`implementations`, or `providers` require a distinct target ID.
 
-Implementation archive accepts a record set, a whole target or `all`, with optional explicit kind
-`implementations`. An exact target means its eligible terminal rows, preserving open rows. An exact
-record set must be entirely terminal or pause at the human checkpoint (§1); never expand or silently
-filter it. Already archived explicitly selected records are reported as no-ops and not moved again.
-Provider archive has no `all` form and never expands a description to every provider. A request
-ambiguous between provider and implementation archive requires clarification. Capture requires an existing guide except explicit
-provider preparation (§12). New target registration belongs to first planning, not generic sync.
+Archive accepts a record set, a whole target or `all`. An exact target means its eligible terminal
+rows, preserving open rows. An exact record set must be entirely terminal or pause at the human
+checkpoint (§1); never expand or silently filter it. Already archived explicitly selected records
+are reported as no-ops. Capture requires an existing guide except explicit provider preparation
+(§12). New target registration belongs to first planning, not generic sync.
 
 ### Implementation batch selectors
 
@@ -69,8 +67,8 @@ A batch decision without applicable proof/reason pauses. Never infer approval fr
 
 ### Archive record-set selectors
 
-Implementation archive reuses the bounded ID/range/plural syntax and duplicate/gap checks above.
-The resolved set is fixed before writing. Target/all scopes collect only terminal rows at binding;
-a later record never joins. A deferred "them" binds only prior queue outputs, including their open
-states for the decision checkpoint. After the decision recheck that same set. Read-only historical
-lookup does not imply authority to archive providers or modify unrelated records.
+Archive reuses the bounded ID/range/plural syntax and duplicate/gap checks above. The resolved set
+is fixed before writing. Target/all scopes collect only terminal rows at binding; a later record
+never joins. A deferred "them" binds only prior queue outputs, including their open states for the
+decision checkpoint. After the decision recheck that same set. Read-only historical lookup does not
+imply authority to modify unrelated records.

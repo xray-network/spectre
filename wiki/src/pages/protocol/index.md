@@ -22,13 +22,13 @@ The first public release.
 - **Sparse ledger.** `SPECTRE.md` contains only populated sections with Target and Path. Archive removes
   terminal rows and newly empty sections.
 - **Plain Markdown writes.** Every operation writes in one order and its last write is its commit
-  point. An interrupted write leaves a named state that `check` reports and `sync` finishes when it
+  point. An interrupted write leaves a named state that `sync` reports and finishes when it
   is provably safe. No locks, transaction logs or recovery manifests; version control is the backup.
 - **Parallel branches.** Duplicate IDs after a merge are reported, and one record is renumbered
   through an explicit override.
 - **Decisions bound to reviewed bytes.** Every decision records your quoted words, the date and a
   12-character digest of each reviewed result, such as `api/0004@3f9a1c0b7d2e`. You can bind the
-  digest yourself (`accept api/0004@3f9a1c0b7d2e`), and `check` reports accepted results that
+  digest yourself (`accept api/0004@3f9a1c0b7d2e`), and `sync` reports accepted results that
   changed afterwards.
 - **Tools.** A program you run, such as a CLI or a local page, can show status, run checks and
   record your decisions using the same files and rules.

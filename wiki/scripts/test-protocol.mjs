@@ -9,9 +9,9 @@ const source = await readFile(new URL("../../protocol/SPECTRE-PROTOCOL.md", impo
 test("the protocol extracts all routed rules and three templates from one canonical source", () => {
   const release = verifyRelease(source)
   assert.match(release.version, /^\d+\.\d+\.\d+$/)
-  assert.equal(release.runtime.size, 25)
+  assert.equal(release.runtime.size, 23)
   assert.equal(release.templates.size, 3)
-  assert.equal(new Set(moduleNames).size, 25)
+  assert.equal(new Set(moduleNames).size, 23)
   assert.equal(release.hash, createHash("sha256").update(source).digest("hex"))
   for (const text of release.runtime.values()) {
     assert.ok(text.startsWith(`<!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->\nProtocol-Version: ${release.version}\nSource-SHA256: ${release.hash}\n\n`))
@@ -33,11 +33,11 @@ test("extraction preserves repeated block order and shared rules byte-for-byte",
   const core = runtime.get("core.md")
   assert.ok(core.indexOf("Operation names, flags") < core.indexOf("### Authorization"))
   assert.ok(core.indexOf("### Authorization") < core.indexOf("### Shared runtime checks"))
-  const target = runtime.get("commands/target.md")
-  const refs = runtime.get("references.md")
-  const sharedStart = "### Target identity and current paths"
-  const shared = target.slice(target.indexOf(sharedStart), target.indexOf("### Target operations")).trim()
-  assert.ok(refs.includes(shared))
+  const implement = runtime.get("commands/implement.md")
+  const revise = runtime.get("commands/revise.md")
+  const sharedStart = "### Declared source relocation"
+  const shared = implement.slice(implement.indexOf(sharedStart)).split("\n\n").slice(0, 2).join("\n\n")
+  assert.ok(shared.startsWith(sharedStart) && revise.includes(shared))
 })
 
 test("documents carry no schema versions; only the protocol is versioned", () => {
@@ -65,13 +65,17 @@ const corruptions = [
   ["malformed extraction marker", text => text.replace("<!-- spectre:runtime core.md -->", "<!-- spectre:runtime core.md-->")],
   ["missing publication module", text => text.replace("<!-- spectre:runtime publication.md -->", "<!-- spectre:runtime references.md -->")],
   ["queue rules leak back into core", text => text.replace("<!-- spectre:runtime queues.md -->", "<!-- spectre:runtime core.md queues.md -->")],
-  ["incorrect module inventory", text => text.replace("Require all 25 files.", "Require all 24 files.")],
+  ["incorrect module inventory", text => text.replace("Require all 23 files.", "Require all 22 files.")],
   ["schema version header returns", text => text.replace("Protocol-Version: <Protocol-Version of the installed protocol>\nProtocol-SHA256: <SHA-256 of the installed protocol>\nProtocol: [", "Protocol-Version: <Protocol-Version of the installed protocol>\nProtocol-SHA256: <SHA-256 of the installed protocol>\nStatus-Schema-Version: v2\nProtocol: [")],
   ["ledger loses its protocol hash", text => text.replace("Protocol-SHA256: <SHA-256 of the installed protocol>\n", "")],
   ["upgrade relies on the version label alone", text => text.replace("The same Protocol-Version with a different SHA-256 still\n   upgrades.", "")],
   ["missing status template", text => text.replace("### `.agents/spectre/runtime/modules/templates/TEMPLATE_STATUS.md`", "### Status template removed")],
   ["upgrade stops rewriting live files", text => text.replace("5. Rewrite every live file to the latest templates", "5. Preserve every live file")],
-  ["upgrade touches archives", text => text.replace("archive records or providers, or touch `archive/`.", "or archive records or providers.")],
+  ["upgrade keeps an old layout", text => text.replace("Bring files into the current layout", "Leave files in their earlier layout")],
+  ["provider archive disappears", text => text.replaceAll("Spectre archive provider <provider>", "Spectre archive")],
+  ["archives lose their ARCHIVE.md", text => text.replace("This is the commit point", "No record is kept")],
+  ["sync applies target fixes without asking", text => text.replace("Proposed fixes, applied only after the human answers", "Target fixes, applied at once")],
+  ["absorb loses its ID map", text => text.replace("Build the ID map before writing", "Move the files")],
   ["upgrade rewrites historical hashes", text => text.replace("Historical notes, such as\n     migration hash tables in guides or provenance notes in snapshots, keep the hashes they\n     recorded.", "All recorded hashes are refreshed.")],
   ["upgrade stops logging as an override", text => text.replace("7. Append one override log row", "7. Optionally note")],
   ["upgrade takes a version argument again", text => text.replace("| `Spectre upgrade` |", "| `Spectre upgrade <version>` |")],
@@ -83,7 +87,7 @@ const corruptions = [
   ["checkpoint gate is removed", text => text.replace("### Human checkpoints and bounded replies", "### Unbounded continuation")],
   ["tool proof source is removed", text => text.replace("| `Human decision \"<verbatim input>\" in <tool>` |", "| `Tool decision` |")],
   ["decision digests leave the proof shape", text => text.replace("<source> on <date>; reviewed <id>@<digest>, <id>@<digest>.", "<source> on <date>.")],
-  ["archive history leaks back into references", text => text.replace("<!-- spectre:runtime history.md -->\n### Archives are kept as is", "<!-- spectre:runtime references.md history.md -->\n### Archives are kept as is")],
+  ["archived-row rules leak into references", text => text.replace("<!-- spectre:runtime history.md -->\n### Immovable evidence", "<!-- spectre:runtime references.md history.md -->\n### Immovable evidence")],
   ["decisions load archive history", text => text.replace(/(\| accept \/ reject \/ cancel \| commands\/decide\.md \| selectors\.md, references\.md, )/, "$1history.md, ")],
   ["old ledger column returns", text => text.replace("| Evidence mode | Decision or status |", "| Evidence mode | Decision proof |")],
   ["interrupted revise state is removed", text => text.replace("Revise again; it reconciles the row", "Ask a human")],

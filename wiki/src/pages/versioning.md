@@ -8,7 +8,7 @@ its exact bytes. Each installation keeps its installed bytes until it is explici
 ## Protocol and schemas
 
 Documents carry no schema versions of their own. Live files always follow the installed protocol's
-templates, and an upgrade brings them to the latest. Archives are frozen.
+templates, and an upgrade brings them to the latest. Archived records are never rewritten.
 
 <div class="spectre-fields">
 <div class="spectre-fields__head"><span>File type</span><span>Path</span></div>
@@ -34,7 +34,6 @@ templates, and an upgrade brings them to the latest. Archives are frozen.
 <li><code>Protocol-Version</code> — the version the live files follow.</li>
 <li><code>Protocol-SHA256</code> — the protocol bytes the live files follow. An upgrade writes it last, so a value that differs from the installed protocol means an upgrade was interrupted.</li>
 <li><code>Protocol</code> — link to the installed protocol.</li>
-<li><code>Storage-Mode</code> — <code>flat</code> or <code>nested</code>.</li>
 </ul>
 </details>
 <details class="spectre-fields__row">
@@ -84,22 +83,19 @@ templates, and an upgrade brings them to the latest. Archives are frozen.
 </ul>
 </details>
 <details class="spectre-fields__row">
-<summary><span class="spectre-fields__name">Archive manifest</span><code>archive/&lt;archive-id&gt;/ARCHIVE.md</code></summary>
+<summary><span class="spectre-fields__name">Archive</span><code>__archive/&lt;timestamp&gt;/ARCHIVE.md</code></summary>
 <ul>
-<li><code>Archive-ID</code>, <code>Created</code> — identity and UTC timestamp.</li>
-<li><code>Protocol-Version</code> — provenance only: the version that wrote the archive.</li>
-<li><code>Kind</code> — <code>implementations</code> or <code>providers</code>.</li>
-<li><code>Storage-Mode</code> — implementation archives only.</li>
-<li><code>Scope</code> — sorted record or provider IDs.</li>
+<li>No metadata fields: one subsection per target, with the same table columns as <code>SPECTRE.md</code>.</li>
+<li>Rows move here unchanged except their Instruction and Result links, which name the archived files.</li>
 </ul>
-<p>Archives are frozen: never upgraded, reformatted or checked against the current formats.</p>
+<p>One per archive run, under <code>implementations/</code> or <code>providers/</code>, next to the archived files. Archived files are never rewritten.</p>
 </details>
 </div>
 
 Paths are relative to <code>.agents/spectre/</code> except the root <code>SPECTRE.md</code> ledger.
 
 The build publishes the latest protocol only. Installed runtime and templates are verbatim
-extractions, never separately maintained summaries. `check` with no scope verifies all generated
+extractions, never separately maintained summaries. `sync` with no scope verifies all generated
 bytes; routine operations check their loaded rules and affected dependency closure. No protocol
 publication silently updates an adopting repository.
 
@@ -131,10 +127,14 @@ SPECTRE file. It runs on its own, never as part of a queue, and proceeds as foll
      rejected proofs get the new digests of their rewritten results.
    - Only references that bind bytes change: provider pins, summary, predecessor and reuse hashes.
      Historical notes, such as migration hash tables in guides, keep the hashes they recorded.
-   - Artifact files and `archive/` are never touched, and no work is closed or archived.
+   - Artifact files and archived records are never rewritten, and no work is closed or archived.
+   - Record files from earlier layouts move into the current one: live records into
+     `implementations/<target>/`, archived ones into `implementations/__archive/<timestamp>/<target>/`
+     with an `ARCHIVE.md` per archive. Only live records' relative links change, when a move changes
+     their depth; archived files are never rewritten.
 6. Writes the protocol, runtime modules, templates, router and `AGENTS.md` section first; then each
    provider's captures in ascending order with recomputed hashes, then its guide; then live
-   instructions with updated pins and live results; and finally the ledger with the new
+   instructions with updated pins and live results; then the archive conversion; and finally the ledger with the new
    `Protocol-Version` and `Protocol-SHA256`, as the commit point.
 7. Logs every changed file to `logs/OVERRIDES.md` with the reason
    `upgrade <old version>@<sha12> → <new version>@<sha12>`.
