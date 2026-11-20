@@ -45,53 +45,52 @@ import { CodeBlock, HeroArtwork, CopyPromptButton, installationPrompt, Link } fr
 
   <section className="spectre-start" id="get-started" aria-labelledby="get-started-title">
     <div className="spectre-section-heading">
-      <div><span className="spectre-eyebrow">01 / Installation</span><h2 id="get-started-title" data-outline>Start with a single prompt</h2></div>
+      <div><span className="spectre-eyebrow">Get started</span><h2 id="get-started-title" data-outline>Install with a single prompt</h2></div>
       <Link className="spectre-text-link" href="/installation">Installation guide <span aria-hidden="true">↗</span></Link>
     </div>
-    <p>Open your repository in a coding agent, then copy and send this prompt.</p>
-    <div className="spectre-install-panel">
-      <CodeBlock title="Copy into your coding agent" wrapCode>
-        <pre tabIndex={0}><code>{installationPrompt}</code></pre>
-      </CodeBlock>
-      <div className="spectre-install-result">
-        <span className="spectre-check" aria-hidden="true">✓</span>
-        <p>Your agent installs the protocol and creates your <code>SPECTRE.md</code> ledger with its Targets table.</p>
-      </div>
-    </div>
+    <p>Open your repository in a coding agent and send this prompt.</p>
+    <CodeBlock wrapCode><pre tabIndex={0}><code>{installationPrompt}</code></pre></CodeBlock>
+    <p className="spectre-flow__result">Your agent installs the protocol and creates your <code>SPECTRE.md</code> ledger with its Targets table.</p>
   </section>
 
   <section className="spectre-workflow" id="first-change" aria-labelledby="first-change-title">
     <div className="spectre-section-heading">
-      <div><span className="spectre-eyebrow">02 / The workflow</span><h2 id="first-change-title" data-outline>Plan, implement, and approve a change</h2></div>
+      <h2 id="first-change-title" data-outline>How to use</h2>
+      <Link className="spectre-text-link" href="/commands">Commands <span aria-hidden="true">↗</span></Link>
     </div>
-    <p>Describe each change in your own words; every step is recorded in <code>SPECTRE.md</code>.</p>
-    <ol className="spectre-workflow-list">
+    <ol className="spectre-flow" role="list">
       <li>
-        <div className="spectre-workflow-title"><span className="spectre-step" aria-hidden="true">01</span><h3>Plan</h3><span className="spectre-state spectre-state--planned">PLANNED</span></div>
-        <p>Your agent writes the bounded plan to <code>0002-IMPL-INSTR.md</code> and adds its ledger row as <code>PLANNED</code>. No product source changes yet.</p>
-        <CodeBlock title="Copy into your coding agent" wrapCode><pre tabIndex={0}><code>Spectre plan add a health endpoint</code></pre></CodeBlock>
+        <h3>Plan</h3>
+        <CodeBlock wrapCode><pre tabIndex={0}><code>Spectre plan add a health endpoint</code></pre></CodeBlock>
+        <p className="spectre-flow__result">Your agent writes the plan to <code>0002-IMPL-INSTR.md</code> and adds a <code>PLANNED</code> row to the ledger.</p>
+      </li>
+      <li className="spectre-flow__unnumbered">
+        <h3>Review the plan</h3>
+        <p className="spectre-flow__result">Check the scope, proposed changes and verification steps before asking your agent to implement.</p>
       </li>
       <li>
-        <div className="spectre-workflow-title"><span className="spectre-step" aria-hidden="true">02</span><h3>Implement</h3><span className="spectre-state spectre-state--review">REVIEW</span></div>
-        <p>Your agent changes source and tests, runs the checks and records them in <code>0002-IMPL-RESULT.md</code> as <code>IMPLEMENTED</code>.</p>
-        <CodeBlock title="Copy into your coding agent" wrapCode><pre tabIndex={0}><code>Spectre implement 0002</code></pre></CodeBlock>
+        <h3>Implement</h3>
+        <CodeBlock wrapCode><pre tabIndex={0}><code>Spectre implement 0002</code></pre></CodeBlock>
+        <p className="spectre-flow__result">Your agent makes the change, runs the checks and records the results in <code>0002-IMPL-RESULT.md</code> for review.</p>
       </li>
-      <li>
-        <div className="spectre-workflow-title"><span className="spectre-step" aria-hidden="true">03</span><h3>Decide</h3><span className="spectre-state spectre-state--accepted">ACCEPTED</span></div>
-        <p>You review and accept or reject. The ledger row becomes <code>ACCEPTED</code> or <code>REJECTED</code> with your words, the date and a digest of the result.</p>
-        <CodeBlock title="Copy into your coding agent" wrapCode><pre tabIndex={0}><code>Spectre accept 0002: checks pass</code></pre></CodeBlock>
+      <li className="spectre-flow__unnumbered">
+        <h3>Review the result</h3>
+        <p className="spectre-flow__result">Read the diff and the recorded checks before deciding whether to accept or reject the change.</p>
       </li>
-      <li>
-        <div className="spectre-workflow-title"><span className="spectre-step" aria-hidden="true">04</span><h3>List</h3><span className="spectre-state">READ-ONLY</span></div>
-        <p>See every record with its state, or open one with its plan, result and decision. Or just read <code>SPECTRE.md</code> in your repository root.</p>
-        <CodeBlock title="Copy into your coding agent" wrapCode><pre tabIndex={0}><code>Spectre status all</code></pre></CodeBlock>
+      <li className="spectre-flow__unnumbered">
+        <h3>Decide</h3>
+        <p className="spectre-flow__result">When you're ready to record a decision, send <code>Spectre accept 0002: checks pass</code> or <code>Spectre reject 0002: needs more tests</code> to your coding agent.</p>
+      </li>
+      <li className="spectre-flow__unnumbered">
+        <h3>List</h3>
+        <p className="spectre-flow__result">Open <code>SPECTRE.md</code> in your repository root or send <code>Spectre status all</code> to your coding agent to see every record and its current state.</p>
       </li>
     </ol>
   </section>
 
   <section className="spectre-browse" id="reference" aria-labelledby="reference-title">
     <div className="spectre-section-heading">
-      <div><span className="spectre-eyebrow">03 / Go further</span><h2 id="reference-title" data-outline>Commands and a worked example</h2></div>
+      <div><span className="spectre-eyebrow">Go further</span><h2 id="reference-title" data-outline>Commands and a worked example</h2></div>
     </div>
     <p>Look up supported commands or see how a sample repository tracks a change.</p>
     <nav className="spectre-resources" aria-label="Explore XRAY/SPECTRE documentation">

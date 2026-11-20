@@ -423,13 +423,15 @@ html .rp-code-button-group__button {
   color: var(--xr-fg-secondary);
 }
 
-html .rp-code-copy-button {
-  opacity: 1;
-}
-
 html .rp-code-button-group__button:hover {
   background: var(--xr-chip);
   color: var(--xr-fg);
+}
+
+html .rp-code-copy-button,
+html .rp-code-copy-button:hover {
+  background: transparent;
+  opacity: 1;
 }
 
 html .rp-codeblock__content--fold:after {
@@ -803,7 +805,6 @@ html .rp-doc-layout__container:has(.spectre-home) > .rp-doc-layout__outline-plac
 
 /* ---- Sections ---- */
 .spectre-section-heading,
-.spectre-workflow-title,
 .spectre-resource-label {
   display: flex;
   align-items: center;
@@ -849,7 +850,6 @@ html .rp-doc-layout__container:has(.spectre-home) > .rp-doc-layout__outline-plac
 }
 
 .spectre-section-heading h2 {
-  margin-top: 12px;
   color: var(--rp-c-text-0);
   font-size: clamp(26px, 2.6vw, 34px);
   line-height: 1.2;
@@ -857,18 +857,25 @@ html .rp-doc-layout__container:has(.spectre-home) > .rp-doc-layout__outline-plac
   font-weight: 600;
 }
 
-/* Section descriptions: one line over a hairline. */
-:is(.spectre-start, .spectre-workflow, .spectre-browse) > p {
-  padding-bottom: 28px;
-  border-bottom: 1px solid var(--xr-border);
+.spectre-section-heading .spectre-eyebrow + h2 {
+  margin-top: 12px;
+}
+
+:is(.spectre-start, .spectre-browse) > p {
   color: var(--xr-fg-secondary);
   font-size: 17px;
+}
+
+.spectre-browse > p {
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--xr-border);
 }
 
 .spectre-text-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-height: 24px;
   color: var(--rp-c-link);
   font-size: 13px;
   font-weight: 600;
@@ -892,21 +899,6 @@ html .rp-doc-layout__container:has(.spectre-home) > .rp-doc-layout__outline-plac
   border-radius: 4px;
   background: var(--rp-c-bg);
   text-align: left;
-}
-
-:is(.spectre-start, .spectre-workflow) .rp-codeblock {
-  margin: 0 0 16px;
-  border-top: 6px solid var(--xr-action);
-}
-
-:is(.spectre-start, .spectre-workflow) .rp-codeblock__title {
-  background: var(--xr-canvas);
-  border-bottom: 1px solid var(--xr-border);
-  font: 500 11px/1.5 var(--xr-font-mono);
-}
-
-:is(.spectre-start, .spectre-workflow) .rp-codeblock__content {
-  background: var(--xr-canvas);
 }
 
 .spectre-home .rp-codeblock pre {
@@ -936,65 +928,7 @@ html .rp-doc-layout__container:has(.spectre-home) > .rp-doc-layout__outline-plac
   overflow-wrap: anywhere;
 }
 
-.spectre-install-result {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  font-size: 13px;
-}
-
-.spectre-check {
-  color: var(--xr-link);
-  font-weight: 700;
-}
-
-/* The steps: unframed, like the install prompt, in two columns; subgrid rows align the titles, descriptions,
-   and prompts across each pair of steps. */
-.spectre-workflow-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 40px 32px;
-  margin: 28px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.spectre-workflow-list > li {
-  display: grid;
-  grid-row: span 3;
-  grid-template-rows: subgrid;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-}
-
-.spectre-step {
-  display: grid;
-  flex: none;
-  width: 26px;
-  height: 26px;
-  place-items: center;
-  background: var(--xr-surface);
-  border: 1px solid var(--xr-border);
-  border-radius: 6px;
-  color: var(--xr-fg-muted);
-  font: 600 10px/1 var(--rp-font-family-mono);
-}
-
-.spectre-workflow-list .spectre-workflow-title {
-  justify-content: flex-start;
-  gap: 10px;
-}
-
-.spectre-workflow-title h3 {
-  color: var(--rp-c-text-0);
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: -.015em;
-}
-
-.spectre-workflow-title .spectre-state {
+.spectre-state {
   margin-left: auto;
 }
 
@@ -1146,21 +1080,6 @@ html .rp-doc-layout__container:has(.spectre-home) > .rp-doc-layout__outline-plac
 
   .spectre-resource :is(h2, h3) {
     margin-top: 24px;
-  }
-}
-
-.spectre-workflow {
-  container-type: inline-size;
-}
-
-@container (max-width: 540px) {
-  .spectre-workflow-list {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .spectre-workflow-list > li {
-    grid-row: auto;
-    grid-template-rows: none;
   }
 }
 
@@ -1675,9 +1594,13 @@ html .rp-doc .spectre-fields--commands .spectre-fields__row:target > summary {
   background: var(--xr-surface);
 }
 
-/* Concepts: a request queue as numbered steps on a dashed rail; each command has its own copy block,
-   followed by what it produced and the resulting state. */
+/* Home and Core concepts: numbered prompts and their results on a dashed rail. */
 html .rp-doc .spectre-flow {
+  --flow-marker-size: 26px;
+  --flow-marker-top: 10px;
+  --flow-marker-gap: 18px;
+  --flow-step-spacing: 24px;
+  --flow-counter-style: decimal-leading-zero;
   margin: 24px 0;
   padding: 0;
   list-style: none;
@@ -1687,18 +1610,18 @@ html .rp-doc .spectre-flow {
 html .rp-doc .spectre-flow > li {
   position: relative;
   margin: 0;
-  padding: 0 0 24px 44px;
+  padding: 0 0 var(--flow-step-spacing) calc(var(--flow-marker-size) + var(--flow-marker-gap));
   counter-increment: spectre-flow;
 }
 
 html .rp-doc .spectre-flow > li::before {
-  content: counter(spectre-flow, decimal-leading-zero);
+  content: counter(spectre-flow, var(--flow-counter-style));
   position: absolute;
-  top: 10px;
+  top: var(--flow-marker-top);
   left: 0;
   display: grid;
-  width: 26px;
-  height: 26px;
+  width: var(--flow-marker-size);
+  height: var(--flow-marker-size);
   place-items: center;
   border: 1px solid var(--xr-border);
   border-radius: 4px;
@@ -1710,9 +1633,9 @@ html .rp-doc .spectre-flow > li::before {
 html .rp-doc .spectre-flow > li:not(:last-child)::after {
   content: "";
   position: absolute;
-  top: 44px;
+  top: calc(var(--flow-marker-top) + var(--flow-marker-size) + 8px);
   bottom: 6px;
-  left: 13px;
+  left: calc(var(--flow-marker-size) / 2);
   border-left: 1px dashed var(--xr-border-strong);
 }
 
@@ -1724,14 +1647,19 @@ html .rp-doc .spectre-flow .rp-codeblock {
   margin: 0;
 }
 
-html .rp-doc .spectre-flow .rp-codeblock pre {
+html .rp-doc .spectre-flow:not(:where(.rp-not-doc *)) .rp-codeblock pre {
   margin: 0;
-  padding: 0 4.5rem 0 20px; /* same as the design wiki's step blocks */
+  padding: 0 4.5rem 0 20px; /* this theme's code block already pads vertically */
 }
 
-html .rp-doc .spectre-flow .rp-codeblock code {
+html .rp-doc .spectre-flow:not(:where(.rp-not-doc *)) .rp-codeblock code {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+/* Highlighted code wraps each line in a padded span; the pre already provides the inset. */
+html .rp-doc .spectre-flow .rp-codeblock .line {
+  padding-left: 0;
 }
 
 html .rp-doc .spectre-flow__result {
@@ -1748,7 +1676,91 @@ html .rp-doc .spectre-flow__result .spectre-state {
   line-height: 1.4;
 }
 
-/* Highlighted code wraps each line in a padded span; the pre already provides the inset. */
-html .rp-doc .spectre-flow .rp-codeblock .line {
-  padding-left: 0;
+html .spectre-home .spectre-flow {
+  --flow-marker-size: clamp(36px, 4vw, 44px);
+  --flow-marker-top: 0px;
+  --flow-marker-gap: clamp(12px, 2vw, 24px);
+  --flow-step-spacing: 32px;
+  --flow-counter-style: decimal;
+  margin: 28px 0 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--xr-border);
+}
+
+html .spectre-home .spectre-flow > li::before {
+  border: 0;
+  border-radius: var(--xr-radius);
+  background: var(--xr-brand);
+  color: var(--xr-on-action);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.spectre-home .spectre-flow > li:not(.spectre-flow__unnumbered):has(+ .spectre-flow__unnumbered) {
+  --flow-step-spacing: 20px;
+}
+
+.spectre-home .spectre-flow > .spectre-flow__unnumbered {
+  --flow-step-spacing: 16px;
+  counter-increment: none;
+}
+
+html .spectre-home .spectre-flow > .spectre-flow__unnumbered::before {
+  /* Academic cap from XRAY/DESIGN and Heroicons v2.2.0 (MIT, Copyright (c) Tailwind Labs, Inc.). */
+  --review-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5'/%3E%3C/svg%3E");
+  content: "";
+  top: 1px;
+  left: calc(var(--flow-marker-size) / 2);
+  width: 18px;
+  height: 18px;
+  translate: -50%;
+  background: var(--xr-fg-muted);
+  -webkit-mask: var(--review-icon) center / contain no-repeat;
+  mask: var(--review-icon) center / contain no-repeat;
+}
+
+html .spectre-home .spectre-flow > .spectre-flow__unnumbered:not(:last-child)::after {
+  top: 26px;
+}
+
+.spectre-home .spectre-flow h3 {
+  margin-bottom: 12px;
+  padding-top: calc((var(--flow-marker-size) - 28px) / 2);
+  color: var(--xr-fg);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -.015em;
+}
+
+.spectre-home .spectre-flow__unnumbered h3 {
+  margin-bottom: 0;
+  padding-top: 0;
+  color: var(--xr-fg-secondary);
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.spectre-home .rp-code-button-group {
+  top: 12px;
+  right: 12px;
+  gap: 4px;
+}
+
+.spectre-home .rp-code-button-group__button {
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.spectre-home .rp-code-button-group__button:focus-visible {
+  opacity: 1;
+}
+
+html .spectre-home .spectre-flow__result {
+  font-size: 16px;
+}
+
+html .spectre-home .spectre-flow__unnumbered .spectre-flow__result {
+  margin-top: 4px;
+  font-size: 14px;
 }
