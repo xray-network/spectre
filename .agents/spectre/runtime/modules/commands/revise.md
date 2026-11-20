@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 ## 6. Evidence modes and inputs
 
@@ -75,7 +75,9 @@ For an explicit `Spectre revise <record>: <changes>` invocation (or its host-nat
      and check outcomes, update dispositions for changed Change IDs, and identify superseded work
      without claiming completion.
    - Synchronize the ledger title, evidence mode, result link, and Decision or status cell where
-     affected, while keeping the row `PLANNED` and retaining any unresolved blocker or
+     affected, and recalculate the Pinned by cells of captures whose pins were added or removed
+     from the final instructions, while keeping
+     the row `PLANNED` and retaining any unresolved blocker or
      unfinished-work reason. Write the instruction and any partial result first and the ledger row
      last (publication.md). A row that no longer matches its instruction after an interruption is
      reconciled here.

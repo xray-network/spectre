@@ -1,10 +1,10 @@
 # SPECTRE implementations
 
 Protocol-Version: 1.0.0
-Protocol-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Protocol-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 Protocol: [.agents/spectre/runtime/SPECTRE-PROTOCOL.md](.agents/spectre/runtime/SPECTRE-PROTOCOL.md)
 
-This is the live lifecycle ledger and target registry. Archived rows live in .agents/spectre/archive/SPECTRE-ARCHIVE.md.
+This is the live ledger: targets, providers and implementations. Archived rows live in the __archive folders' ARCHIVE.md files.
 
 ## Targets
 
@@ -12,6 +12,8 @@ This is the live lifecycle ledger and target registry. Archived rows live in .ag
 | --- | --- | --- | --- | --- |
 | `harness` | Harness | `./harness/` | `ACTIVE` | Registered by harness/0001, which creates this new project |
 | `repository` | Repository | `./` | `ACTIVE` | Repository governance bootstrap |
+
+## Providers
 
 ## Implementations
 

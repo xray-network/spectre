@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 ## 4. Repository discovery and target selection
 
@@ -89,8 +89,8 @@ target selector using §1 and §4 before allocating an ID or creating records.
    plan operation and need no separate command. Planning never prepares a missing provider guide or
    changes a provider's selection rules; report either need as a blocker. A plan that relies on no
    provider evidence (`LOCAL` or `DERIVED`) captures nothing.
-3. Reconcile the target's sequence. Read both ledgers and the target's record files, live and
-   archived. The next ID is one greater than the
+3. Reconcile the target's sequence. Read `SPECTRE.md`, every `ARCHIVE.md` and the target's record
+   files, live and archived. The next ID is one greater than the
    highest instruction, result, or row ID found. Never fill gaps, reuse IDs, or restart after
    archiving, even when `SPECTRE.md` has no rows. Refuse incomplete
    or conflicting history; if the highest ID is `9999`, stop and report sequence exhaustion. If the
@@ -114,8 +114,9 @@ target selector using §1 and §4 before allocating an ID or creating records.
    edit, add the matching PLANNED row with a short matching objective title, creating its
    implementation subsection only now, and, if the target is used for the first time, its Targets
    row with ACTIVE status and its verified existing Path or the new-project Path its changes create
-   (references.md). New work for a RETIRED target reactivates it in the same edit and reports
-   that it did. Do not create a result or modify source.
+   (references.md), and, for each capture it pins, its ID in that capture row's Pinned by cell. New
+   work for a RETIRED target reactivates it in the same edit and reports that it did. Do not create
+   a result or modify source.
 
 Every change row receives a stable Change ID such as `C01`. IDs are unique within the instruction
 and are used unchanged by the result.

@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 Operation names, flags, state filters, and subcommands are ASCII
 case-insensitive. Lowercase is canonical; stored target IDs, paths, objectives and human proof keep
@@ -32,13 +32,15 @@ module and the dependencies the router lists.
 
 Runtime modules are rules from the installed local protocol; loading one does not invoke its command.
 Logical IDs are `target/NNNN` (four digits); slugs match `^[a-z0-9]+(?:-[a-z0-9]+)*$`. Live record
-files live in `implementations/<target>/`, archived ones in `archive/<archive-id>-<target>/`. `SPECTRE.md` is the
-live ledger and the archive ledger holds archived rows. Require exactly one row across both and a
+files live in `implementations/<target>/`, archived ones in `implementations/__archive/<archive-id>/<target>/`.
+`SPECTRE.md` is the live ledger; each archive's `ARCHIVE.md` holds its rows. Require exactly one row
+across them and a
 matching instruction per identity; REVIEW/ACCEPTED/REJECTED also require a matching result.
 Refuse missing, duplicate, corrupt, or contradictory records; never substitute another identity.
 Read target identity and current Path from the ledger's Targets table.
-All tracking mutations follow publication.md. Use canonical IDs/paths in stored data: rows in both ledgers always show the qualified
-`target/NNNN` ID and follow the canonical table format in §11. Every write checks local-reference containment and resolves normative inputs; historical source
+All tracking mutations follow publication.md. Use canonical IDs and paths in stored data.
+Implementation rows use qualified `target/NNNN` IDs and capture rows use qualified `provider/NNNN`
+IDs, following §11. Every write checks local-reference containment and resolves normative inputs; historical source
 locations follow references.md. A historical missing source path does not invalidate a terminal decision.
 Required validation remains part of the selected operation;
 never claim checks ran when they did not. Read required source and evidence completely even though
@@ -99,7 +101,7 @@ result (when present) are immutable, with two exceptions. An explicit upgrade (�
 terminal records to the current formats and replaces each digest their proofs cite with the
 rewritten result's digest; `absorb`, `detach` (§9) and an explicit override may move them and update
 their links and digests. State, ID, decision source, date and wording remain unchanged. Archiving
-moves a terminal row to the archive ledger and its files, byte for byte, to the archive. It is a storage operation, not a lifecycle state;
+moves a terminal record's files, byte for byte, and its row to an archive (§9). It is a storage operation, not a lifecycle state;
 there is no `ARCHIVED` state. Correct terminal content with a new local sequence that references
 the prior record. Git history alone is not a substitute for this rule.
 

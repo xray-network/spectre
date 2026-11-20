@@ -39,8 +39,8 @@ The sections below explain each piece: the [ledger](#installation-and-ledgers), 
 An installation lives in one folder, its installation root: the repository root by default, or a
 project folder you name. It holds:
 
-- **`SPECTRE.md`**, the live ledger: the Targets table, the Providers table and one row per open
-  or recently finished record. This is the file you read.
+- **`SPECTRE.md`**, the live ledger, holds the Targets table, the Providers section and one row per
+  open or recently finished implementation.
 - **`.agents/spectre/`**: the installed protocol and its rule modules, live records under
   `implementations/<target>/`, captured evidence under `providers/`, and the archive: its ledger
   `__archive/<timestamp>/` folders inside `implementations/` and `providers/`, each with an
@@ -113,9 +113,13 @@ Each plan declares what it relies on:
 Outside evidence, such as an upstream repository, a specification or another project's interface,
 enters as a **provider**: a guide describing the source, plus numbered **captures**, each a frozen
 snapshot with a summary of what changed. Plans pin an exact capture and its hashes, never a branch
-or "latest". The Providers table in `SPECTRE.md` shows each provider's source, what it tracks, its
-latest capture and which records pin it. Records never link outside their installation; another project, even a sibling in the
-same monorepo, is captured like any other source.
+or "latest". In `SPECTRE.md`, each provider has its own subsection with a guide link and a row for
+every numbered capture. Each row shows the UTC capture date, upstream identity, snapshot and
+summary links, and the live implementations that pin that capture. The highest capture ID is the
+latest. `Spectre status <provider> --archived` lists archived consumers by capture.
+
+Records stay within their installation. Evidence from another project, including a sibling in the
+same monorepo, enters through a provider capture.
 
 ## Combine and split installations
 

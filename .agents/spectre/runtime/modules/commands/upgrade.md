@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 ### Upgrade procedure
 
@@ -14,7 +14,7 @@ and only the current human may order it.
    SHA-256 equals both the installed protocol's and the ledger's Protocol-SHA256, report that the
    installation is current and stop. The same Protocol-Version with a different SHA-256 still
    upgrades.
-2. Read the installation metadata, runtime, both ledgers, any archive batch directories, every
+2. Read the installation metadata, runtime, `SPECTRE.md`, every archive in any earlier layout, every
    live record and every provider guide and capture. Run full validation under the installed protocol without changing
    files; when an earlier upgrade was interrupted (publication.md), continue it under the protocol
    it already wrote. Report conflicts, interrupted writes and missing evidence, and resolve blockers
@@ -34,30 +34,35 @@ and only the current human may order it.
      file. In ACCEPTED and REJECTED proofs, replace each cited digest of a rewritten result with its
      new digest.
    - Update only references that bind bytes: provider pins, summary, predecessor and reuse hashes,
-     and cited result digests, each to the final hash of its file. Historical notes, such as
-     migration hash tables in guides or provenance notes in snapshots, keep the hashes they
-     recorded.
+     and cited result digests, each to the final hash of its file. Historical provenance in
+     snapshots keeps its recorded hashes.
    - Never close work or archive records. Pending checkpoints are invalidated and must be refreshed.
-   - Bring record files into the current layout, `implementations/<target>/` for live records and
-     `archive/<archive-id>-<target>/` for archived ones:
-     - Records directly under `implementations/`, from a single-folder layout, move into
-       `implementations/<target>/` of the installation's one target.
-     - Archive batches holding an `ARCHIVE.md` move each file in its Record paths table to
-       `archive/<archive-id>-<target>/` and add its rows to the archive ledger. A provider batch
-       moves each provider directory back under `providers/`. The `ARCHIVE.md` is then removed.
-     - Archived rows whose files are still under `implementations/` move those files to
-       `archive/<archive-id>-<target>/` under one new archive ID.
-     Point every moved row's links at the new paths. When a move changes a file's depth, add or
-     remove one `../` in each relative link that leaves its folder, and re-cite any changed result
-     digest in decision proofs. Refuse when a destination holds different bytes or a manifest cannot
+   - Bring files into the current layout: live records into `implementations/<target>/`, archived
+     records into `implementations/__archive/<archive-id>/<target>/`, and archived providers into
+     `providers/__archive/<archive-id>/<provider>/`, each archive folder with an `ARCHIVE.md` holding
+     its rows (§11). This covers records directly under `implementations/` from a single-folder
+     layout, which move into the installation's one target, and every archive an earlier protocol
+     kept under `.agents/spectre/archive/` (batch folders with their own `ARCHIVE.md`, archive
+     ledgers, per-target archive folders), which keep their archive IDs and are then removed. Rows
+     keep every cell except links, which name the moved files. A live record whose depth changes gets
+     one `../` added or removed in each relative link that leaves its folder, and any changed result
+     digest is re-cited in decision proofs; archived files are never rewritten, so their outward
+     links may go stale. Refuse when a destination holds different bytes or an earlier archive cannot
      be read mechanically.
+   - Build the live Providers section from the validated guides, published captures and final
+     live instruction pins (§11). Replace provider summary rows with subsections that include
+     every capture, including unpinned captures and captures older than the latest. Verify the
+     provider and capture identities against the files before writing the ledger.
+   - Convert any archived provider summary rows to capture subsections from their archived guides
+     and captures. Preserve provider-level archive pins in the §11 historical note when the
+     original ledger did not record them per capture. Preserve archived evidence bytes.
 6. Write in this order. First the protocol, its extracted modules and three templates, the router
    and the SPECTRE section of AGENTS.md; remove obsolete generated runtime files, such as a
    `commands/host.md` an earlier protocol generated, and never touch a custom slash command. Then,
    provider by provider in ascending capture order, each CAPTURE.md and its SNAPSHOT.md with
    recomputed summary, predecessor and reuse hashes, then the PROVIDER.md guide. Then each live
-   instruction, with its pins updated, and each live result. Then the archive conversion and the
-   archive ledger. Finally
+   instruction, with its pins updated, and each live result. Then the archive conversion with its
+   `ARCHIVE.md` files. Finally
    `SPECTRE.md` with its rewritten rows, cited digests, new Protocol-Version and new
    Protocol-SHA256 in one write, the commit point. Files already in the latest formats are left as
    they are, so repeating an interrupted upgrade completes it.

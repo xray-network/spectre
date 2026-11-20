@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 ## 13. Validation invariants
 
@@ -24,15 +24,15 @@ are reported, not silently waived or expanded into repairs. Override exceptions 
 reported under §9. Read-only diagnosis can report multiple failures instead of stopping at the first.
 
 Checks below are split between this module (records/references/operations), validation-full.md
-(installation and archive ledger), and validation-evidence.md (captured/provider inputs).
+(installation and archives), and validation-evidence.md (captured/provider inputs).
 
 **Ledger and records**
 
-10. Format: both ledgers use §11 canonical delimiters/columns; Targets rows and implementation
+10. Format: `SPECTRE.md` and every `ARCHIVE.md` use §11 canonical delimiters/columns; Targets rows and implementation
     subsections are unique and sorted; live subsections are populated and name ACTIVE targets.
 11. Identity: valid target/provider slugs and four-digit IDs; no new target is all/implementations/
-    providers. Each record ID has exactly one row across both ledgers. Sequence allocation scans
-    both ledgers and the record files, never fills gaps or reuses published IDs. Duplicate IDs from
+    providers. Each record ID has exactly one row, live or archived. Sequence allocation scans
+    every row and record file, live and archived, never fills gaps or reuses published IDs. Duplicate IDs from
     parallel branches are blockers resolved under publication.md.
 12. Rows: each live row has one matching instruction, matching title/evidence mode and at most one
     result. REVIEW/ACCEPTED/REJECTED require results; a started PLANNED instruction has a partial result.
@@ -51,7 +51,7 @@ Checks below are split between this module (records/references/operations), vali
 
 16. Boundary: local references and active target paths remain inside the installation, including
     realpath/symlink containment. External official provenance URLs are not local input pointers.
-17. Resolution: links in both ledgers resolve to existing files; record-to-record references resolve
+17. Resolution: links in `SPECTRE.md` and every `ARCHIVE.md` resolve to existing files; record-to-record references resolve
     by qualified ID through the ledgers. Historical source locations may be stale; missing normative evidence blocks its
     consumer. Never guess replacement evidence or use log text as an input redirect.
 18. Dependencies: DERIVED/HYBRID consume accepted results of this installation, preserving identity
@@ -74,10 +74,14 @@ Checks below are split between this module (records/references/operations), vali
 37. Publication: writes follow publication.md; a commit point is written last. Interrupted states are
     reported with their next action; only the states marked safe sync are completed automatically.
 38. Sync: only the exhaustive safe fixes in commands/sync.md occur without an answer, and target
-    fixes only after the human answers; no rows/records reconstructed, no state inferred, no
-    evidence/history deleted, no format upgraded implicitly.
+    fixes only after the human answers; no implementation rows or records reconstructed, no
+    state inferred, no evidence/history deleted, no format upgraded implicitly.
 39. Targets: the ledger's Targets table uniquely owns IDs, labels, current paths, status and reasons.
     Removing an empty implementation subsection never removes a Targets row or frees its ID.
+40. Providers: each live subsection links its guide. Each published capture has one row under
+    its own provider, with matching ID, UTC date, upstream identity, snapshot and summary links.
+    Pinned by equals the sorted set of live implementations whose instructions pin that exact
+    capture. Validate the empty marker for a guide with no captures.
 
 Use repository-native validation tools when available. Machine checks verify structure and execution
 contracts; human acceptance remains a separate explicit decision. Never report checks that did not run.

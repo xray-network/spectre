@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 ### Publication order
 
@@ -10,7 +10,7 @@ before the commit point, and validation afterwards. Version control is the backu
 commands never commit for the human.
 
 Each operation has one commit point: the write after which its change counts as published. It is
-the `SPECTRE.md` row for lifecycle changes, the archive ledger write for an archive,
+the `SPECTRE.md` row for lifecycle changes, the archive's `ARCHIVE.md` for an archive,
 `SNAPSHOT.md` for a capture, and the receiving `SPECTRE.md` for `absorb` and `detach`. Content
 without its commit point was never published. Writes after the commit point, such as removing an
 archived row from `SPECTRE.md`, only finish a change already published. Every mutation follows this
@@ -25,9 +25,9 @@ order:
    depends on changed since step 1, stop and report it; never overwrite the other change. Files
    already written in step 2 stay for `sync` to report.
 4. Edit the ledger last, in one write, changing only the Targets rows, rows and cells the
-   operation owns. An archive copies its files first, writes its rows to the archive ledger (its
-   commit point), then removes them from `SPECTRE.md`, deletes the verified originals and prunes
-   newly empty subsections and directories.
+   operation owns. An archive copies its files first, writes its `ARCHIVE.md` (its commit point),
+   then removes the rows from `SPECTRE.md`, deletes the verified originals and prunes newly empty
+   subsections and directories.
 5. Validate the affected scope (§13) and report. Never report a check that did not run.
 
 Source implementation is not rolled back: preserve product edits and record honest partial work.
@@ -45,8 +45,10 @@ An interrupted operation leaves one of these states. `sync` reports each with it
 | Instruction file at a sequence maximum with no row and no result | Plan stopped before its commit point | Human deletes the file, or asks to plan the same objective again, which publishes it |
 | Result file not linked from its `PLANNED` row | Implement stopped before its commit point | Implement again; it reconciles the existing result |
 | Row title or evidence mode that differs from its `PLANNED` or `REVIEW` instruction | Revise stopped before its ledger edit | Revise again; it reconciles the row |
-| Files in `archive/<archive-id>-<target>/` whose rows are not in the archive ledger, each equal to its live original | Archive stopped before its commit point | Safe sync removes the unpublished copies |
-| Archived rows still in `SPECTRE.md`, or originals still byte-identical to their archived copies | Archive stopped after its commit point | Safe sync removes those live rows, then those originals |
+| An `__archive/<archive-id>/` without `ARCHIVE.md` whose every file equals its live original | Archive stopped before its commit point | Safe sync removes the unpublished copies |
+| Implementation rows of an `ARCHIVE.md` still in `SPECTRE.md`, or originals still byte-identical to their archived copies | Implementation archive stopped after its commit point | Safe sync removes those live rows, then those originals, and reconciles the affected capture pin lists |
+| Provider subsections of an `ARCHIVE.md` still in `SPECTRE.md`, or original provider directories still byte-identical to their archived copies | Whole-provider archive stopped after its commit point | Safe sync removes those live subsections, then the verified originals |
+| A live provider subsection or capture row is missing or differs from its guide, verified captures or live pins | Provider preparation, capture, plan, revise or archive stopped before its ledger edit | Safe sync rebuilds the subsection from validated files |
 | Files or rows listed in an `absorb` or `detach` ID map present in both installations | Absorb or detach stopped before its commit point | Repeat the same operation; it skips what is already in place |
 | Numbered capture directory without `SNAPSHOT.md` that nothing references | Capture stopped before its commit point | Safe sync removes the unpublished directory |
 | Runtime files whose Source-SHA256 differs from the installed protocol | Install or upgrade stopped | Repeat the same explicit install or upgrade |

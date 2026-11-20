@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 ### Absorb and detach
 
@@ -13,7 +13,7 @@ target.
 
 Shared rules for both:
 
-1. Read both installations: runtime, both ledgers, every record and provider. Run full validation
+1. Read both installations: runtime, `SPECTRE.md`, archives, every record and provider. Run full validation
    on each and stop on any blocker. Both must run the same protocol (§14); upgrade first otherwise.
    Recommend a commit first.
 2. Build the ID map before writing: each moved target's old ID and new ID, each record's old and new
@@ -23,8 +23,12 @@ Shared rules for both:
    the moved files and in both installations, every link, provider pin, predecessor and reuse hash,
    and qualified ID that the map changes. A file whose bytes change gets its new digest cited
    wherever a decision proof cited the old one; decision sources, dates and wording stay.
-4. Write the receiving installation's `SPECTRE.md` (its commit point) and the archive ledger
-   with the moved rows and Targets rows. Then update the sending installation's ledgers.
+4. Move the targets' archived records too, into the receiving installation's
+   `implementations/__archive/<archive-id>/`, keeping each archive ID and splitting its `ARCHIVE.md`
+   rows accordingly. Write the receiving installation's `SPECTRE.md` (its commit point) with the
+   moved rows, Targets rows and provider subsections derived from the receiving providers and live
+   instructions after applying the ID map. Then update the sending installation's `SPECTRE.md`,
+   deriving its provider subsections from the providers and live instructions that remain there.
 5. Log every moved, changed, created or removed file in each installation's override log, with the
    human's command and the reason, and record the ID map in the moved targets' Targets-row Reason
    in both installations (`Moved from <installation>: <old> → <new>`). Validate both installations.

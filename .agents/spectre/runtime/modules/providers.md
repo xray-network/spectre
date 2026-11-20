@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 ### Pinned provider evidence
 
@@ -26,8 +26,8 @@ to recapture it or silently read Git history. CAPTURE.md is advisory; it cannot 
 Plans select an explicit completed immutable capture and record its pin. Capture publication and
 integrity validation are required; a separate Git commit is not a protocol prerequisite. Version
 control remains recommended repository practice and commands never auto commit. Keep every
-numbered directory and artifact in place: providers are never archived, and archived records may
-still pin them. Numbered evidence
+numbered directory and artifact in place until the human archives the whole provider (§9).
+Numbered evidence
 and hashes provide stable inputs without requiring a Git-only history store. New provider updates
 never overwrite those files.
 
@@ -36,7 +36,6 @@ never overwrite those files.
 Every live capture follows the installed protocol's provider template. Only an explicit upgrade
 (§14) rewrites existing PROVIDER.md, SNAPSHOT.md and CAPTURE.md files to a newer format, as a
 human-ordered override that recomputes their hashes and every live pin, predecessor, reuse and
-summary reference to them. Historical notes, such as migration hash tables in guides or provenance
-notes in snapshots, keep the hashes they recorded. Artifact files are captured provider data, not
-SPECTRE format, and are never rewritten. If an earlier capture's inventory cannot be resolved, report a blocker instead of
-guessing.
+summary reference to them. Historical provenance in snapshots keeps its recorded hashes. Artifact
+files are captured provider data and are never rewritten. An unresolved earlier capture inventory
+is a blocker.

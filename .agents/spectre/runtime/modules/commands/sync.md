@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 ### Sync
 
@@ -18,6 +18,10 @@ four steps.
    - Sort Targets rows, subsections and rows, and normalize table formatting where parsing is
      unambiguous, keeping every ID, link, title, state, evidence mode and Decision or status value.
    - Remove an empty record directory, never one that holds files or evidence.
+   - Rebuild live provider subsections and capture rows from valid guides, validated published
+     captures and the live instructions that pin each exact capture (§11). A missing ledger row
+     for a validated capture is repairable. A row naming a missing snapshot, conflicting identities
+     or an invalid pin is a blocker.
    - Complete the interrupted states that publication.md marks safe sync, after verifying every
      byte and row condition that table states.
 3. Proposed fixes, applied only after the human answers. List them together as one checkpoint
@@ -31,9 +35,11 @@ four steps.
    never pick one.
 4. Blockers are reported and never changed: missing record files, conflicting states, duplicate IDs
    (publication.md), a changed accepted or rejected result, corrupt pins, an ACTIVE target with live
-   rows but no folder, and interrupted states outside the publication.md table.
+   rows but no folder, a live record that pins an archived provider or depends on a missing archived
+   result, a repository file that names a path moved by an archive, and interrupted states outside
+   the publication.md table.
 
 Distinguish errors, safe fixes, proposals and historical information. Never add, reconstruct or
-delete record rows, register targets, infer REVIEW or acceptance, move records or evidence,
+delete implementation rows, register targets, infer REVIEW or acceptance, move records or evidence,
 archive, reset counters, upgrade, or rewrite terminal records. A clean installation produces no
 writes. Success means only the reported scope passed.

@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 ### Override workflow
 
@@ -14,12 +14,12 @@ item or combined with another operation.
 1. Require the scope, the requested changes, and a reason. Ask before writing if any is missing or
    ambiguous.
 2. Resolve the scope to the exact files and records it changes, including links, inventory entries,
-   and rows in both ledgers that must follow. Report that complete list and the intended result before
+   and rows in `SPECTRE.md` and every `ARCHIVE.md` that must follow. Report that complete list and the intended result before
    writing, then proceed without further confirmation.
 3. Apply exactly the requested changes, even where they break immutability, layout, naming, format,
    lifecycle, or boundary rules. The human's decision is the authority for them.
 4. In the same scope, bring every dependent active record in line with the new bytes and paths:
-   provider pins and inventories, rows in both ledgers, and links that point at moved or renamed
+   provider pins and inventories, rows in `SPECTRE.md` and every `ARCHIVE.md`, and links that point at moved or renamed
    files. The installation must validate on its own files afterwards;
    no log excuses a check. Change nothing outside the reported scope.
 5. Append one row per changed, moved, created, or removed file to `.agents/spectre/logs/OVERRIDES.md`.

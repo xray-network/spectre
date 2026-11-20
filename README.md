@@ -71,7 +71,7 @@ checks and record your decisions in the same files. See the
 | --- | --- |
 | Root `SPECTRE.md`, Targets table | Stable target identities, current source paths, active/retired status |
 | Root `SPECTRE.md`, Implementations | Unarchived implementation rows, grouped only under populated targets |
-| Root `SPECTRE.md`, Providers | Live providers: source, tracking, latest capture and the records that pin them |
+| Root `SPECTRE.md`, Providers | One subsection per live provider with its guide and one row per capture, including the records that pin that capture |
 | `.agents/spectre/*/__archive/<timestamp>/ARCHIVE.md` | Archived rows and preserved human decisions |
 
 Targets register on first planning, with an ID derived from the folder path or package name; a

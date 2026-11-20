@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 ### Natural-language selectors
 
@@ -8,7 +8,7 @@ Record selectors accept qualified `target/NNNN`, a unique bare ID, title/objecti
 or verified conversational references such as "this plan". Target selectors accept stable IDs,
 current paths, labels and repository/package descriptions. Provider selectors accept existing slugs
 or guide descriptions. Explicit IDs take precedence; an invalid or missing explicit ID never gets
-a fuzzy replacement. Search the Targets table and both ledgers first; read only candidate bodies
+a fuzzy replacement. Search the Targets table, Providers subsections, live rows and archives first; read only candidate bodies
 needed to resolve meaning. A source folder is not automatically a registered target (§4).
 
 1. Parse operation and objective/changes/proof/reason, preserving the human payload. Colons are

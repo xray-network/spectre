@@ -25,7 +25,7 @@ All paths below are relative to `.agents/spectre/runtime/modules/`.
 | Operation | Command file | Additional required reads |
 | --- | --- | --- |
 | help | commands/help.md | None |
-| status | commands/status.md | selectors.md, references.md |
+| status | commands/status.md | selectors.md, references.md, templates/TEMPLATE_STATUS.md; templates/TEMPLATE_IMPL.md for archived provider consumers |
 | recall | commands/recall.md | selectors.md, references.md; providers.md for pinned evidence |
 | sync | commands/sync.md | selectors.md, references.md, publication.md, queues.md, validation.md, templates/TEMPLATE_STATUS.md; validation-full.md for installation scope; validation-evidence.md and templates/TEMPLATE_PROVIDER.md for provider checks |
 | plan | commands/plan.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md, templates/TEMPLATE_STATUS.md; commands/capture.md, providers.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md when relying on providers |
@@ -33,7 +33,7 @@ All paths below are relative to `.agents/spectre/runtime/modules/`.
 | revise | commands/revise.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_IMPL.md; templates/TEMPLATE_STATUS.md for declared source relocation; providers.md and validation-evidence.md for provider inputs |
 | accept / reject / cancel | commands/decide.md | selectors.md, references.md, publication.md, validation.md |
 | archive | commands/archive.md | selectors.md, references.md, publication.md, validation.md, templates/TEMPLATE_STATUS.md |
-| capture | commands/capture.md | selectors.md, references.md, publication.md, providers.md, validation.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md |
+| capture | commands/capture.md | selectors.md, references.md, publication.md, providers.md, validation.md, validation-evidence.md, templates/TEMPLATE_PROVIDER.md, templates/TEMPLATE_STATUS.md |
 | upgrade | commands/upgrade.md | Latest protocol completely; commands/override.md, publication.md, references.md, providers.md, validation.md, validation-full.md, validation-evidence.md, the three latest templates |
 | override | commands/override.md | selectors.md, references.md, history.md, publication.md, validation.md |
 | absorb / detach | commands/relocate.md | Both installations; commands/override.md, selectors.md, references.md, history.md, providers.md, publication.md, validation.md, validation-full.md, templates/TEMPLATE_STATUS.md |

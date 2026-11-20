@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 ### Recall
 
@@ -9,7 +9,7 @@ records as the only source. Without a target it searches every target. It is rea
 no records, captures, or lifecycle state, and changes no files. The records stay authoritative;
 recall only finds and cites them.
 
-1. Resolve a supplied target under `selectors.md`. Read `SPECTRE.md` and the archive ledger,
+1. Resolve a supplied target under `selectors.md`. Read `SPECTRE.md` and every archive's `ARCHIVE.md`,
    and select candidate records whose titles or decision proofs relate to the question.
 2. Read only the candidates' instructions and results: objectives, change dispositions, outcomes,
    exported change contracts, validation, and deviations. For candidates with provider inputs, read

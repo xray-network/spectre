@@ -1,6 +1,6 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 An ordinary `capture` command requires an existing unversioned provider guide. An explicit compound
 queue may first prepare a missing guide from a human-supplied provider identity and authoritative
@@ -44,9 +44,10 @@ stop before creating the guide.
 
 Create only `providers/<provider>/PROVIDER.md`, following the provider-guide template with bounded
 purpose, official links, live or explicitly frozen tracking policy, license guidance, evidence
-domains and exclusions, summary requirements, maintained-consumer guidance, and `No captures yet.`
+domains and exclusions, summary requirements and maintained-consumer guidance.
 Do not create a numbered directory, fetch artifact bytes into the provider tree, create plans, or
-modify product source during preparation. Validate the new guide, then complete its separately
+modify product source during preparation. Validate the new guide and add its Providers subsection to
+`SPECTRE.md` (§11) with the guide link and `No captures yet.` Then complete its separately
 queued capture item through the ordinary capture workflow. If a matching valid guide already exists,
 preparation is a reported no-op and capture uses it; never overwrite or silently reinterpret it.
 
@@ -56,9 +57,8 @@ PROVIDER.md explains source authority, tracking and maintained-consumer context.
 SNAPSHOT.md owns the complete specification and resolved inventory; CAPTURE.md summarizes only
 that capture. Published capture files are immutable outside an explicit upgrade (§14). Load core, selectors, references,
 providers, the provider template, validation and evidence checks, repository guidance, the guide and
-applicable snapshots.
-Reconcile every numbered directory and guide entry; never trust a latest link alone. Every live
-capture follows the installed provider template (`providers.md`).
+applicable snapshots. Reconcile every numbered capture directory with its row in SPECTRE.md.
+Every live capture follows the installed provider template (`providers.md`).
 
 ### Discovery and comparison
 
@@ -126,8 +126,9 @@ states. Never treat an earlier conversation report as a verified current source 
 5. Recheck the provider sequence, baseline, referenced files and guide against the hashes recorded
    during discovery. Create the new numbered directory only where none exists; write its artifacts
    and CAPTURE.md first and SNAPSHOT.md last, the commit point (publication.md). Never overwrite an
-   existing capture. Then add an optional guide index entry linking the new snapshot and summary,
-   and validate final paths and the full reference graph. On failure preserve all earlier captures
+   existing capture. Then append the new capture row to its provider subsection in `SPECTRE.md`, replacing
+   `No captures yet.` for the first capture. Initialize Pinned by to — and validate final paths
+   and the full reference graph. On failure preserve all earlier captures
    and unrelated edits; an unpublished directory blocks the next capture until sync removes it.
 6. Report provider/capture ID, snapshot and summary links, added/changed/removed/reused counts,
   newly stored file count, upstream identities and consumer findings, then stop. Do not auto

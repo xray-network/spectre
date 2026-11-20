@@ -1,12 +1,13 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 Every installation keeps its records in one form: `implementations/<target>/NNNN-IMPL-INSTR.md` and
 `implementations/<target>/NNNN-IMPL-RESULT.md`, one independent sequence per target. A single
 project has one target, named after its folder (§4); a monorepo has one target per project plus the
-reserved `repository` governance target. Archiving moves files to `archive/<archive-id>-<target>/`,
-at the same depth, so relative links inside a moved record keep resolving.
+reserved `repository` governance target. Archiving moves records to
+`implementations/__archive/<archive-id>/<target>/` and providers to
+`providers/__archive/<archive-id>/<provider>/`.
 
 An implementation **target** is the smallest stable project area with its own source ownership and
 meaningful completion validation. Examples include `api`, `web`, `mobile`,
@@ -15,17 +16,19 @@ Each provider has an independent four-digit capture sequence. These numbers iden
 evidence captures, not versions of the provider or upstream protocol.
 
 `SPECTRE.md` in the installation root is the live lifecycle ledger, the target registry and the
-project-facing implementation summary. Its Targets table holds every target identity and current
-source location; its implementation subsections exist only for targets with live rows.
-The archive ledger, `.agents/spectre/archive/SPECTRE-ARCHIVE.md`, holds the rows of archived
-(terminal) implementations in the same table format. Every implementation has exactly one row, in
-one of the two ledgers. Archiving moves the row there and the record files once, byte for byte, to
-`archive/<archive-id>-<target>/`. Target directories contain
+project-facing summary. Its Targets table holds every target identity and current source location,
+its Providers section has one subsection per live provider and one row per published capture, and
+its implementation subsections exist only for targets with live rows. Each archive run has one
+folder, `__archive/<archive-id>/`, under `implementations/` or `providers/`, whose `ARCHIVE.md`
+holds the rows or provider subsections that left `SPECTRE.md`. Every implementation and capture
+has exactly one row, and every provider has exactly one subsection, in `SPECTRE.md` or in one
+`ARCHIVE.md`. Target directories contain
 instructions and results, not status ledgers. Provider captures have no lifecycle ledger and never
 contain implementation instructions or results.
 
-IDs remain unique across both ledgers within their sequence. Archiving never resets a sequence: the
-next ID follows the highest ID in either ledger and on disk for that target.
+IDs remain unique within their sequence across live and archived records. Archiving never resets a
+sequence: the next ID follows the highest ID live or archived for that target, and a provider's
+next capture follows its highest live or archived capture.
 
 ### Installation boundary
 

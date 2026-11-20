@@ -85,12 +85,13 @@ Read-only: no file ever changes.
 <details class="spectre-fields__row" id="status">
 <summary><span class="spectre-fields__name">Status</span><code>Spectre status [scope] [state] [--archived]</code></summary>
 <div class="spectre-command">
-<p>Shows targets with their paths and counts, a target's records, a provider with its captures and the records that pin it, or one record with its plan, result and decision. <code>--archived</code> lists archived rows instead. Read-only.</p>
+<p>Shows targets with their paths and counts, a target's records, a provider with the live consumers of each capture, or one record with its plan, result and decision. <code>--archived</code> lists archived records or, for a provider, its archived consumers by capture. Read-only.</p>
 <p class="spectre-command__label">Examples</p>
 <pre><code>Spectre status
 Spectre status api REVIEW
 Spectre status api/0004
 Spectre status uplc
+Spectre status uplc --archived
 Spectre status the rate limiting change</code></pre>
 <p class="spectre-command__label">You get</p>
 <p>A summary in the conversation. No file changes.</p>
@@ -160,7 +161,7 @@ Spectre archive provider cardano-ledger</code></pre>
 Spectre capture plutus
 Spectre capture cardano-ledger</code></pre>
 <p class="spectre-command__label">You get</p>
-<p>For a new provider, its guide, <code>providers/&lt;provider&gt;/PROVIDER.md</code>. Then a numbered capture, <code>providers/&lt;provider&gt;/NNNN/</code>, with the pinned commit, its specification, a summary of what changed and the selected files. Nothing when the source has not changed.</p>
+<p>For a new provider, its guide at <code>providers/&lt;provider&gt;/PROVIDER.md</code>. Each published capture has a numbered directory with its specification, summary and selected files, plus a row under its provider in <code>SPECTRE.md</code>. An unchanged capture produces no writes.</p>
 </div>
 </details>
 </div>

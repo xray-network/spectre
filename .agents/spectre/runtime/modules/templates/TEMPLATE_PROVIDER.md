@@ -28,16 +28,13 @@ Describe the protocol, standard or implementation and what it supplies. Link off
 ## Summarization requirements
 
 ## Maintained consumer guidance
-
-## Captures
-
-No captures yet. After publication, add a numbered SNAPSHOT.md link and CAPTURE.md summary link.
 ```
 
 The guide owns purpose, official links, tracking policy, domains, exclusions, summarization and
 maintained-consumer guidance. Follow live upstream unless a human explicitly freezes a source
 with a reason. Exact source identities, selections, formats, counts and verification rules belong
-to each SNAPSHOT.md, never to the guide or summary. Later guide edits cannot reinterpret history.
+to each SNAPSHOT.md. The Providers section in SPECTRE.md is the capture index. Git history records
+changes to provider paths and files. Later guide edits cannot reinterpret history.
 
 ## Snapshot specification
 

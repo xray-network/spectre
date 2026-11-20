@@ -37,8 +37,8 @@ Each implemented change has an instruction and a result. Record `0005` has only 
 because implementation has not started. Record `0001` documents installation itself; its acceptance
 comes from the human's installation request.
 
-Accepted records stay in the live ledger until you explicitly archive them. This example has
-no archive yet, so there is no `.agents/spectre/archive/` folder.
+Accepted records stay in the live ledger until you explicitly archive them. The first archive
+creates `.agents/spectre/implementations/__archive/`.
 
 ## SPECTRE.md
 
@@ -86,3 +86,24 @@ Archiving records 0001–0003 moves their files to
 `ARCHIVE.md`, while 0004–0005 stay live. Once all records are
 terminal and archived, the ledger keeps its Targets table and an empty `## Implementations`
 heading; the target remains registered and its next implementation still receives 0006.
+
+## Provider capture example
+
+If a repository uses captured evidence, the Providers section groups every capture under its
+provider. In this example, the live implementation `cardano-lib-typescript/0029` pins
+`uplc/0002`, and the earlier capture is still available.
+
+```markdown
+## Providers
+
+### `uplc`
+
+[Provider guide](.agents/spectre/providers/uplc/PROVIDER.md)
+
+| Capture | Captured | Upstream | Snapshot | Summary | Pinned by |
+| --- | --- | --- | --- | --- | --- |
+| `uplc/0001` | 2026-07-27 | `1.66.0.0` | [Snapshot](.agents/spectre/providers/uplc/0001/SNAPSHOT.md) | [Summary](.agents/spectre/providers/uplc/0001/CAPTURE.md) | — |
+| `uplc/0002` | 2026-09-09 | `1.68.0.0` | [Snapshot](.agents/spectre/providers/uplc/0002/SNAPSHOT.md) | [Summary](.agents/spectre/providers/uplc/0002/CAPTURE.md) | `cardano-lib-typescript/0029` |
+```
+
+Use `Spectre status uplc --archived` to see which archived implementations pinned each capture.

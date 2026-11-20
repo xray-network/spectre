@@ -126,7 +126,7 @@ SPECTRE file. It runs on its own, never as part of a queue, and proceeds as foll
    - IDs, states, numbering, paths, decision sources, dates and wording are kept. Accepted and
      rejected proofs get the new digests of their rewritten results.
    - Only references that bind bytes change: provider pins, summary, predecessor and reuse hashes.
-     Historical notes, such as migration hash tables in guides, keep the hashes they recorded.
+     Historical provenance in snapshots keeps its recorded hashes.
    - Artifact files and archived records are never rewritten, and no work is closed or archived.
    - Record files from earlier layouts move into the current one: live records into
      `implementations/<target>/`, archived ones into `implementations/__archive/<timestamp>/<target>/`

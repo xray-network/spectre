@@ -90,8 +90,8 @@ export function verifyRelease(source) {
       "`api/0004@3f9a1c0b7d2e`, alone or in a comma-separated list"]],
     ["references.md", ["### Installation boundary", "### Target identity and current paths",
       "### Current inputs and historical source locations", "A nested\ninstallation's folder belongs to it alone",
-      "Each archive run has one folder, `__archive/<archive-id>/`", "its Providers table every live provider"]],
-    ["history.md", ["### Immovable evidence", "### Archives", "resolves by its qualified ID or provider name",
+      "folder, `__archive/<archive-id>/`", "one subsection per live provider and one row per published capture"]],
+    ["history.md", ["### Immovable evidence", "### Archives", "A record or capture resolves by its qualified ID",
       "never rewrite an archived file to repair them", "is blocked until it is revised", "never repair them or substitute another file"]],
     ["publication.md", ["### Publication order", "### Interrupted writes", "### Parallel branches",
       "commit point", "reread it", "Create new files only at paths that do not exist",
@@ -101,11 +101,11 @@ export function verifyRelease(source) {
       "explicit `Spectre override`"]],
     ["commands/plan.md", ["## 4. Repository discovery", "2. Capture first.", "highest instruction, result, or row ID",
       "if the target is used for the first time, its Targets\n   row", "Target-Path", "incomplete captures or missing inherited artifacts block",
-      "an interrupted plan", "in one ledger\n   edit, add the matching PLANNED row"]],
+      "an interrupted plan", "in one ledger\n   edit, add the matching PLANNED row", "for each capture it pins"]],
     ["commands/implement.md", ["### Declared source relocation", "current Targets Path", "### Sequential batch execution", "partial result", "leave the row `PLANNED`",
       "required validation", "reconcile", "the `REVIEW` row last", "repository guidance", "an upgrade marked for revision"]],
     ["commands/revise.md", ["### Declared source relocation", "For `PLANNED`:", "Do not modify product source or tests", "For `REVIEW`:",
-      "the ledger row\n     last (publication.md)", "an upgrade marked for revision"]],
+      "the ledger row\n     last (publication.md)", "an upgrade marked for revision", "captures whose pins were added or removed"]],
     ["commands/decide.md", ["### Decision workflow", "Cancel", "REVIEW", "result digest", "first 12 lowercase hexadecimal",
       "<source> on <date>; reviewed <id>@<digest>, <id>@<digest>.", "| `Human command \"<verbatim request>\"` |",
       "| `Human reply \"<verbatim reply>\"` |", "| `Human decision \"<verbatim input>\" in <tool>` |",
@@ -113,24 +113,27 @@ export function verifyRelease(source) {
       "only their State and Decision\nor status cells", "future-result acceptance", "never parse them for authority"]],
     ["commands/archive.md", ["### Archive workflow", "Spectre archive provider <provider>", "`implementations/__archive/<archive-id>/<target>/`",
       "`providers/__archive/<archive-id>/<provider>/`", "This is the commit point", "Report what the move affects, then proceed",
-      "delete the verified originals", "Already archived IDs are no-ops", "Pinned by"]],
+      "delete the verified originals", "Already archived IDs are no-ops", "the exact captures they pinned"]],
     ["commands/relocate.md", ["### Absorb and detach", "Build the ID map before writing", "Keep every record number",
       "`absorb <path>`:", "`detach <target> to <path>`:", "blocks the run", "free number instead of `0001`",
       "A repeated run skips what is already in place"]],
-    ["commands/sync.md", ["### Sync", "This list is exhaustive", "Proposed fixes, applied only after the human answers", "Moved target", "Removed target", "never pick one", "stop here: write nothing", "never a queue item"]],
+    ["commands/sync.md", ["### Sync", "This list is exhaustive", "Proposed fixes, applied only after the human answers", "Moved target", "Removed target", "never pick one", "stop here: write nothing", "never a queue item",
+      "Rebuild live provider subsections and capture rows from valid guides"]],
     ["commands/upgrade.md", ["### Upgrade procedure", "human-ordered override", "Rewrite every live file to the latest templates",
       "Never invent content", "Needs revise after upgrade to",
       "replace each cited digest", "Bring files into the current layout", "every artifact\n     file", "in ascending capture order",
       "the commit point", "Protocol-SHA256", "same Protocol-Version with a different SHA-256 still\n   upgrades", "Version control is the rollback path", "repeating an interrupted upgrade completes it",
       "never touch a custom slash command", "Append one override log row", "Update only references that bind bytes",
-      "keep the hashes they\n     recorded"]],
-    ["providers.md", ["### Pinned provider evidence", "### Capture format", "keep the hashes they recorded",
+      "Historical provenance in snapshots keeps its recorded hashes", "including unpinned captures and captures older than the latest"]],
+    ["providers.md", ["### Pinned provider evidence", "### Capture format", "Historical provenance in snapshots keeps its recorded hashes",
       "complete resolved inventory", "a separate Git commit is not a protocol prerequisite"]],
     ["commands/capture.md", ["### Compound-queue provider preparation", "### Publish a numbered incremental capture",
       "stop without tracked writes for NO-CHANGE",
-      "SNAPSHOT.md last, the commit point"]],
+      "SNAPSHOT.md last, the commit point", "append the new capture row to its provider subsection",
+      "Reconcile every numbered capture directory with its row in SPECTRE.md"]],
     ["commands/recall.md", ["### Recall", "It is read-only", "Cite every statement"]],
-    ["commands/status.md", ["### Status and listing", "Parse `status [scope] [state] [--archived]`", "read-only"]],
+    ["commands/status.md", ["### Status and listing", "Parse `status [scope] [state] [--archived]`", "read-only",
+      "list archived consumers per capture"]],
     ["validation.md", ["## 13. Validation invariants", "recorded digests match its\n    current result bytes", "37. Publication:", "38. Sync:", "39. Targets:"]],
     ["validation-full.md", ["1. Runtime: all 23 modules", "Three canonical templates exist", "29. Archives:", "32. Relocation:"]]
   ])
@@ -155,7 +158,7 @@ export function verifyRelease(source) {
   }))
   for (const [operation, file, dependencies] of [
     ["help", "commands/help.md", []],
-    ["status", "commands/status.md", ["selectors.md", "references.md"]],
+    ["status", "commands/status.md", ["selectors.md", "references.md", "TEMPLATE_STATUS.md", "TEMPLATE_IMPL.md"]],
     ["recall", "commands/recall.md", ["references.md", "selectors.md"]],
     ["sync", "commands/sync.md", ["publication.md", "queues.md", "validation.md", "validation-full.md", "TEMPLATE_STATUS.md"]],
     ["plan", "commands/plan.md", ["publication.md", "validation-evidence.md", "TEMPLATE_STATUS.md"]],
@@ -163,7 +166,7 @@ export function verifyRelease(source) {
     ["revise", "commands/revise.md", ["publication.md", "TEMPLATE_STATUS.md", "validation.md", "validation-evidence.md"]],
     ["accept / reject / cancel", "commands/decide.md", ["publication.md", "validation.md"]],
     ["archive", "commands/archive.md", ["publication.md", "validation.md", "TEMPLATE_STATUS.md"]],
-    ["capture", "commands/capture.md", ["publication.md", "providers.md", "validation-evidence.md"]],
+    ["capture", "commands/capture.md", ["publication.md", "providers.md", "validation-evidence.md", "TEMPLATE_STATUS.md"]],
     ["upgrade", "commands/upgrade.md", ["commands/override.md", "publication.md", "providers.md", "validation-full.md", "validation-evidence.md"]],
     ["override", "commands/override.md", ["history.md", "publication.md", "validation.md"]],
     ["absorb / detach", "commands/relocate.md", ["commands/override.md", "providers.md", "validation-full.md", "TEMPLATE_STATUS.md"]],
@@ -183,13 +186,18 @@ export function verifyRelease(source) {
   for (const [name, fields] of [
     ["STATUS", ["Protocol-Version: <Protocol-Version of the installed protocol>", "Protocol-SHA256: <SHA-256 of the installed protocol>",
       "| Evidence mode | Decision or status |", "## Targets", "| Target | Label | Path | Status | Reason |",
-      "## Implementations", "### `repository`", "RETIRED", "Every target ever used keeps its", "Escaping:", "Metadata lines are"]],
+      "## Implementations", "### `repository`", "RETIRED", "Every target ever used keeps its", "Escaping:", "Metadata lines are",
+      "## Providers", "| Capture | Captured | Upstream | Snapshot | Summary | Pinned by |", "`No captures yet.`",
+      "qualified IDs of live implementations that pin that exact capture", "Recorded provider pins at archive time:"]],
     ["IMPL", ["Implementation-ID:", "Target-Path:", "## Result"]],
-    ["PROVIDER", ["Only an explicit upgrade rewrites", "### Complete resolved artifact inventory", "Capture-Summary-SHA256:"]]
+    ["PROVIDER", ["Only an explicit upgrade rewrites", "### Complete resolved artifact inventory", "Capture-Summary-SHA256:",
+      "The Providers section in SPECTRE.md is the capture index."]]
   ]) {
     const template = templates.get(`templates/TEMPLATE_${name}.md`)
     for (const field of fields) requireText(template, field, `${name} template`)
   }
+  assert.doesNotMatch(templates.get("templates/TEMPLATE_PROVIDER.md"), /^## (?:Captures|Snapshots|Capture directory migration)\b/m,
+    "the provider guide must not duplicate the capture index or migration history")
   const help = runtime.get("commands/help.md")
   assert.match(help, /\| `Spectre upgrade` \|/)
   assert.match(help, /\| `Spectre sync \[scope\]` \|/)

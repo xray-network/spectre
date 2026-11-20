@@ -1,13 +1,14 @@
 <!-- Generated from SPECTRE-PROTOCOL.md; do not edit. -->
 Protocol-Version: 1.0.0
-Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
+Source-SHA256: 5a90409736ecc8357b3a4e93530fffd94c8c008bcc3ed48a16351b450eb046a7
 
 **Provider evidence**
 
 20. Pins: new inputs name numbered SNAPSHOT.md and hashes with SELF ownership; resolve complete
     inventories including reused files. No latest alias, Git ref or replacement for missing evidence.
 21. Guides: unversioned purpose, authority, official sources, tracking, boundaries and consumer
-    guidance; no provider-version directory or capture specification duplicated in the guide.
+    guidance. The ledger indexes captures, snapshots own the capture specifications, and Git
+    history records path changes.
 22. Captures: snapshots own complete specification/inventory and hash their advisory capture summary;
     no self-hashing cycles. Live captures follow the installed provider template.
 23. Inventory: exact membership, regular files, sizes/hashes, unique safe paths; decreasing acyclic
@@ -19,7 +20,7 @@ Source-SHA256: 8792d72d42e4a70556d250a829ee45cdff86241cbd062e9eb3824062e71d07f4
     evidence reuses earlier physical files, and no duplicate full baseline is manufactured.
 26. Summary: artifact-backed findings, maintained-consumer mapping, recommended checks/work and
     uncertainty; advisory content never authorizes execution or claims unsupported parity.
-27. Outcomes: NO-CHANGE has no tracked writes or ID; CAPTURED commits a new immutable capture and
-    optional guide index update together; BLOCKED never masquerades as upstream removal/no change.
-28. Retention: earlier captures keep their paths and artifact bytes. Providers are never archived;
-    only `absorb`, `detach` and an explicit override move evidence.
+27. Outcomes: NO-CHANGE has no tracked writes or ID. CAPTURED publishes a new immutable capture
+    and its ledger row in publication order. BLOCKED reports the blocker.
+28. Retention: earlier captures keep their paths and artifact bytes. Evidence moves only with
+    whole-provider archiving, `absorb`, `detach` or an explicit override.
